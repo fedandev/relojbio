@@ -1,0 +1,4 @@
+INSERT INTO poblaciones(Nombre)
+SELECT 'Bergantiños'
+FROM dual
+WHERE NOT EXISTS (SELECT Nombre FROM poblaciones WHERE Nombre = ‘Bergantiños’)LIMIT 1

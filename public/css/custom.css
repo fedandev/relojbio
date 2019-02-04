@@ -1,0 +1,59 @@
+
+
+.dataTables_wrapper {
+    padding-bottom: 10px !important;
+}
+
+/*.ibox-content{*/
+/*     padding-bottom: 40px !important;*/
+/*}*/
+select {
+  font-family: 'FontAwesome', 'sans-serif' !important ;
+}
+
+
+/* HEADER PANEL */
+.ribbon{
+    min-height: 40px;
+    background: #2f4050;
+    padding: 0 13px;
+    position: relative
+}
+
+.breadcrumb{
+    background: #2f405000;
+    color: white;
+        padding: 11px 34px 11px 0!important;
+}
+
+
+/*boton refresh del header panel*/
+.btnChico{
+    font-size: 12px !important;
+    margin-right: 5px;
+    padding: 3px 6px;
+}
+
+/*Linea separadora de campos en create_and_edit*/
+.hr-line-dashed{
+    margin: 10px 0px !important;
+}
+
+
+/* Ajusta boton nuevo en index*/
+.btn-nuevo{
+    padding: 4px 8px !important;
+    margin-bottom: 0px !important;
+    
+}
+
+/*Tamaño de logo en navigation*/
+.logo-md{
+    width: 96px !important;
+    height: 25px !important;
+    margin-left: 4px;
+    margin-bottom: 5px;
+    transform: scale(1.5); 
+}
+
+

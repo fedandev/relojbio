@@ -1,0 +1,9 @@
+<option value="">Seleccionar reporte...</option>
+<option value="lt">Llegadas tarde</option>
+<option value="sa">Salidas antes</option>
+<option value="ht">Horas trabajadas</option>
+<option value="hn">Horas nocturnas</option>
+<option value="he">Horas extras</option>
+<option value="lf">Listado de faltas</option>
+<option value="es">Entradas y Salidas</option>
+<option value="lc">Libres Concedidos</option>

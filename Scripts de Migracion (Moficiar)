@@ -1,0 +1,147 @@
+Migrar Empleados
+
+    INSERT INTO clock_dbNew.empleados(id,
+                                    empleado_cedula,
+                                    empleado_nombre,
+                                    empleado_apellido,
+                                    empleado_telefono,
+                                    empleado_diferenciatiempo,
+                                    fk_tipoempleado_id,
+                                    fk_oficina_id)
+    SELECT  Empleado_Id, 
+            Empleado_Cedula, 
+            Empleado_Nombre, 
+            Empleado_Apellido, 
+            Empleado_Telefono, 
+            Empleado_DiferenciaTiempo, 
+            1,                              
+            17                          ----> Id Oficina por defecto (Crear en caso de no estar creada)
+    FROM clock_dbNH.empleados           ----> DB vieja
+    
+Migrar Registros
+
+    INSERT INTO clock_dbNew.registros(id, 
+                                    registro_hora, 
+                                    registro_fecha, 
+                                    registro_tipomarca, 
+                                    registro_comentarios, 
+                                    registro_registrado, 
+                                    registro_tipo, 
+                                    fk_empleado_cedula) 
+    SELECT  Id, 
+            hora, 
+            fecha, 
+            Forma_Ingreso, 
+            Comentarios, 
+            Registrado, 
+            entrada, 
+            cedula
+    FROM clock_dbNH.excel               ----> DB vieja
+    WHERE cedula IN (Select empleado_cedula FROM clock_dbNew.empleados)         ----> DB nueva
+    
+    
+Migrar Feriados
+
+    INSERT INTO clock_dbNew.feriados(id,
+                                    feriado_nombre
+                                    feriado_coeficiente,
+                                    feriado_minimo,
+                                    feriado_fecha)
+    SELECT  IdFeriados, 
+            Feriado_Nombre
+            Feriado_Coeficiente, 
+            Feriados_Minimo, 
+            Fecha_Feriados
+    FROM clock_dbNH.feriados
+    
+Migrar Horarios
+
+    INSERT INTO clock_dbNew.horarios(id, 
+                                    horario_nombre, 
+                                    horario_entrada, 
+                                    horario_salida, 
+                                    horario_comienzobrake, 
+                                    horario_finbrake, 
+                                    horario_tiempotarde, 
+                                    horario_salidaantes)
+    SELECT  Horario_Id, 
+            Horario_Nombre, 
+            Horario_Entrada, 
+            Horario_Salida, 
+            "00:00:00", 
+            "00:00:00", 
+            "00:00:00", 
+            "00:00:00" 
+    FROM clock_dbNH.horarios
+    
+Migrar Horarios Rotativos
+
+    INSERT INTO clock_dbNew.horario_rotativos(
+                                            id,
+                                            horariorotativo_nombre,
+                                            horariorotativo_diacomienzo,
+                                            horariorotativo_diastrabajo,
+                                            fk_horario_id,
+                                            horariorotativo_diaslibres
+                                            )
+    SELECT  HorarioRotativo_Id, 
+            HorarioRotativo_Nombre, 
+            HorarioRotativo_DiaComienzo, 
+            HorarioRotativo_DiasTrabajo, 
+            Horario_Id, 
+            HorarioRotativo_DiasLibres
+    FROM clock_dbNH.horariorotativo
+    
+Migrar tipo de licencias
+
+    INSERT INTO clock_dbNew.tipo_licencias(
+                                            id,
+                                            tipolicencia_nombre
+                                            )
+    SELECT tipoLicencia_Id, TipoLicencia_Nombre
+    FROM clock_dbNH.tipolicencias
+
+Migrar licencias
+
+    INSERT INTO clock_dbNew.licencias(
+    id,
+    licencia_anio,
+    licencia_cantidad,
+    licencia_observaciones,
+    fk_tipolicencia_id,
+    fk_empleado_id
+    )
+    SELECT Licencias_Id, Licencia_Ano, Licencia_Cantidad, Licencia_Observaciones, TipoLicencia_Id, Empleado_Id
+    FROM clock_dbNH.licencias
+
+Migrar Turnos
+
+    INSERT INTO clock_dbNew.turnos(
+    id,
+    turno_nombre,
+    turno_lunes,
+    turno_martes,
+    turno_miercoles,
+    turno_jueves,
+    turno_viernes,
+    turno_sabado,
+    turno_domingo,
+    fk_horario_id
+    )
+    SELECT Turno_Id, Turno_Nombre, Turno_Lunes, Turno_Martes, Turno_Miercoles, Turno_Jueves, Turno_Viernes, Turno_Sabado, Turno_Domingo, Horario_Id
+    FROM clock_dbNH.turnos
+
+Migrar "trabaja"
+
+    INSERT INTO clock_dbNew.trabajas(
+    id,
+    trabaja_fechainicio,
+    trabaja_fechafin,
+    fk_horariorotativo_id,
+    fk_turno_id,
+    fk_horariosemanal_id,
+    fk_empleado_id
+    )
+    SELECT Trabaja_Id, Trabaja_FechaInicio, Trabaja_FechaFin, HorarioRotativo_Id, Turno_Id, HorarioSemanal_Id, Empleado_Id
+    FROM clock_dbNH.trabaja
+    

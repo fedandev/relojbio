@@ -1,0 +1,45 @@
+<style type="text/css">
+
+    h1 {
+        font: oblique bold 200% cursive;
+    }
+    
+    p {
+        margin-top:0; margin-bottom:5px;
+    }
+    
+    pre {
+        margin-top:0; margin-bottom:5px;
+    }
+    
+    tr.border_bottom td {
+      border: 1pt solid black;
+      
+    }
+    
+    table.registros {
+        border-collapse: collapse;
+        text-align: center;
+    }
+    
+    tr.cabezera {
+        background-color: #e8e8e8;
+    }
+    
+    table.registros th, table.registros td {
+        border: 1px solid black;
+    }
+    
+    table.registros tr:nth-child(even) {
+        background-color: #e8e8e8;
+    }
+    
+    .cuadrado {
+        margin-left:5px; 
+        margin-top:5px;
+        width: 10px;
+        height: 10px;
+        background: #5cb85c;
+    }
+</style>
+

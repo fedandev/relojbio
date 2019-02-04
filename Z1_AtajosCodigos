@@ -1,0 +1,30 @@
+ @foreach ($menus as $menu)
+                
+    <li class="{{ isActiveRoute($menu->Menu_URL) }}">
+        <a href="{{ url('/'.$menu->Menu_URL) }}"><i class="fa fa-th-large"></i> <span class="nav-label">Main view</span></a>
+    </li>
+        
+@endforeach
+
+
+
+php artisan make:scaffold Audit --schema="user_id:integer, event:string, auditable_id:integer, auditable_type:string, old_values:text,
+new_values:text, url:text, ip_address:string , user_agent:string, tags:string"
+
+
+php artisan make:scaffold LicenciaDetalle --schema="fecha_desde:date, fecha_hasta:date, aplica_sabado:string, aplica_domingo:string, aplica_libre:string, comentarios:string, licencia_id"
+
+faker en logs/index
+
+
+php artisan make:scaffold TipoLibre --schema="nombre:string, descripcion:string"
+
+
+Migrar solo algunos archivos:
+
+php artisan migrate --path=/database/migrations/selected/
+
+
+Setear en php.ini  para cuando da error 500
+
+    display_errors = On

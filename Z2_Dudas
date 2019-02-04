@@ -1,0 +1,20 @@
+1)  P: Para que se usa el atributo : $empleado->empleado_diferenciatiempo  
+    R: Se usaba para guardar las horas "extras" que hacia, y si un día faltaba se descontaban de ahi, pero se usaba con una funcion que habia 
+       que pasaba estas horas a esa columna, pero como casi nadie la usaba se saco. En resumen se puede eliminar esa columna.
+    
+    
+2)  P: A la licencia no habria que agregarle fecha desde y hasta? (Personal->Licencias)
+    R: A ese formulario no, ahora le cambie el nombre a "Cargar Licencia", en este se cargara la licencia que tiene el funcionario
+       libre para tomarse, cree otro menu "Asignar licencia" donde se va a asignar la licencia cargada anteriormente con su rango de 
+       fecha respectivo y cuando se de aplicar, creara los registros pertinentes a ese rango de fecha en la tabla "registros" de la db
+       y en la columna "registro_comentarios" aparecera "Licencia".
+
+3)  P: donde se utiliza Licencias?
+    R: Para los reportes de faltas mas que nada, si el funcionario se toma licencia y no se carga y aplica esa fecha le va a
+       aparecer como falta por lo tanto les puede descontar. Tambien sirve para llevar un control mas facil de la licencia de cada
+       funcionario, saber cuando se tomo, cuantos días, etc.
+       
+4)  P: donde se utilizan los feriados? en algun reporte?
+    R: Los feriados se utilizan con los reportes, saber si trabajo un feriado para la liquidacion de sueldos, si falto un día 
+       y este día era feriado no laborable saber que no se le tiene que pasar como falta, entre otros ejemplos.
+       

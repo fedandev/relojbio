@@ -1,0 +1,74 @@
+1) Iniciar Git (solo 1 vez):
+        git init
+2) Asociar con bitbucket(debe estar creado el repositorio en Bitbucket)  (solo 1 vez):
+        git remote add origin git@bitbucket.org:Bilygates/proyecto.git        
+        
+        
+3) Añadir todos los archivos al repo:
+        git add -A
+4) Commitear cambios:
+        git commit -m "Initialize repository"
+
+         
+5) Subir a Bitbucket:
+        git push -u origin --all
+        
+        Forzado:
+        
+        git push -f origin master
+        
+
+Deployment instructions
+
+
+This application is Heroku-ready. To deploy it to heroku, you have to first set up an application on Heroku, and add Heroku as a remote with this:
+        heroku git:remote -a your-app-name
+
+
+
+After that, you only have to push it to Heroku:
+        git push heroku master
+
+
+And set up the database
+        heroku run rake db:migrate  
+        heroku run rake db:seed
+
+
+Añadir colaborador a la app
+        heroku access:add asdsad@hotmail.com
+
+
+def change
+  rename_column :table_name, :old_column, :new_column
+end
+
+Ingresar consola pgsql
+
+        heroku pg:psql
+
+Restaurar datos de produccion:
+
+        pg_restore --verbose --clean --no-acl --no-owner -h $IP -p $PORT -U fsantucho -d app_development last.dump
+
+
+Pasar datos locales a Produccion:
+
+
+        heroku pg:push app_development postgresql-crystalline-89833 --app nombre_proyecto
+
+
+Ejecutar comandos en prod:
+
+        heroku run:detached php artisan migrate:fresh --force
+        
+        heroku run:detached php artisan db:seed --class UsersTableSeeder --force
+        
+        mysqldump -u fsantucho -p clock_db > bk-data-20181029.sql
+        
+        
+Importar sql a base:
+
+
+        mysqldump -u fsantucho -p clock_db < bk-data-20181029.sql       
+        

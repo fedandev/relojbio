@@ -1,0 +1,10 @@
+<option value="00:00:00">0 Hora</option>
+<option value="01:00:00">1 Hora</option>
+<option value="02:00:00">2 Horas</option>
+<option value="03:00:00">3 Horas</option>
+<option value="04:00:00">4 Horas</option>
+<option value="05:00:00">5 Horas</option>
+<option value="06:00:00">6 Horas</option>
+<option value="07:00:00">7 Horas</option>
+<option value="08:00:00">8 Horas</option>
+<option value="09:00:00">9 Horas</option>

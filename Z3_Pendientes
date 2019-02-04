@@ -1,0 +1,80 @@
+ -- CreateAndEdit TrabajasController 
+        Crear controles para que un empleado no pueda tener asignado 2 horarios en el mismo periodo de tiempo.
+		 
+asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTTPS		 
+		 
+---------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------REVISAR----------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+		 
+!!!!!!!!!!!!!!!!!!! REVISAR REPORTES CON MAS HORARIOS !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+- Ver si se esta calculando a los empleados la diferencia de horas
+
+- Autorizacion de horas extras (pensar como lo vamos a hacer) (agregar botones para autorizar y rechazar en autorizacions, cargar tabla desde carga de registros)
+
+- Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
+
+- Subir codigo para ver registros "en vivo" desde el reloj conectado.
+
+- En reporte de Faltas poner estilos para que los registros intercalen el color de fondo (blanco, gris) para hacerlo mejor a la vista.
+
+- Licencia_detalle arreglar formularios, aplicacion etc.
+    - Se crea funcion para crear registros cuando se aplica la licenica y reste los días tomados. (Chequear mas a fondo)
+    - Crear regla donde no pueda asignar licencia a un periodo de fecha donde ya tenga otra asignada.
+    - Al eliminar licencia de formulario "Asignar Licencia" borrar los registros creados en tabla "registros".
+
+- probar reportes con brake nocturno entre 2 dias
+
+- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste en horarios y horario semanal
+
+- validar los deletes cuando es fk. Agregar ajuste 'cascade_delete' para forzar el delete en cascada.
+
+- arreglar diseño responsive en tablas (los botones quedan afuera)
+
+- agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
+                Tener en cuenta fecha ingreso empleado (antiguedad). 
+                Analizar trabajador mensual (dias = meses trabajados * 1.6)
+                Analizar trabajador jornalero (dias = jornadas * 0.06)
+
+- probar performance:
+
+        funcionario     1               registros/dia   6
+        funcionarios	30000	        registros/dia 	180000
+        			
+        funcionarios	30000		registros/mes	5.580.000,00
+                        				
+        funcionarios	30000      	registros/año	66.960.000,00
+
+- Reporte de todos los empleados con columnas de las horas trabajadas por días (luunes, martes, etc) y al final 
+la suma de todas las horas.
+
+- Error al intentar sacar horas trabajadas de TODOS los empleados (ARREGLAR URGENTE).
+- Hay unos cuantos reportes que no se puede sacar para todos los empleados.
+
+---------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------ARREGLOS---------------------------------------------------------
+--------------------------------------------------Y TERMINADOS-------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+
+- Se arreglaron todos los select, no cargaban los scripts.
+- Falta menu Personal->Libres y Medicas.
+    - Al eliminar libre de formulario borra los registros creados.
+- Se agrega nuevo reporte de "Libres Concedidos".
+- Se elimina el poder editar Licencias y Libres ya aplicados, solamente se podra ver y eliminar.
+- Licencia_detalles
+    - Al eliminar el detalle de la licencia se eliminan todos los registros.
+
+- Quitar "empleado_diferenciatiempo" de tabla empleados.
+- Arreglar combo empleados en index registros
+- Se agrega parametro nuevo en ajuste "reporte_pdf" para saber si descarga o lo visualiza.
+- Se hace formularios de "tipo_libres" que faltaba hacer.
+- Agregar dashboard con graficas por oficina con mas horas trabajadas, oficiinas con mas llegadas tardes, oficinas con mas horas extras.
+    - Grafica comparando horas trabajadas por mes
+- en ajuste/nuevo controlar que no exista por nombre
+- agregar ajuste 'max_hours_ext_per_day' maximo de horas extras que un empleado puede trabajar por dia.
+- Crear TABLA tipo_libres (id, nombre, descripcion).
+    - Hablar donde se guardan los libres, si se crea una tabla aparte como licencia_detalle o que hacer.
+    - Seguir con formulario libres->index cuando este lista la tabla.
+- IMPORTANTE FALTA CREAR REPORTE DE FALTAS!
+- Terminar formulario autorizacions.

@@ -1,0 +1,69 @@
+[12-Apr-2018 02:27:37 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/ubuntu/workspace/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php on line 50
+[12-Apr-2018 02:29:52 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/ubuntu/workspace/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php on line 40
+[12-Apr-2018 02:32:27 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/ubuntu/workspace/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php on line 50
+[02-Sep-2018 22:48:26 UTC] PHP Fatal error:  Can't use method return value in write context in /home/ubuntu/workspace/app/Http/Controllers/RegistrosController.php on line 91
+[16-Oct-2018 18:58:29 UTC] PHP Fatal error:  Cannot use App\Models\LibreDetalle as LibreDetalle because the name is already in use in /home/ubuntu/workspace/app/Http/Controllers/LibreDetallesController.php on line 12
+[29-Oct-2018 20:23:09 UTC] PHP Fatal error:  Cannot use [] for reading in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 422
+[30-Oct-2018 04:05:29 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:05:32 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:05:33 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:06:01 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:06:06 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:06:34 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:06:57 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:07:27 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:08:38 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:09:07 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:10:32 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:13:05 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:14:19 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:15:40 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:15:42 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:15:43 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:15:44 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:15:57 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:16:06 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:23:41 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:25:34 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:25:35 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:26:22 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:26:24 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:26:32 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:13 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:24 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:26 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:27 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:28 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:29 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:27:29 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:30:48 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 04:34:21 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:34:08 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:38:30 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:38:47 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:39:20 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:39:57 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:41:06 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:44:57 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:47:40 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 12:50:42 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 13:22:34 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[30-Oct-2018 13:26:36 UTC] PHP Parse error:  syntax error, unexpected '=' in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Support/Arr.php on line 388
+[01-Nov-2018 13:50:26 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Dispositivo. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Dispositivo.php on line 6
+[01-Nov-2018 13:55:26 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Conversacion. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Conversacion.php on line 6
+[01-Nov-2018 13:55:53 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:02:36 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:02:57 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:03:22 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:03:30 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:03:52 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:04:37 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[01-Nov-2018 14:06:22 UTC] PHP Fatal error:  App\Models\Model and OwenIt\Auditing\Auditable define the same property ($auditingDisabled) in the composition of App\Models\Feriado. However, the definition differs and is considered incompatible. Class was composed in /home/ubuntu/workspace/app/Models/Feriado.php on line 6
+[02-Nov-2018 03:57:48 UTC] PHP Fatal error:  Can't use function return value in write context in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 134
+[04-Nov-2018 02:29:00 UTC] PHP Fatal error:  Cannot redeclare horarioAfecha() (previously declared in /home/ubuntu/workspace/app/Http/helpers.php:120) in /home/ubuntu/workspace/app/Http/helpers.php on line 150
+[04-Nov-2018 02:29:39 UTC] PHP Fatal error:  Cannot redeclare horarioAfecha() (previously declared in /home/ubuntu/workspace/app/Http/helpers.php:120) in /home/ubuntu/workspace/app/Http/helpers.php on line 150
+[04-Nov-2018 02:45:54 UTC] PHP Fatal error:  Cannot redeclare horarioAfecha() (previously declared in /home/ubuntu/workspace/app/Http/helpers.php:120) in /home/ubuntu/workspace/app/Http/helpers.php on line 150
+[06-Nov-2018 18:08:06 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 17
+[09-Nov-2018 04:32:54 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\HomeController::LlegadasTardeMesAnterior() in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 114
+[09-Nov-2018 04:33:12 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\HomeController::LlegadasTardeMesAnterior() in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 114
+[09-Nov-2018 04:36:05 UTC] PHP Fatal error:  Cannot use empty array elements in arrays in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 206
