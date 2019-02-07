@@ -67,3 +67,24 @@
 [09-Nov-2018 04:32:54 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\HomeController::LlegadasTardeMesAnterior() in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 114
 [09-Nov-2018 04:33:12 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\HomeController::LlegadasTardeMesAnterior() in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 114
 [09-Nov-2018 04:36:05 UTC] PHP Fatal error:  Cannot use empty array elements in arrays in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 206
+[04-Feb-2019 15:15:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::withFacades() in /home/ubuntu/workspace/bootstrap/app.php:46
+Stack trace:
+#0 /home/ubuntu/workspace/public/index.php(38): require_once()
+#1 {main}
+  thrown in /home/ubuntu/workspace/bootstrap/app.php on line 46
+[04-Feb-2019 15:15:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::withFacades() in /home/ubuntu/workspace/bootstrap/app.php:46
+Stack trace:
+#0 /home/ubuntu/workspace/public/index.php(38): require_once()
+#1 {main}
+  thrown in /home/ubuntu/workspace/bootstrap/app.php on line 46
+[04-Feb-2019 15:15:43 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::withFacades() in /home/ubuntu/workspace/bootstrap/app.php:46
+Stack trace:
+#0 /home/ubuntu/workspace/public/index.php(38): require_once()
+#1 {main}
+  thrown in /home/ubuntu/workspace/bootstrap/app.php on line 46
+[04-Feb-2019 15:15:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::withFacades() in /home/ubuntu/workspace/bootstrap/app.php:46
+Stack trace:
+#0 /home/ubuntu/workspace/public/index.php(38): require_once()
+#1 {main}
+  thrown in /home/ubuntu/workspace/bootstrap/app.php on line 46
+[04-Feb-2019 18:53:33 UTC] PHP Fatal error:  Maximum execution time of 300 seconds exceeded in /home/ubuntu/workspace/vendor/dompdf/dompdf/src/Dompdf.php on line 548

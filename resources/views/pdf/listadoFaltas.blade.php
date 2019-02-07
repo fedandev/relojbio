@@ -6,13 +6,15 @@
     $format_fecha=ajuste('date_format');
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
+    $ultimo ='N';
+    $i = 0;
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
     	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    	<title>LLEGADAS TARDES</title>
+    	<title>LISTADO DE FALTAS</title>
     	<link rel="stylesheet" href="{{ asset('css/pdf2.css') }}" />
     </head>
     <body>
@@ -24,18 +26,19 @@
     		</div>
     		
     		<div id="logo">
-                <!--<img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>-->
-                 <h4 class="logo-name">SGRRHH+</h>
+                <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
             </div>
+            
     		<div style="clear:both"></div>
+    		
     		<div id="customer">
                 <textarea id="customer-title">
                     @if(isset($oficina))
                         Oficina {{ $oficina->oficina_nombre }}
-                    @elseif(isset($nombres))
-                        Empleado {{ $nombres }}
-                    @else
+                    @elseif(count($empleados)>1)
                         Todas las oficinas
+                    @else
+                        Empleado: {{ $empleados[0]->empleado_nombre }} {{ $empleados[0]->empleado_apellido }}
                     @endif
                 </textarea>
     		</div>

@@ -3,6 +3,6 @@
         
     </div>
     <div>
-        <strong>Copyright</strong> SGRHH+ &copy; 2019 -prrr
+        <strong>Copyright</strong> SGRHH+ &copy; 2019
     </div>
 </div>

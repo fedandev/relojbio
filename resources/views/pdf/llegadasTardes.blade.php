@@ -33,8 +33,7 @@
 		</div>
 		
 		<div id="logo">
-            <!--<img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>-->
-             <h4 class="logo-name">SRRHH+</h>
+            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
         </div>
 		
 		<div style="clear:both"></div>

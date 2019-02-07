@@ -2,7 +2,7 @@
         git init
 2) Asociar con bitbucket(debe estar creado el repositorio en Bitbucket)  (solo 1 vez):
         git remote add origin git@bitbucket.org:Bilygates/proyecto.git        
-        
+----------------------------------------------------------------------------------------------------
         
 3) Añadir todos los archivos al repo:
         git add -A
@@ -17,6 +17,13 @@
         
         git push -f origin master
         
+
+USER: fedandev
+pass: fernet$15
+
+
+
+
 
 Deployment instructions
 

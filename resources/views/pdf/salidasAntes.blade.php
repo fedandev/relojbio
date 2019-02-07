@@ -21,7 +21,7 @@
 
 	<div id="page-wrap">
 
-		<textarea id="header">HORAS EXTRAS</textarea>
+		<textarea id="header">SALIDAS ANTES DE HORA</textarea>
 		
 		<div id="identity">
 		
@@ -31,8 +31,7 @@
 		</div>
 		
 		<div id="logo">
-            <!--<img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>-->
-             <h4 class="logo-name">SGRRHH+</h>
+            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
         </div>
 		
 		<div style="clear:both"></div>

@@ -54,6 +54,7 @@
                                 <div class="col-sm-4">
                                     <input type="hidden" name="oficina" id="id_oficina" value="{{ old('fk_oficina_id') }}"/>
                                     <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field">
+                                        <option value="ALL">TODAS</option>
                                         @include('layouts.oficinas')
                                     </select>
                                 </div>
@@ -137,6 +138,7 @@
                     $('#div_oficina').show();
                 }else{
                     $('#div_oficina').hide();
+                    
                 }
             });
             

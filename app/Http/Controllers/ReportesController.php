@@ -11,6 +11,8 @@ use App\Models\Oficina;
 use App\Models\Trabaja;
 use DateTime;
 use Barryvdh\DomPDF\Facade as PDF;
+use Dompdf\Options;
+use Dompdf\Dompdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 
@@ -29,32 +31,36 @@ class ReportesController extends Controller
         }
 	}
     
-    public function horasTrabajadasEmpleado(Request $request, Empleado $empleado){
+    public function horasTrabajadasEmpleado(Request $request, Empleado $empleados){
         $controller = 'reportes';
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
 		if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         
+        $for = "N";
         $fechainicio = $request->input('fechainicio');
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
-        $empleado = Empleado::where('empleado_cedula',$cedula)->get();
+        $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         $fk_oficina_id = $request->input('fk_oficina_id');
         
         if($cedula !='' && $cedula != 'ALL'){
             $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                return redirect()->route('main')->with('error', 'Por favor seleccione un empleado.');
-                //$empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
-            }else{
-                return redirect()->route('main')->with('error', 'Por favor seleccione una oficina.');
-                //$empleados = Empleado::all();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
             }
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $empleados = Empleado::all();    
+            $for = "S";
         }
         
-        $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->get();
+        if($for == 'N'){
+            $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->get();
+        }elseif($for == 'S'){
+            $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->get();
+        }
         
         $tiposRegistros = array(
             array("Nombre" => "Manual",
@@ -74,7 +80,8 @@ class ReportesController extends Controller
             ),
         );
         
-        $pdf = PDF::loadView('pdf.horasTrabajadas', compact('registros','fechainicio','fechafin','empleado','tiposRegistros','suma'));
+        $pdf = PDF::loadView('pdf.horasTrabajadas', compact('registros','fechainicio','fechafin','empleados','tiposRegistros','suma'));
+
     	if($Rpdf->ajuste_valor == 'stream'){
             return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
         }elseif($Rpdf->ajuste_valor == 'download'){
@@ -88,16 +95,30 @@ class ReportesController extends Controller
 		if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.'); 
         }
-        
+        $for = 'N';
     	$fechainicio = $request->input('fechainicio');
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
-        $empleado = Empleado::where('empleado_cedula',$cedula)->get();
+        $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         
-    	$registros = Registro::whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->orderBy('registro_fecha', 'desc')->get();
+        if($cedula !='' && $cedula != 'ALL'){
+            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
+            if($fk_oficina_id != NULL){
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+            }
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $empleados = Empleado::all();    
+            $for = "S";
+        }
         
-    	
-    	$pdf = PDF::loadView('pdf.entradasYsalidas', compact('registros','fechainicio','fechafin','empleado'));
+        if($for == 'N'){
+            $registros = Registro::whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->orderBy('registro_fecha')->get();
+        }elseif($for == 'S'){
+            $registros = Registro::whereBetween('registro_fecha', array($fechainicio,$fechafin))->orderBy('registro_fecha')->get();
+        }
+        
+    	$pdf = PDF::loadView('pdf.entradasYsalidas', compact('registros','fechainicio','fechafin','empleados'));
     	
     	if($Rpdf->ajuste_valor == 'stream'){
             return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
@@ -122,11 +143,11 @@ class ReportesController extends Controller
         if($cedula !='' && $cedula != 'ALL'){
             $sql = $sql. " AND fk_empleado_cedula = '".$cedula."'";
             $oficina = Oficina::find($fk_oficina_id);
-        }
-        
-        if($fk_oficina_id > 0 && $cedula == 'ALL' ){
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL' ){
             $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados WHERE fk_oficina_id = ".$fk_oficina_id.")";
             $oficina = Oficina::find($fk_oficina_id);
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados)";     
         }
         
         $sql = $sql." order by registro_fecha asc, fk_empleado_cedula, registro_tipo ";
@@ -148,7 +169,6 @@ class ReportesController extends Controller
             
             $empleado = $registro->Empleado;
             $horario = $empleado->HorarioEnFecha($registro_fecha);
-            
            
             if(!is_null($horario)){
                 if(!is_null($horario->fk_horariorotativo_id)){
@@ -156,12 +176,11 @@ class ReportesController extends Controller
                 }elseif(!is_null($horario->fk_turno_id)){
                     $horario_ax = $horario->turno->horario;
                 }
-            
+                
                 if(!is_null($horario_ax)){
                     $horario_entrada = new DateTime($registro_fecha.' '.$horario_ax->horario_entrada); 
                     $horario_salida = new DateTime($registro_fecha.' '.$horario_ax->horario_salida); 
                     $hay_brake = $horario_ax->horario_haybrake;
-                    
                
                     if($registro_hora_d < $horario_entrada){         //hora nocturna aumento un dia
                         $diff = date_diff($horario_entrada, $registro_hora_d);
@@ -200,8 +219,9 @@ class ReportesController extends Controller
                         //consulto si es la primera entrada del dia;
                         $f_inicio = $horario_entrada_2->format('Y-m-d H:i:s');
                         $f_fin = $horario_salida->format('Y-m-d H:i:s');
-                        $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' order by registro_hora limit 1" ;
+                        $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."' order by registro_hora limit 1" ;
                         $reg_sql =  DB::select($sql);
+                        
                         if($reg_sql[0]->registro_hora == $registro_hora_d->format('Y-m-d H:i:s')){
                             $ok='S';
                         }else{
@@ -223,7 +243,7 @@ class ReportesController extends Controller
                                 //consulto si es la primera entrada despues del fin del brake y el horario de salida;
                                 $f_inicio = $horario_finbrake->format('Y-m-d H:i:s');
                                 $f_fin = $horario_salida->format('Y-m-d H:i:s');
-                                $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' order by registro_hora limit 1" ;
+                                $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."'  order by registro_hora limit 1" ;
                                 $reg_sql =  DB::select($sql);
                                 
                                 if($reg_sql){
@@ -233,7 +253,7 @@ class ReportesController extends Controller
                                 }
                             }
                         }
-                     
+                        
                         if($ok=='S'){
                             $registros_ok[$iRegistros] = $registro;
                             $iRegistros = $iRegistros + 1;
@@ -253,7 +273,7 @@ class ReportesController extends Controller
                 return $pdf->download('listado.pdf');             //Forzar descarga de PDF
             }
         }else{
-            return back()->with('warning', "No hay llegadas tardes para el empleado $empleado->empleado_nombre $empleado->empleado_apellido o no se encontraron datos.")->withInput();
+            return back()->with('warning', "No se encontraron datos.")->withInput();
         }
     }
     
@@ -268,7 +288,6 @@ class ReportesController extends Controller
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
         
-        
         $fk_oficina_id = $request->input('fk_oficina_id');
         
         $sql= "SELECT * FROM registros WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."'  AND registro_tipo='O' " ;
@@ -276,22 +295,26 @@ class ReportesController extends Controller
         if($cedula !='' && $cedula != 'ALL'){
             $sql = $sql. " AND fk_empleado_cedula = '".$cedula."'";
             $oficina = Oficina::find($fk_oficina_id);
+        
         }
         
         if($fk_oficina_id > 0 && $cedula == 'ALL' ){
             $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados WHERE fk_oficina_id = ".$fk_oficina_id.")";
             $oficina = Oficina::find($fk_oficina_id);
+           
         }
         
-        $sql = $sql." order by registro_hora asc, fk_empleado_cedula, registro_tipo ";
+      
+        
+        $sql = $sql." order by fk_empleado_cedula, registro_hora asc , registro_tipo ";
         
         $registros_sql =  DB::select($sql);
         
         $registros = Registro::hydrate($registros_sql); // paso a collecion de registros
- 
-       
+
         $iRegistros = 0;
         $registros_ok = [];
+        
         
         //busco el horario a la fecha porque en un periodo de fechas pueden existir horarios distintos
         foreach($registros as $registro){
@@ -316,7 +339,7 @@ class ReportesController extends Controller
                     $horario_salida = new DateTime($registro_fecha.' '.$horario_ax->horario_salida); 
                     $hay_brake = $horario_ax->horario_haybrake;
                     
-               
+                    
                     if($registro_hora_d > $horario_salida){         //hora nocturna aumento un dia
                         $diff = date_diff($registro_hora_d, $horario_salida);
                         $horas = intval($diff->format('%h'));
@@ -328,14 +351,14 @@ class ReportesController extends Controller
                         if($horario_entrada > $registro_hora_d){           
                             $diff = date_diff($horario_entrada,$registro_hora_d);
                             $horas = intval($diff->format('%h'));
-                            
-                            if ($diff->format('%r') =='-' && $horas > 6){
+                           
+                            if ($diff->format('%r') =='-' && $horas > 0){
                                 $horario_entrada= $horario_entrada->modify('- 1 day');
                             }
                             
                         }
                     }
-                    //dd($horario_entrada, $diff, $horas);
+                    
                     $horario_tope = $horario_entrada;
                
                     $tolerencia_antes = $horario_ax->horario_salidaantes;
@@ -344,19 +367,19 @@ class ReportesController extends Controller
                     
                     $horario_salida_men_antes = $horario_salida;
                     $horario_salida_men_antes= $horario_salida_men_antes->modify('-'.$minutes_antes.' minutes');
-                    
-               
-                    if($registro_hora_d < $horario_salida_men_antes && $registro_hora_d  > $horario_tope){              //siempre comparo entre formato dd/mm/aaaa hh:mm:ss
+                    //dd($registro_hora_d,$horario_salida_men_antes,$horario_tope);
+                    if($registro_hora_d < $horario_salida_men_antes && $registro_hora_d  > $horario_tope){
+                        //siempre comparo entre formato dd/mm/aaaa hh:mm:ss
                         $ok = 'S';
                         if($hay_brake =='S'){
                             $horario_comienzobrake = new DateTime($registro_fecha.' '.$horario_ax->horario_comienzobrake); 
-                            $horario_entrada_2 = new DateTime($registro_fecha.' '.$horario_ax->horario_entrada); 
+                            $horario_entrada_2 = new DateTime($registro_fecha.' '.$horario_ax->horario_entrada);
+                            
                             if($horario_entrada_2 > $horario_comienzobrake){
                                 $horario_comienzobrake= $horario_comienzobrake->modify('+ 1 day');
                             }
                             
                             $horario_comienzobrake= $horario_comienzobrake->modify('-'.$minutes_antes.' minutes');
-                            
                             
                             $horario_finbrake = new DateTime($registro_fecha.' '.$horario_ax->horario_finbrake); 
                             $horario_salida_2 = new DateTime($registro_fecha.' '.$horario_ax->horario_salida); 
@@ -365,7 +388,6 @@ class ReportesController extends Controller
                                 $horario_finbrake= $horario_finbrake->modify('- 1 day');
                             }
                             
-                            
                             if($registro_hora_d >= $horario_comienzobrake &&  $registro_hora_d < $horario_finbrake){    //Si salio dentro de la hora del descanso no es salida antes
                                 $ok = 'N';   
                             }
@@ -373,17 +395,11 @@ class ReportesController extends Controller
                             //     $ok = 'N';       
                             // }
                         }
-                        
                         if($ok == 'S'){
                             $registros_ok[$iRegistros] = $registro;
                             $iRegistros = $iRegistros + 1;
                         }
-                        
-                    
-                        
                     }
-                            
-                   
                 }
             }
             
@@ -428,19 +444,20 @@ class ReportesController extends Controller
             $sql = $sql. " AND fk_empleado_cedula = '".$cedula."'";
             $fk_oficina_id = $empleado->fk_oficina_id;
             $oficina = Oficina::find($fk_oficina_id);
-        }
-        
-        if($fk_oficina_id > 0 && $cedula == 'ALL' ){
+            $empleados = 0;
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL' ){
             $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados WHERE fk_oficina_id = ".$fk_oficina_id.")";
             $oficina = Oficina::find($fk_oficina_id);
+            $empleados = 0;
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $empleados = 2;
+            $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados)";
         }
         
         $sql = $sql." order by registro_fecha asc ";
         
-        //$registros = DB::select("SELECT * FROM  v_horas WHERE  fk_empleado_cedula =  :cedula AND  registro_fecha BETWEEN  :fechainicio AND  :fechafin AND TIME(registro_entrada) >=  :inicioNoche AND TIME(registro_salida) <= :finNoche ORDER BY registro_fecha ASC", ['cedula' => $cedula, 'fechainicio' => $fechainicio, 'fechafin' => $fechafin, 'inicioNoche' => $inicioNoche, 'finNoche' => $finNoche]);
-        ///$registros = DB::select("SELECT *  FROM v_inout WHERE fk_empleado_cedula =  :cedula AND registro_fecha BETWEEN  :fechainicio AND  :fechafin  AND ((TIME( registro_entrada ) >=  :inicioNoche AND TIME( registro_entrada ) <=  '23:59:59') OR  (TIME( registro_salida ) >=  '00:00:00' AND TIME( registro_salida ) <=  :finNoche)) ORDER BY registro_fecha ASC", ['cedula' => $cedula, 'fechainicio' => $fechainicio, 'fechafin' => $fechafin, 'inicioNoche' => $inicioNoche, 'finNoche' => $finNoche]);
         $registros = DB::select($sql);
-        //
+
         $registros = collect( $registros);
      
         foreach($registros as $registro){
@@ -461,7 +478,7 @@ class ReportesController extends Controller
             }
         }
         
-        $pdf = PDF::loadView('pdf.horasNocturnas', compact('registros','fechainicio','fechafin','oficina'));
+        $pdf = PDF::loadView('pdf.horasNocturnas', compact('registros','fechainicio','fechafin','oficina','empleado','empleados'));
     	
         if($Rpdf->ajuste_valor == 'stream'){
             return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
@@ -470,7 +487,7 @@ class ReportesController extends Controller
         }
     }
     
-    public function listadoFaltas(Request $request){
+    public function listadoFaltas_fafa(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
 		if (!Gate::allows('view-report', $controller)) {
@@ -487,35 +504,40 @@ class ReportesController extends Controller
             $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL' ){
             $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $empleados = Empleado::all();
         }
-        
         foreach($empleados as $empleado){
             $registros_array = array();
             $registros_diff = array();
+            
             $trabajas = Trabaja::where('trabaja_fechainicio','<=',$fechaInicio)->where('trabaja_fechafin','>=',$fechaFin)->where('fk_empleado_id',$empleado->id)->get();
             foreach($trabajas as $trabaja){
                 if($trabaja->fk_horariorotativo_id != null){
-                    $trabaja = $trabaja->HorarioRotativo->horariorotativo_diastrabajo;
+                    $trabajo = $trabaja->HorarioRotativo->horariorotativo_diastrabajo;
                     $libre = $trabaja->HorarioRotativo->horariorotativo_diaslibres;
                     $comienza = $trabaja->HorarioRotativo->horariorotativo_diacomienzo;
                     
-                    $diasQueTrabaja = $this->Diasquetrabajarotativo($trabaja, $libre, $comienza, $fechaInicio);
+                    $diasQueTrabaja = $this->Diasquetrabajarotativo($trabajo, $libre, $comienza, $fechaInicio);
                     
-                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
+                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->whereBetween('registro_fecha', [$fechaInicio,$fechaFin])->get();
                     
                     foreach($registros as $registro){
                         array_push($registros_array, $registro->registro_fecha);
                     }
                     
                     $registros_diff = array_diff($diasQueTrabaja,$registros_array);
-                    
                 }elseif($trabaja->fk_turno_id != null){
                     $diasQueTrabaja = $this->Diasquetrabaja($fechaInicio, $fechaFin, $trabaja);
-                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
-
+                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->whereBetween('registro_fecha', [$fechaInicio,$fechaFin])->get();
+                    
+                    
+                    
                     foreach($registros as $registro){
                         array_push($registros_array, $registro->registro_fecha);
                     }
+                    
+                    
                     $registros_diff = array_diff($diasQueTrabaja,$registros_array);
                 }
                 $nombres = $trabaja->empleado->empleado_nombre ." ". $trabaja->empleado->empleado_apellido;
@@ -533,7 +555,7 @@ class ReportesController extends Controller
         $registros_ok = collect($registros_ok);
         
         if($registros_ok->count() > 0){
-            $pdf = PDF::loadView('pdf.listadoFaltas', compact('registros_ok','fechaInicio','fechaFin','oficina','nombres'));
+            $pdf = PDF::loadView('pdf.listadoFaltas', compact('registros_ok','fechaInicio','fechaFin','oficina','empleados'));
     	    if($Rpdf->ajuste_valor == 'stream'){
                 return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
             }elseif($Rpdf->ajuste_valor == 'download'){
@@ -569,7 +591,6 @@ class ReportesController extends Controller
     		}
     		if($i<$diaSemana || $i>=$last_cell){
     		}else{
-    			// mostramos el dia
     			if($day<10){
     				$day='0'.$day;
     			}
@@ -587,16 +608,17 @@ class ReportesController extends Controller
     			$contador++;
     			if($contador<=$trabajoingresado){
     				if($primerdia==0){
-    					if($fecha == $empezamos){
+    				    $NombreDia = $dias[$fecha];
+    					if($NombreDia == $empezamos){
     						//echo '---'.$agregar.'---';
-    						$diastrab[$x][0]=$agregar;
+    						$diastrab[$x]=$agregar;
     						$x++;
     						$primerdia = 1;
     					}else{
     						$contador--;
     					}
     				}else{
-    					$diastrab[$x][0]=$agregar;
+    					$diastrab[$x]=$agregar;
     					$x++;
     				}
     			}else{
@@ -611,6 +633,7 @@ class ReportesController extends Controller
     		if($i%7==0){
     		}
     	}
+    	
     	return $diastrab;
     }
     
@@ -732,4 +755,77 @@ class ReportesController extends Controller
             return $pdf->download('listado.pdf');             //Forzar descarga de PDF
         }
     }
+    
+    
+    
+    
+    
+    
+    public function listadoFaltas(Request $request){
+        $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
+        $controller = 'reportes';
+		if (!Gate::allows('view-report', $controller)) {
+           return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
+		}
+        $fechaInicio = $request->input('fechainicio');
+        $fechaFin = $request->input('fechafin');
+        $cedula = $request->input('fk_empleado_cedula');
+        $fk_oficina_id = $request->input('fk_oficina_id');
+        
+        $x = 0;
+        
+        if($cedula !='' && $cedula != 'ALL'){
+            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL' ){
+            $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+        }elseif($fk_oficina_id == 0 && $cedula == 'ALL'){
+            $empleados = Empleado::all();
+        }
+        
+        foreach($empleados as $empleado){
+            
+            $fechaDo = $fechaInicio;
+            while (strtotime($fechaDo) <= strtotime($fechaFin)  ) {
+                $horario = $empleado->HorarioEnFecha($fechaDo);
+                
+                if(!is_null($horario)){
+                    $horario_ax = null;    
+                    if(!is_null($horario->fk_horariorotativo_id)){
+                        $horario_ax = $horario->horariorotativo->horario;
+                    }elseif(!is_null($horario->fk_turno_id)){
+                        $horario_ax = $horario->turno->horario;
+                    }
+                    
+                    if (!is_null($horario_ax)){
+                        $registros = Registro::where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->where('registro_fecha', '=',$fechaDo )->get();
+                       
+                        if ($registros->count() == 0){
+                            $nombres = $empleado->empleado_nombre ." ". $empleado->empleado_apellido;
+                            $cedula = $empleado->empleado_cedula;
+                            $registros_ok[$x][0] = $cedula;
+                            $registros_ok[$x][1] = $nombres;
+                            $registros_ok[$x][2] = $fechaDo;
+                            $x++;
+                        }
+                    }
+                }
+                $fechaDo = date ("Y-m-d", strtotime("+1 day", strtotime($fechaDo)));
+	        }
+        }
+
+        $registros_ok = collect($registros_ok);
+        
+        if($registros_ok->count() > 0){
+            $pdf = PDF::loadView('pdf.listadoFaltas', compact('registros_ok','fechaInicio','fechaFin','oficina','empleados'));
+    	    if($Rpdf->ajuste_valor == 'stream'){
+                return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
+            }elseif($Rpdf->ajuste_valor == 'download'){
+                return $pdf->download('listado.pdf');             //Forzar descarga de PDF
+            }
+        }else{
+            return back()->with('warning', "No hay llegadas tardes para el empleado $empleado->empleado_nombre $empleado->empleado_apellido o no se encontraron datos.")->withInput();
+        }
+    }
+    
+    
 }

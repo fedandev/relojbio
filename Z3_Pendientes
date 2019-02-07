@@ -2,6 +2,11 @@
         Crear controles para que un empleado no pueda tener asignado 2 horarios en el mismo periodo de tiempo.
 		 
 asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTTPS		 
+
+
+---------------------NEWS-----------
+
+- Agregar para que se pueda ver el horarios/s de empleado en la vista de empleados
 		 
 ---------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------REVISAR----------------------------------------------------------
@@ -49,6 +54,8 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 - Reporte de todos los empleados con columnas de las horas trabajadas por días (luunes, martes, etc) y al final 
 la suma de todas las horas.
 
+
+
 - Error al intentar sacar horas trabajadas de TODOS los empleados (ARREGLAR URGENTE).
 - Hay unos cuantos reportes que no se puede sacar para todos los empleados.
 
@@ -78,3 +85,19 @@ la suma de todas las horas.
     - Seguir con formulario libres->index cuando este lista la tabla.
 - IMPORTANTE FALTA CREAR REPORTE DE FALTAS!
 - Terminar formulario autorizacions.
+- Se modifica reportes de PDF.
+- Error en reporte salida antes, solo muestra algunos registros. (Adjunto SQL para ver los registros)
+        SELECT reg.registro_hora, reg.registro_fecha, emp.empleado_cedula, emp.empleado_nombre, hor.horario_salida, CASE WHEN (TIME(reg.registro_hora)) < hor.horario_salida THEN 'SALIO ANTES' ELSE 'No' END AS Continent
+        FROM registros reg, empleados emp, horarios hor, turnos tur, trabajas tra
+        WHERE reg.registro_fecha
+        BETWEEN  '2018-04-01'
+        AND  '2018-04-30'
+        AND reg.registro_tipo =  'O'
+        AND reg.fk_empleado_cedula = emp.empleado_cedula
+        AND emp.id = tra.fk_empleado_id
+        AND tra.fk_turno_id = tur.id
+        AND tur.fk_horario_id = hor.id
+        AND reg.registro_fecha
+        BETWEEN tra.trabaja_fechainicio
+        AND tra.trabaja_fechafin
+        LIMIT 0 , 30
