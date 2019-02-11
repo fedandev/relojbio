@@ -48,6 +48,21 @@
                                     <label class="col-sm-2 control-label">Teléfono</label>
                                     <div class="col-sm-6"><input class="form-control" type="text" name="empresa_telefono" id="empresa_telefono-field" value="{{ old('empresa_telefono', $empresa->empresa_telefono ) }}"></div>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Teléfono 2</label>
+                                    <div class="col-sm-6"><input class="form-control" type="text" name="empresa_telefono2" id="empresa_telefono2-field" value="{{ old('empresa_telefono2', $empresa->empresa_telefono2 ) }}"></div>
+                                </div>
+                                
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-6"><input class="form-control" type="email" name="empresa_email" id="empresa_email-field" value="{{ old('empresa_email}', $empresa->empresa_email ) }}"></div>
+                                </div>
+                                
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email 2</label>
+                                    <div class="col-sm-6"><input class="form-control" type="email" name="empresa_email2" id="empresa_email2-field" value="{{ old('empresa_email2}', $empresa->empresa_email2 ) }}"></div>
+                                </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Estado </label>

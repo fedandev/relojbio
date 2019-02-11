@@ -6,7 +6,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Empresa extends Model implements Auditable
 {       
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['empresa_nombre', 'empresa_telefono', 'empresa_estado', 'empresa_ingreso'];
+    protected $fillable = ['empresa_nombre', 'empresa_telefono', 'empresa_estado', 'empresa_ingreso','empresa_email', 'empresa_email2', 'empresa_telefono2'];
     public $timestamps = false;
     
     public function Dispositivos(){

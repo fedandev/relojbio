@@ -37,6 +37,29 @@
                             <div class="hr-line-dashed"></div>
                             
                             <div class="form-group">
+                                <label class="col-lg-2 control-label">Telefono 2</label>
+                                <div class="col-lg-10"><p class="form-control-static">{{  $empresa->empresa_telefono2 }} </p></div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Email</label>
+                                <div class="col-lg-10"><p class="form-control-static">{{  $empresa->empresa_email }} </p></div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Email 2</label>
+                                <div class="col-lg-10"><p class="form-control-static">{{  $empresa->empresa_email2 }} </p></div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            
+                            <div class="form-group">
                                 <label class="col-lg-2 control-label">Estado</label>
                                 <div class="col-lg-10"><p class="form-control-static"> 
                                     @if ($empresa->empresa_estado == 1)

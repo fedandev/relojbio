@@ -6,6 +6,9 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 -----------------------------------------------------NEWS------------------------------------------------------------
 
 - Agregar para que se pueda ver el horarios/s de empleado en la vista de empleados
+
+
+- Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
 		 
 ---------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------REVISAR----------------------------------------------------------
@@ -17,7 +20,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 
 - Autorizacion de horas extras (pensar como lo vamos a hacer) (agregar botones para autorizar y rechazar en autorizacions, cargar tabla desde carga de registros)
 
-- Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
 
 - Subir codigo para ver registros "en vivo" desde el reloj conectado.
 
