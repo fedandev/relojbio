@@ -7,6 +7,7 @@
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
     $maxExtras = ajuste('max_hours_ext_per_day');
+    $empleado_header =  ($registros_ok->count() > 0 ? App\Models\Empleado::where('empleado_cedula',$registros_ok[0]['fk_empleado_cedula'] )->first() : ''); 
 @endphp
 
 
@@ -22,77 +23,63 @@
 
 	<div id="page-wrap">
 		<textarea id="header">HORAS EXTRAS</textarea>
-		
-		<div id="identity">
-            <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-			</textarea>
-		</div>
-		
-		<div id="logo">
-            <!--<img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>-->
-        	 <h4 class="logo-name">SGRRHH+</h>
-        </div>
-		
-		<div style="clear:both"></div>
-		
-		<div id="customer">
-            <textarea id="customer-title">
-                @if(isset($oficina))
-                    Oficina {{ $oficina->oficina_nombre }}
-                @else
-                    Todas las oficinas
-                @endif
-            </textarea>
-		</div>
-		
-		<div id="meta-box">
-			<table id="meta">
-                <tr>
-                    <td class="meta-head">Fecha Inicio</td>
-                    <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">Fecha Fin</td>
-                    <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
-                </tr>
-            </table>
-		</div>
+		@include('pdf.cabecera')	
+	
 		
 		<table id="items">
 			<tr id="title">
 				<th>Empleado</th>
 				<th>Cedula</th>
 				<th>Fecha</th>
+				<th>Horas a Trabajar</th>
+				<th>Horas Trabajadas</th>
 				<th>Horas Extras</th>
 			</tr>
-			@if($registros->count())
-				@php
-					$igual = '';
-				@endphp
-				@foreach($registros as $registro)
-					@if($igual != $registro->fk_empleado_cedula)
-						@php
-							$Empleado = App\Models\Empleado::where('empleado_cedula', $registro->fk_empleado_cedula)->first();
-							$horario = horarioAfecha( $Empleado->id, $registro->registro_fecha);
-							$horas = totalHorasAfecha($horario);
-							
-							$aExtras = totalExtras($registros, $horas);
-							
-							$salida = $horario[1];
-							$igual = $registro->fk_empleado_cedula;
-						@endphp
-						
-						@foreach($aExtras as $extra)
-							@if($extra[2] <= $maxExtras)
-								<tr>
-									<td>{{ $Empleado->empleado_nombre }} {{ $Empleado->empleado_apellido }}</td>
-									<td>{{ $Empleado->empleado_cedula }}</td>
-									<td>{{ $extra[1] }}</td>
-									<td>{{ $extra[2] }}</td>
-								</tr>
-							@endif
-					   	@endforeach
-					@endif
+			@if($registros_ok->count())
+				 @php
+	                $i=0;
+	                $first_cedula = $empleado_header->empleado_cedula;
+	            @endphp
+				@foreach($registros_ok as $registro)
+					<?php $i++; ?>
+                    @if ($i == 29 || $registro['fk_empleado_cedula'] <> $first_cedula)
+                     
+                        @php
+			                $i=0;
+			                echo '</table>';
+			                $first_cedula = $registro['fk_empleado_cedula'];
+			                $empleado_header = App\Models\Empleado::where('empleado_cedula',$registro['fk_empleado_cedula'] )->first();
+			            @endphp
+        			     
+                        <div id="footer">
+                          <div class="page-number"></div>
+                        </div>
+			            <div style="page-break-after:always;"></div>
+			            <textarea id="header">HORAS EXTRAS</textarea>
+	                    @include('pdf.cabecera')
+			            @php
+			                echo '<table id="items" >'
+			            @endphp
+        			     
+			            <tr id="title">
+							<th>Empleado</th>
+							<th>Cedula</th>
+							<th>Fecha</th>
+							<th>Horas a Trabajar</th>
+							<th>Horas Trabajadas</th>
+							<th>Horas Extras</th>
+						</tr>
+                    @endif
+					
+					<tr>
+						<td>{{ $registro['empleado'] }}</td>
+						<td>{{ $registro['fk_empleado_cedula'] }}</td>
+						<td>{{ $registro['registro_fecha'] }}</td>
+						<td>{{ $registro['horas_debe_trabajar'] }}</td>
+						<td>{{ $registro['horas_trabajadas'] }}</td>
+						<td>{{ $registro['horas_extras'] }}</td>
+					</tr>
+					
 				@endforeach
 			@else
 				<tr>
@@ -102,6 +89,9 @@
 				</tr>    
 			@endif
 		</table>
+		<div id="footer">
+          <div class="page-number"></div>
+        </div>
 	</div>
 </body>
 </html>

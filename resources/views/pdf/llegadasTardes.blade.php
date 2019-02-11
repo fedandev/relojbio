@@ -7,6 +7,8 @@
     $format_fecha=ajuste('date_format');
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
+    $empleado_header =  ($registros_ok->count() > 0 ? $registros_ok[0]->empleado : ''); 
+    
 @endphp
 
 
@@ -21,47 +23,12 @@
 
 <body>
 
-	<div id="page-wrap">
-
-		<textarea id="header">LLEGADAS TARDES</textarea>
-		
-		<div id="identity">
-		
-            <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-			</textarea>
-			
-		</div>
-		
-		<div id="logo">
-            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-        </div>
-		
-		<div style="clear:both"></div>
-		
-		<div id="customer">
-            <textarea id="customer-title">
-                @if(isset($oficina))
-                    Oficina {{ $oficina->oficina_nombre }}
-                @else
-                    Todas las oficinas
-                @endif
-            </textarea>
-		</div>
-		
-		<div id="meta-box">
-			<table id="meta">
-                <tr>
-                    <td class="meta-head">Fecha Inicio</td>
-                    <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">Fecha Fin</td>
-                    <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
-                </tr>
-            </table>
-		</div>
-		
-		<table id="items">
+	<div id="page-wrap" >
+       
+        <textarea id="header">LLEGADAS TARDES</textarea>
+    	@include('pdf.cabecera')	
+    	
+		<table id="items" >
 			<tr>
 				<th>ID</th>
                 <th>Empleado</th>
@@ -71,26 +38,62 @@
                 <th>Diferencia</th>
 			</tr>
 			@if($registros_ok->count())
-                @foreach($registros_ok as $registro)
-                <tr>
-                    <td>{{ $registro->id }}</td>
-                    <td>{{ $registro->empleado->empleado_cedula }} - {{ $registro->empleado->empleado_nombre }} {{ $registro->empleado->empleado_apellido }}</td>
-                    @php
-                        $horario = horarioAfecha($registro->empleado->id, $registro->registro_fecha);
-                        $entrada = $horario[0];
-                    @endphp
-                    <td>{{ $entrada }}</td>
-                    <td>
-                        @if ($registro->registro_tipo == "I")
-                            Entrada
-                        @else
-                            Salida
+			    @php
+	                $i=0;
+	                $first_cedula = $registros_ok[0]->empleado->empleado_cedula;
+	               
+	            @endphp
+	            @foreach($registros_ok as $registro)
+	                    <?php $i++; ?>
+	                    @if ($i == 29 || $registro->empleado->empleado_cedula <> $first_cedula)
+                         
+                            @php
+    			                $i=0;
+    			                echo '</table>';
+    			                $first_cedula = $registro->empleado->empleado_cedula;
+    			                $empleado_header = $registro->empleado;
+    			            @endphp
+            			     
+                            <div id="footer">
+                              <div class="page-number"></div>
+                            </div>
+    			            <div style="page-break-after:always;"></div>
+    			            <textarea id="header">LLEGADAS TARDES</textarea>
+    	                    @include('pdf.cabecera')
+    			            @php
+    			                echo '<table id="items" >'
+    			            @endphp
+            			     
+    			            <tr>
+                				<th>ID</th>
+                                <th>Empleado</th>
+                                <th>Hora Entrada</th>
+                                <th>Entrada/Salida</th>
+                                <th>Fecha/Hora</th>
+                                <th>Diferencia</th>
+                			</tr>
                         @endif
-                    </td>
-                    <td>{{ $registro->registro_hora }}</td>
-                    <td>{{  date('H:i:s', strtotime($registro->registro_hora) - strtotime($entrada)) }}</td>
+                        <tr>
+                            <td>{{ $registro->id }}</td>
+                            <td>{{ $registro->empleado->empleado_cedula }} - {{ $registro->empleado->empleado_nombre }} {{ $registro->empleado->empleado_apellido }}</td>
+                            @php
+                                $horario = horarioAfecha($registro->empleado->id, $registro->registro_fecha);
+                                $entrada = $horario[0];
+                            @endphp
+                            <td>{{ $entrada }}</td>
+                            <td>
+                                @if ($registro->registro_tipo == "I")
+                                    Entrada
+                                @else
+                                    Salida
+                                @endif
+                            </td>
+                            <td>{{ $registro->registro_hora }}</td>
+                            <td>{{  date('H:i:s', strtotime($registro->registro_hora) - strtotime($entrada)) }}</td>
+                           
+                        </tr>
+                        
                    
-                </tr>
                 @endforeach
             @else
             <tr>
@@ -101,7 +104,9 @@
             @endif		  
 		
 		</table>
-				
+		<div id="footer">
+          <div class="page-number"></div>
+        </div>		
 	</div>
 	
 </body>

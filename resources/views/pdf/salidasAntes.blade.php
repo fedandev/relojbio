@@ -20,44 +20,47 @@
 <body>
 
 	<div id="page-wrap">
-
-		<textarea id="header">SALIDAS ANTES DE HORA</textarea>
+        @section('header')
+    		<textarea id="header">SALIDAS ANTES DE HORA</textarea>
+    		
+    		<div id="identity">
+    		
+                <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
+    			</textarea>
+    			
+    		</div>
+    		
+    		<div id="logo">
+                <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+            </div>
+    		
+    		<div style="clear:both"></div>
+    		
+    		<div id="customer">
+                <textarea id="customer-title">
+                    @if(isset($oficina))
+                        Oficina {{ $oficina->oficina_nombre }}
+                    @else
+                        Todas las oficinas
+                    @endif
+                </textarea>
+    		</div>
+    		
+    		<div id="meta-box">
+    			<table id="meta">
+                    <tr>
+                        <td class="meta-head">Fecha Inicio</td>
+                        <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="meta-head">Fecha Fin</td>
+                        <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
+                    </tr>
+                </table>
+    		</div>
+    	@endsection
 		
-		<div id="identity">
-		
-            <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-			</textarea>
-			
-		</div>
-		
-		<div id="logo">
-            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-        </div>
-		
-		<div style="clear:both"></div>
-		
-		<div id="customer">
-            <textarea id="customer-title">
-                @if(isset($oficina))
-                    Oficina {{ $oficina->oficina_nombre }}
-                @else
-                    Todas las oficinas
-                @endif
-            </textarea>
-		</div>
-		
-		<div id="meta-box">
-			<table id="meta">
-                <tr>
-                    <td class="meta-head">Fecha Inicio</td>
-                    <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                </tr>
-                <tr>
-                    <td class="meta-head">Fecha Fin</td>
-                    <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
-                </tr>
-            </table>
-		</div>
+		@yield('header')
 		
 		<table id="items">
 			<tr>
@@ -67,7 +70,11 @@
                 <th>Fecha/Hora</th>
 			</tr>
 			@if($registros_ok->count())
+			    @php
+	                $i=0;
+	            @endphp
                 @foreach($registros_ok as $registro)
+                <?php $i++ ?>
                 <tr>
                     <td>{{ $registro->empleado->empleado_cedula }} - {{ $registro->empleado->empleado_nombre }} {{ $registro->empleado->empleado_apellido }} </td>
                     @php
@@ -84,6 +91,29 @@
                     </td>
                     <td>{{ $registro->registro_hora }}</td>
                 </tr>
+                    @if ($i == 29)
+                     
+                        @php
+			                $i=0;
+			                echo '</table>';
+			            @endphp
+        			     
+                        <div id="footer">
+                          <div class="page-number"></div>
+                        </div>
+			            <div style="page-break-after:always;"></div>
+			            @yield('header')
+			            @php
+			                echo '<table id="items" >'
+			            @endphp
+        			     
+			            <tr>
+            			    <th>Empleado</th>
+                            <th>Horario Salida</th>
+                            <th>Entrada/Salida</th>
+                            <th>Fecha/Hora</th>
+            			</tr>
+                    @endif
                 @endforeach
             @else
             <tr>
@@ -94,7 +124,9 @@
             @endif		  
 		
 		</table>
-				
+		<div id="footer">
+          <div class="page-number"></div>
+        </div>			
 	</div>
 	
 </body>

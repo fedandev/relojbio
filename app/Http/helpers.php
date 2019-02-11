@@ -119,31 +119,32 @@ function formatFecha( $date , $format_fecha = null) {
 }
 
 function horarioAfecha($idEmpleado, $fecha){
-    $trabaja = Trabaja::where('fk_empleado_id', '=', $idEmpleado)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->get();
+    $trabaja = Trabaja::where('fk_empleado_id', '=', $idEmpleado)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->first();
     $horario[0] = '';
     $horario[1] = '';
     $horario[2] = '';
     $horario[3] = '';
-    if($trabaja){
-        if(!is_null($trabaja[0]->fk_horariorotativo_id)){
-            if($trabaja[0]->horariorotativo->horario->horario_haybrake == "S"){
-                $horario[0] = $trabaja[0]->horariorotativo->horario->horario_entrada;
-                $horario[1] = $trabaja[0]->horariorotativo->horario->horario_comienzobrake;
-                $horario[2] = $trabaja[0]->horariorotativo->horario->horario_finbrake;
-                $horario[3] = $trabaja[0]->horariorotativo->horario->horario_salida;
+
+    if(!is_null($trabaja)){
+        if(!is_null($trabaja->fk_horariorotativo_id)){
+            if($trabaja->horariorotativo->horario->horario_haybrake == "S"){
+                $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
+                $horario[1] = $trabaja->horariorotativo->horario->horario_comienzobrake;
+                $horario[2] = $trabaja->horariorotativo->horario->horario_finbrake;
+                $horario[3] = $trabaja->horariorotativo->horario->horario_salida;
             }else{
-                $horario[0] = $trabaja[0]->horariorotativo->horario->horario_entrada;
-                $horario[1]=  $trabaja[0]->horariorotativo->horario->horario_salida;
+                $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
+                $horario[1]=  $trabaja->horariorotativo->horario->horario_salida;
             }
-        }elseif(!is_null($trabaja[0]->fk_turno_id)){
-            if($trabaja[0]->turno->horario->horario_haybrake == "S"){
-                $horario[0] = $trabaja[0]->turno->horario->horario_entrada;
-                $horario[1] = $trabaja[0]->turno->horario->horario_comienzobrake;
-                $horario[2] = $trabaja[0]->turno->horario->horario_finbrake;
-                $horario[3] = $trabaja[0]->turno->horario->horario_salida;
+        }elseif(!is_null($trabaja->fk_turno_id)){
+            if($trabaja->turno->horario->horario_haybrake == "S"){
+                $horario[0] = $trabaja->turno->horario->horario_entrada;
+                $horario[1] = $trabaja->turno->horario->horario_comienzobrake;
+                $horario[2] = $trabaja->turno->horario->horario_finbrake;
+                $horario[3] = $trabaja->turno->horario->horario_salida;
             }else{
-                $horario[0] = $trabaja[0]->turno->horario->horario_entrada;
-                $horario[1] = $trabaja[0]->turno->horario->horario_salida;
+                $horario[0] = $trabaja->turno->horario->horario_entrada;
+                $horario[1] = $trabaja->turno->horario->horario_salida;
             }
         }
     } 
@@ -267,4 +268,18 @@ function existeLicencia($fechaInicio, $fechaFin, $fk_licencia_id ){
 	if ($cant_licencias > 0){
 		return Redirect()->back()->withErrors(['Ya existe licencia para el periodo de fecha seleccionado.']);
 	}
+}
+
+
+function diff_horas($hora_inicio, $hora_fin){
+    $diff_seconds  = $horaFin - $horaInicio;
+    $diff_weeks    = floor($diff_seconds/604800);
+    $diff_seconds -= $diff_weeks   * 604800;
+    $diff_days     = floor($diff_seconds/86400);
+    $diff_seconds -= $diff_days    * 86400;
+    $diff_hours    = floor($diff_seconds/3600);
+    $diff_seconds -= $diff_hours   * 3600;
+    $diff_minutes  = floor($diff_seconds/60);
+    $diff_seconds -= $diff_minutes * 60;
+    
 }

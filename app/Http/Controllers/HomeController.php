@@ -12,6 +12,7 @@ use App\Models\Empleado;
 use App\Models\Trabaja;
 use DateTime;
 use Carbon\Carbon;
+use Mail;
 
 class HomeController extends Controller
 {
@@ -25,6 +26,7 @@ class HomeController extends Controller
         $registrosHorasNoctAnterior = $this->horasNocturnasMesAnterior();
         $registrosHorasNoctActual = $this->horasNocturnasMesActual();
         $advertencias = $this->advertencias();
+        $this->ChequeoLicencia();
         return view('home', compact('registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual','advertencias'));
     }
     
@@ -727,4 +729,47 @@ class HomeController extends Controller
     	return $diastrab;
     }
     
+    function ChequeoLicencia(){
+        $now = date("d-m-Y");
+        $Recordatorio = Ajuste::where('ajuste_nombre','send_mail_license')->first();
+        
+        if($Recordatorio->ajuste_valor == 'S'){
+            
+            //$sql = DB::table('pagos')->select('*')->where('pago_prox_mail','=',$now)->get();
+            $sql = DB::table('pagos')->select('*')->get();
+            $registros = collect($sql);
+            
+            foreach($registros as $registro){
+                $vencimiento = date_format(date_create($registro->pago_fvencimiento), 'd-m-Y');
+                
+                $dif_dias = Carbon::parse($vencimiento)->diffInDays(Carbon::parse($now));
+                
+                if($dif_dias == 7 ){
+                    $fecha_det = explode('-', $vencimiento);
+                    
+                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1]); 
+                    
+                    Mail::send('common.mail', $data, function($message){
+                       $message->to('matiasfiermarin@hotmail.com')->subject('Recordatorio de vencimiento');
+                    });
+                    
+                    $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
+
+                    $Update = DB::update('UPDATE pagos SET pago_prox_mail = ? WHERE id= ?',[$fecha_nueva, $registro->id]);
+                }elseif($dif_dias == 1){
+                    $fecha_det = explode('-', $vencimiento);
+                    
+                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1]); 
+                    
+                    Mail::send('common.mail_vencido', $data, function($message){
+                       $message->to('matiasfiermarin@hotmail.com')->subject('Recordatorio de vencimiento');
+                    });
+                    
+                    $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
+
+                    $Update = DB::update('UPDATE pagos SET pago_prox_mail = ? WHERE id= ?',['01-01-1999', $registro->id]);
+                }
+            }
+        }
+    }
 }

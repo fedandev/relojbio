@@ -3,8 +3,7 @@
 		 
 asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTTPS		 
 
-
----------------------NEWS-----------
+-----------------------------------------------------NEWS------------------------------------------------------------
 
 - Agregar para que se pueda ver el horarios/s de empleado en la vista de empleados
 		 
@@ -33,8 +32,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 
 - agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste en horarios y horario semanal
 
-- validar los deletes cuando es fk. Agregar ajuste 'cascade_delete' para forzar el delete en cascada.
-
 - arreglar diseño responsive en tablas (los botones quedan afuera)
 
 - agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
@@ -43,22 +40,15 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
                 Analizar trabajador jornalero (dias = jornadas * 0.06)
 
 - probar performance:
-
         funcionario     1               registros/dia   6
         funcionarios	30000	        registros/dia 	180000
-        			
         funcionarios	30000		registros/mes	5.580.000,00
-                        				
         funcionarios	30000      	registros/año	66.960.000,00
 
 - Reporte de todos los empleados con columnas de las horas trabajadas por días (luunes, martes, etc) y al final 
 la suma de todas las horas.
 
-
-
-- Error al intentar sacar horas trabajadas de TODOS los empleados (ARREGLAR URGENTE).
-- Hay unos cuantos reportes que no se puede sacar para todos los empleados.
-
+- Reporte de horas trabajadas hacer una suma final de horas por cada empleado.
 ---------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------ARREGLOS---------------------------------------------------------
 --------------------------------------------------Y TERMINADOS-------------------------------------------------------
@@ -71,7 +61,6 @@ la suma de todas las horas.
 - Se elimina el poder editar Licencias y Libres ya aplicados, solamente se podra ver y eliminar.
 - Licencia_detalles
     - Al eliminar el detalle de la licencia se eliminan todos los registros.
-
 - Quitar "empleado_diferenciatiempo" de tabla empleados.
 - Arreglar combo empleados en index registros
 - Se agrega parametro nuevo en ajuste "reporte_pdf" para saber si descarga o lo visualiza.
@@ -101,3 +90,6 @@ la suma de todas las horas.
         BETWEEN tra.trabaja_fechainicio
         AND tra.trabaja_fechafin
         LIMIT 0 , 30
+- validar los deletes cuando es fk. Agregar ajuste 'cascade_delete' para forzar el delete en cascada.
+- Error al intentar sacar horas trabajadas de TODOS los empleados.
+- Hay unos cuantos reportes que no se puede sacar para todos los empleados.

@@ -88,3 +88,4 @@ Stack trace:
 #1 {main}
   thrown in /home/ubuntu/workspace/bootstrap/app.php on line 46
 [04-Feb-2019 18:53:33 UTC] PHP Fatal error:  Maximum execution time of 300 seconds exceeded in /home/ubuntu/workspace/vendor/dompdf/dompdf/src/Dompdf.php on line 548
+[11-Feb-2019 00:49:13 UTC] PHP Fatal error:  Cannot use [] for reading in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 750
