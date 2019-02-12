@@ -15,6 +15,7 @@ use Dompdf\Options;
 use Dompdf\Dompdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
+use App\SumaTiempos;
 
 class ReportesController extends Controller
 {
@@ -836,5 +837,3 @@ class ReportesController extends Controller
         }
     }
 }
-
-

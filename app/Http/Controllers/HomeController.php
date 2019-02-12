@@ -13,6 +13,7 @@ use App\Models\Trabaja;
 use DateTime;
 use Carbon\Carbon;
 use Mail;
+use App\Models\Empresa;
 
 class HomeController extends Controller
 {
@@ -734,8 +735,6 @@ class HomeController extends Controller
         $Recordatorio = Ajuste::where('ajuste_nombre','send_mail_license')->first();
         
         if($Recordatorio->ajuste_valor == 'S'){
-            
-            //$sql = DB::table('pagos')->select('*')->where('pago_prox_mail','=',$now)->get();
             $sql = DB::table('pagos')->select('*')->get();
             $registros = collect($sql);
             
@@ -743,14 +742,20 @@ class HomeController extends Controller
                 $vencimiento = date_format(date_create($registro->pago_fvencimiento), 'd-m-Y');
                 
                 $dif_dias = Carbon::parse($vencimiento)->diffInDays(Carbon::parse($now));
+                $empresa = Empresa::where('empresa_estado','1')->first();
                 
                 if($dif_dias == 7 ){
                     $fecha_det = explode('-', $vencimiento);
                     
-                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1]); 
                     
-                    Mail::send('common.mail', $data, function($message){
-                       $message->to('matiasfiermarin@hotmail.com')->subject('Recordatorio de vencimiento');
+                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1], 'empresa' => $empresa->empresa_nombre); 
+                    
+                    Mail::send('common.mail', $data, function($message) use ($empresa){
+                        if($empresa->empresa_email2 == null){
+                            $message->to($empresa->empresa_email)->subject('Recordatorio de vencimiento');
+                        }else{
+                            $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Recordatorio de vencimiento');
+                        }
                     });
                     
                     $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
@@ -759,10 +764,14 @@ class HomeController extends Controller
                 }elseif($dif_dias == 1){
                     $fecha_det = explode('-', $vencimiento);
                     
-                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1]); 
+                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1], 'empresa' => $empresa->empresa_nombre); 
                     
-                    Mail::send('common.mail_vencido', $data, function($message){
-                       $message->to('matiasfiermarin@hotmail.com')->subject('Recordatorio de vencimiento');
+                    Mail::send('common.mail_vencido', $data, function($message) use ($empresa){
+                       if($empresa->empresa_email2 == null){
+                            $message->to($empresa->empresa_email)->subject('Recordatorio de vencimiento');
+                        }else{
+                            $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Recordatorio de vencimiento');
+                        }
                     });
                     
                     $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 

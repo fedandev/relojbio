@@ -1,5 +1,6 @@
 @php
     // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
+    use App\SumaTiempos;
     $logo = ajuste('system_logo');
     $empresa = ajuste('company_name');
     $format_hora =ajuste('time_format');
@@ -8,6 +9,8 @@
     $now = date("D M d, Y G:i");
     $maxExtras = ajuste('max_hours_ext_per_day');
     $empleado_header =  ($registros_ok->count() > 0 ? App\Models\Empleado::where('empleado_cedula',$registros_ok[0]['fk_empleado_cedula'] )->first() : ''); 
+	$totalHoras = 0;
+	$tiempoTrabajado = new SumaTiempos();
 @endphp
 
 
@@ -43,10 +46,15 @@
 				@foreach($registros_ok as $registro)
 					<?php $i++; ?>
                     @if ($i == 29 || $registro['fk_empleado_cedula'] <> $first_cedula)
-                     
                         @php
 			                $i=0;
+			                echo '<tr>';
+			                echo 	'<td colspan="4"></td>';
+							echo	'<td>Total de Horas</td>';
+							echo	'<td>'. $tiempoTrabajado->verTiempoFinal() .'</td>';
+							echo '</tr>';
 			                echo '</table>';
+			                $tiempoTrabajado = new SumaTiempos();
 			                $first_cedula = $registro['fk_empleado_cedula'];
 			                $empleado_header = App\Models\Empleado::where('empleado_cedula',$registro['fk_empleado_cedula'] )->first();
 			            @endphp
@@ -70,16 +78,39 @@
 							<th>Horas Extras</th>
 						</tr>
                     @endif
-					
-					<tr>
-						<td>{{ $registro['empleado'] }}</td>
-						<td>{{ $registro['fk_empleado_cedula'] }}</td>
-						<td>{{ $registro['registro_fecha'] }}</td>
-						<td>{{ $registro['horas_debe_trabajar'] }}</td>
-						<td>{{ $registro['horas_trabajadas'] }}</td>
-						<td>{{ $registro['horas_extras'] }}</td>
-					</tr>
-					
+					@if($loop->last)
+						<tr>
+							<td>{{ $registro['empleado'] }}</td>
+							<td>{{ $registro['fk_empleado_cedula'] }}</td>
+							<td>{{ $registro['registro_fecha'] }}</td>
+							<td>{{ $registro['horas_debe_trabajar'] }}</td>
+							<td>{{ $registro['horas_trabajadas'] }}</td>
+							<td>{{ $registro['horas_extras'] }}</td>
+						</tr>
+						@php
+							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro['horas_extras']));
+						@endphpp
+						<tr>
+							<td colspan="4"></td>
+							<td>Total de Horas</td>
+							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+						</tr>
+						@php
+							$totalHoras = 0;
+						@endphp
+					@else
+						<tr>
+							<td>{{ $registro['empleado'] }}</td>
+							<td>{{ $registro['fk_empleado_cedula'] }}</td>
+							<td>{{ $registro['registro_fecha'] }}</td>
+							<td>{{ $registro['horas_debe_trabajar'] }}</td>
+							<td>{{ $registro['horas_trabajadas'] }}</td>
+							<td>{{ $registro['horas_extras'] }}</td>
+						</tr>
+						@php
+							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro['horas_extras']));
+						@endphp
+					@endif
 				@endforeach
 			@else
 				<tr>

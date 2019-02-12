@@ -25,7 +25,7 @@
     								</tr>
     								<tr>
     									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-    										Estimado Sr. Luis González, el presente se le envía con el fin de recordarle que el próximo @php echo $vencimiento_dia; echo "-"; echo $vencimiento_mes @endphp del corriente año vence la mensualidad del software. Le recordamos realizar el pago antes de esa fecha para que evite inconvenientes con el mismo.
+    										Estimado cliente @php echo $empresa @endphp, el presente se le envía con el fin de recordarle que el en el día de mañana (@php echo $vencimiento_dia; echo "-"; echo $vencimiento_mes @endphp) vence la mensualidad del software. Le recordamos realizar el pago antes de esa fecha para que evite inconvenientes con el mismo.
                                             <br><br>
                                             Atentamente<br>
                                             Equipo de SysClock.

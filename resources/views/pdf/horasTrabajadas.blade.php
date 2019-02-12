@@ -1,4 +1,5 @@
 @php
+    use App\SumaTiempos;
     // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
     $logo = ajuste('system_logo');
     $empresa = ajuste('company_name');
@@ -8,6 +9,7 @@
     $now = date("D M d, Y G:i");
     $ultimo ='N';
     $i = 0;
+    $tiempoTrabajado = new SumaTiempos();
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -71,7 +73,7 @@
 		                    $ultimo='S';
 		                @endphp
 		            @endif
-		            @foreach($registro_group as $registro)
+		            @foreach($registro_group->sortBy('registro_fecha') as $registro)
 		                @if($loop->last)
         			        @foreach($empleados as $empleado)
         			            @if($empleado->empleado_cedula == $registro->fk_empleado_cedula)
@@ -85,7 +87,19 @@
                                             <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
                                             <td>{{ $registro->registro_totalHoras }}</td>
                                         </tr>
+                                        @php
+                							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
+                						@endphp
+                                        <tr>
+                							<td colspan="3"></td>
+                							<td>Total de Horas</td>
+                							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+                						</tr>
                                         @if($ultimo != 'S')
+                                            
+                    						@php
+                    							$tiempoTrabajado = new SumaTiempos();
+                    						@endphp
                                             <div id="footer">
                                               <div class="page-number"></div>
                                             </div>
@@ -143,6 +157,9 @@
                                             <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
                                             <td>{{ $registro->registro_totalHoras }}</td>
                                         </tr>
+                                        @php
+                							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
+                						@endphp
                                     @else
                             		    @php
                 			                $i=1;

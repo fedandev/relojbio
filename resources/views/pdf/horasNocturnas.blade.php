@@ -1,5 +1,6 @@
 @php
     // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
+    use App\SumaTiempos;
     $logo = ajuste('system_logo');
     $empresa = ajuste('company_name');
     $format_hora =ajuste('time_format');
@@ -8,6 +9,7 @@
     $now = date("D M d, Y G:i");
     $ultimo ='N';
     $i = 0;
+    $tiempoTrabajado = new SumaTiempos();
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -86,7 +88,23 @@
                                 <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
                                 <td>{{ $registro->registro_totalHoras }}</td>
                             </tr>
+                            @php
+    							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
+    						@endphp
+                            <tr>
+    							<td colspan="3"></td>
+    							<td>Total de Horas</td>
+    							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+    						</tr>
                             @if($ultimo != 'S')
+                                <tr>
+        							<td colspan="3"></td>
+        							<td>Total de Horas</td>
+        							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+        						</tr>
+        						@php
+        							$tiempoTrabajado = new SumaTiempos();
+        						@endphp
                                 <div id="footer">
                                   <div class="page-number"></div>
                                 </div>
@@ -153,6 +171,9 @@
                                     <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
                                     <td>{{ $registro->registro_totalHoras }}</td>
                                 </tr>
+                                @php
+        							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
+        						@endphp
                             @else
                     		    @php
         			                $i=1;

@@ -7,7 +7,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 
 - Agregar para que se pueda ver el horarios/s de empleado en la vista de empleados
 
-
 - Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
 		 
 ---------------------------------------------------------------------------------------------------------------------
@@ -19,11 +18,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 - Ver si se esta calculando a los empleados la diferencia de horas
 
 - Autorizacion de horas extras (pensar como lo vamos a hacer) (agregar botones para autorizar y rechazar en autorizacions, cargar tabla desde carga de registros)
-
-
-- Subir codigo para ver registros "en vivo" desde el reloj conectado.
-
-- En reporte de Faltas poner estilos para que los registros intercalen el color de fondo (blanco, gris) para hacerlo mejor a la vista.
 
 - Licencia_detalle arreglar formularios, aplicacion etc.
     - Se crea funcion para crear registros cuando se aplica la licenica y reste los días tomados. (Chequear mas a fondo)
@@ -47,10 +41,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
         funcionarios	30000		registros/mes	5.580.000,00
         funcionarios	30000      	registros/año	66.960.000,00
 
-- Reporte de todos los empleados con columnas de las horas trabajadas por días (luunes, martes, etc) y al final 
-la suma de todas las horas.
-
-- Reporte de horas trabajadas hacer una suma final de horas por cada empleado.
 ---------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------ARREGLOS---------------------------------------------------------
 --------------------------------------------------Y TERMINADOS-------------------------------------------------------
@@ -95,3 +85,8 @@ la suma de todas las horas.
 - validar los deletes cuando es fk. Agregar ajuste 'cascade_delete' para forzar el delete en cascada.
 - Error al intentar sacar horas trabajadas de TODOS los empleados.
 - Hay unos cuantos reportes que no se puede sacar para todos los empleados.
+- Envio de mail a maximo 2 direcciones de correo diferente cuando se esta por vencer la licencia, (7 y 1 dias antes).
+- Reporte de todos los empleados con columnas de las horas trabajadas por días (luunes, martes, etc) y al final 
+la suma de todas las horas.
+- Reporte de horas trabajadas hacer una suma final de horas por cada empleado.
+- Subir codigo para ver registros "en vivo" desde el reloj conectado.
