@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Models;
-use OwenIt\Auditing\Contracts\Auditable;
+//use OwenIt\Auditing\Contracts\Auditable;
 
-class Turno extends Model implements Auditable
+class Turno extends Model //implements Auditable
 {       
-    use \OwenIt\Auditing\Auditable;
+    //use \OwenIt\Auditing\Auditable;
     protected $fillable = ['turno_nombre', 'turno_lunes', 'turno_martes', 'turno_miercoles', 'turno_jueves', 'turno_viernes', 'turno_sabado', 'turno_domingo', 'fk_horario_id'];
     public $timestamps = false;
     

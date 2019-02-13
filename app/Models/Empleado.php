@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Models;
-use OwenIt\Auditing\Contracts\Auditable;
+//use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Trabaja;
 
-class Empleado extends Model implements Auditable
+class Empleado extends Model //implements Auditable
 {       
-    use \OwenIt\Auditing\Auditable;
+    //use \OwenIt\Auditing\Auditable;
     protected $fillable = ['empleado_cedula', 'empleado_codigo', 'empleado_nombre', 'empleado_apellido', 'empleado_correo', 'empleado_telefono', 'empleado_fingreso', 'empleado_diferenciatiempo', 'empleado_estado', 'fk_tipoempleado_id', 'fk_oficina_id'];
     public $timestamps = false;
     

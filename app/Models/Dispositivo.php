@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Models;
-use OwenIt\Auditing\Contracts\Auditable;
+//use OwenIt\Auditing\Contracts\Auditable;
 
-class Dispositivo extends Model implements Auditable
+class Dispositivo extends Model //implements Auditable
 {       
-    use \OwenIt\Auditing\Auditable;
+    //use \OwenIt\Auditing\Auditable;
     protected $fillable = ['dispositivo_nombre', 'dispositivo_serial', 'dispositivo_modelo', 'dispositivo_ip', 'dispositivo_puerto', 'dispositivo_usuario', 'dispositivo_password', 'fk_empresa_id'];
     public $timestamps = false;
     
