@@ -12,11 +12,11 @@ class TipoEmpleadosController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		TipoEmpleado::disableAuditing();
         }else{
         	TipoEmpleado::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

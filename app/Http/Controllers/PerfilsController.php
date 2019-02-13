@@ -15,11 +15,11 @@ class PerfilsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Perfil::disableAuditing();
         }else{
         	Perfil::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

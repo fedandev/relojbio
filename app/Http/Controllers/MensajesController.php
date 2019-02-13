@@ -13,11 +13,11 @@ class MensajesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Mensaje::disableAuditing();
         }else{
         	Mensaje::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

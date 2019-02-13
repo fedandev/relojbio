@@ -12,11 +12,11 @@ class TurnosController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Turno::disableAuditing();
         }else{
         	Turno::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

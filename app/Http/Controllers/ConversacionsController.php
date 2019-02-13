@@ -14,11 +14,11 @@ class ConversacionsController extends Controller
     {
         $this->middleware('auth');
         
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Conversacion::disableAuditing();
         }else{
         	Conversacion::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

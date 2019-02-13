@@ -14,11 +14,11 @@ class TrabajasController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Trabaja::disableAuditing();
         }else{
         	Trabaja::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

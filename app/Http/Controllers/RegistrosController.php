@@ -17,11 +17,11 @@ class RegistrosController extends Controller
     public function __construct(){
         $this->middleware('auth');
         $this->error = 'N';
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Registro::disableAuditing();
         }else{
         	Registro::enableAuditing();
-        }
+        }*/
     }
 
 	public function index(){

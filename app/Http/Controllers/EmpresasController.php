@@ -13,11 +13,11 @@ class EmpresasController extends Controller
     {
         $this->middleware('auth');
         
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Empresa::disableAuditing();
         }else{
         	Empresa::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

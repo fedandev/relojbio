@@ -18,11 +18,11 @@ class LicenciaDetallesController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		LicenciaDetalle::disableAuditing();
         }else{
         	LicenciaDetalle::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()

@@ -12,11 +12,11 @@ class AutorizacionsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        if (ajuste('audit') != 'S'){
+        /*if (ajuste('audit') != 'S'){
     		Autorizacion::disableAuditing();
         }else{
         	Autorizacion::enableAuditing();
-        }
+        }*/
     }
 
 	public function index()
