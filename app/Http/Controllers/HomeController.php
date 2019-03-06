@@ -24,16 +24,17 @@ class HomeController extends Controller
     }
 
     public function index(){
-        $registrosPieMesAnt = $this->LlegadasTardeMesAnterior();
+        /*$registrosPieMesAnt = $this->LlegadasTardeMesAnterior();
         $registrosPieMesActual = $this->LlegadasTardeMesActual();
         $registrosHorasNoctAnterior = $this->horasNocturnasMesAnterior();
-        $registrosHorasNoctActual = $this->horasNocturnasMesActual();
+        $registrosHorasNoctActual = $this->horasNocturnasMesActual();*/
         $advertencias = $this->advertencias();
         $this->ChequeoLicencia();
-        return view('home', compact('registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual','advertencias'));
+        //'registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual',
+        return view('home', compact('advertencias'));
     }
     
-    public function LlegadasTardeMesAnterior(){
+    /*public function LlegadasTardeMesAnterior(){
         $fechaActual = new DateTime();
         $fechaActual->modify('first day of last month');
         $fechainicio = $fechaActual->format('Y/m/d');
@@ -473,7 +474,7 @@ class HomeController extends Controller
         $registros_dev = collect($registros_dev);
 
         return $registros_dev;
-    }
+    }*/
     
     public function advertencias(){
         $trabajas = Trabaja::all();

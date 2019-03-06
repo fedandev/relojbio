@@ -3,7 +3,7 @@
 @section('content')
     <div class="wrapper wrapper-content animated fadeIn">
         
-       <div class="row">
+       <!--<div class="row">
             <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="row">
             @include('vendor.home_layouts.table_autorizaciones', ['advertencias' => $advertencias])
         </div>
@@ -98,7 +98,7 @@
 @section('scripts')
 
     <script>
-        $(document).ready(function () {
+        /*$(document).ready(function () {
             DibujarGraficaPieMesAnterior();
             DibujarGraficaPieMesActual();
             DibujarGraficaHorasNocturnasAnterior();
@@ -279,7 +279,7 @@
                     ]
                 }]
             });
-        }
+        }*/
     </script>
     
 @endsection
