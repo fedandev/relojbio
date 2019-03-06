@@ -127,24 +127,34 @@ function horarioAfecha($idEmpleado, $fecha){
 
     if(!is_null($trabaja)){
         if(!is_null($trabaja->fk_horariorotativo_id)){
-            if($trabaja->horariorotativo->horario->horario_haybrake == "S"){
-                $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
-                $horario[1] = $trabaja->horariorotativo->horario->horario_comienzobrake;
-                $horario[2] = $trabaja->horariorotativo->horario->horario_finbrake;
-                $horario[3] = $trabaja->horariorotativo->horario->horario_salida;
-            }else{
-                $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
-                $horario[1]=  $trabaja->horariorotativo->horario->horario_salida;
+           
+            $trabajaElDia = trabajaDiaRotativo($trabaja->horariorotativo,$trabaja->trabaja_fechainicio, $fecha );
+            
+            if($trabajaElDia == "1"){
+                if($trabaja->horariorotativo->horario->horario_haybrake == "S"){
+                    $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
+                    $horario[1] = $trabaja->horariorotativo->horario->horario_comienzobrake;
+                    $horario[2] = $trabaja->horariorotativo->horario->horario_finbrake;
+                    $horario[3] = $trabaja->horariorotativo->horario->horario_salida;
+                }else{
+                    $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
+                    $horario[1]=  $trabaja->horariorotativo->horario->horario_salida;
+                }
             }
+        
         }elseif(!is_null($trabaja->fk_turno_id)){
-            if($trabaja->turno->horario->horario_haybrake == "S"){
-                $horario[0] = $trabaja->turno->horario->horario_entrada;
-                $horario[1] = $trabaja->turno->horario->horario_comienzobrake;
-                $horario[2] = $trabaja->turno->horario->horario_finbrake;
-                $horario[3] = $trabaja->turno->horario->horario_salida;
-            }else{
-                $horario[0] = $trabaja->turno->horario->horario_entrada;
-                $horario[1] = $trabaja->turno->horario->horario_salida;
+            $trabajaElDia = trabajaDiaTurno($trabaja->turno, $fecha);
+                
+            if($trabajaElDia == "1"){
+                if($trabaja->turno->horario->horario_haybrake == "S"){
+                    $horario[0] = $trabaja->turno->horario->horario_entrada;
+                    $horario[1] = $trabaja->turno->horario->horario_comienzobrake;
+                    $horario[2] = $trabaja->turno->horario->horario_finbrake;
+                    $horario[3] = $trabaja->turno->horario->horario_salida;
+                }else{
+                    $horario[0] = $trabaja->turno->horario->horario_entrada;
+                    $horario[1] = $trabaja->turno->horario->horario_salida;
+                }
             }
         }
     } 
@@ -270,7 +280,6 @@ function existeLicencia($fechaInicio, $fechaFin, $fk_licencia_id ){
 	}
 }
 
-
 function diff_horas($hora_inicio, $hora_fin){
     $diff_seconds  = $horaFin - $horaInicio;
     $diff_weeks    = floor($diff_seconds/604800);
@@ -281,5 +290,109 @@ function diff_horas($hora_inicio, $hora_fin){
     $diff_seconds -= $diff_hours   * 3600;
     $diff_minutes  = floor($diff_seconds/60);
     $diff_seconds -= $diff_minutes * 60;
+    
+}
+
+function trabajaDiaTurno($turno, $fecha){
+    $fecha_date = new datetime($fecha);
+    $dia = $fecha_date->format('D');
+    
+    if($dia=="Mon"){
+        $trabaja =  $turno->turno_lunes;
+    }
+    
+    if($dia=="Tue"){
+        $trabaja =  $turno->turno_martes;
+    }
+    
+    
+    if($dia=="Wed"){
+        $trabaja =  $turno->turno_miercoles;
+    }
+    
+    
+    if($dia=="Thu"){
+        $trabaja =  $turno->turno_jueves;
+    }
+    
+    if($dia=="Fri"){
+        $trabaja =  $turno->turno_viernes;
+    }
+    
+    
+    if($dia=="Sat"){
+        $trabaja =  $turno->turno_sabado;
+    }
+    
+    if($dia=="Sun"){
+        $trabaja =  $turno->turno_domingo;
+    }
+    
+
+    return $trabaja;
+}
+
+
+function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
+   
+    $diasTrabajo = $rotativo->horariorotativo_diastrabajo;
+    $diasLibre = $rotativo->horariorotativo_diaslibres;
+    $fecha_date = new datetime($fecha);
+    $dia = $fecha_date->format('D');
+    
+    
+    $start_date = new DateTime($fechaInicio);
+    $end_date= new DateTime($fecha);
+    
+    
+    $contTrabajo = 0;
+    $contLibres = 0;
+    $cuentoLibres = 'N';
+    for($i = $start_date; $i <= $end_date; $i->modify('+1 day')){
+       
+        $dia =  $i->format("Y-m-d");
+        
+        
+        if($dia == $fecha){
+            
+            if($cuentoLibres == 'S'){
+                 $trabaja = '0';
+            }else{
+                 $trabaja = '1';
+            }
+        }
+        
+        
+        if($cuentoLibres == 'S'){
+             $contLibres++;
+        }
+        
+        if ($cuentoLibres == 'N'){
+            $contTrabajo++;
+        }
+        
+        
+        
+        if($contTrabajo == $diasTrabajo){
+            $contTrabajo = 0;
+            $cuentoLibres ='S';
+            
+        }
+        
+        if ($contLibres == $diasLibre){
+            $contLibres = 0;
+            $cuentoLibres ='N';
+            
+        }
+        
+        
+        
+    }
+
+    
+   return $trabaja;
+  
+  
+    
     
 }

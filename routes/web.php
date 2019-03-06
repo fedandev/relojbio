@@ -8,7 +8,7 @@ Route::get('/registros/search', 'RegistrosController@search')->name('registros.s
 
 Route::get('/', 'HomeController@index')->name('main');
 Route::get('/home', 'HomeController@index');
-
+Route::get('/dashboard', 'HomeController@dashboard');
 Route::get('/dispositivos/download/{dispositivo}', 'DispositivosController@download')->name('dispositivos.download');
 Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios');
 Route::get('licencia/{id}','LicenciasController@getDiasLicencia');

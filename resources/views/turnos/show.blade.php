@@ -124,7 +124,7 @@
                             <div class="hr-line-dashed"></div>
                            
                             <div class="form-group"><label class="col-lg-2 control-label">Horario</label>
-                                <div class="col-lg-10"><p class="form-control-static">{{  $turno->horario->horario_nombre }} </p></div>
+                                <div class="col-lg-10"><p class="form-control-static"><a href="{{ route('horarios.show', $turno->horario->id) }}" target="_blank">{{  $turno->horario->horario_nombre }}</a> </p></div>
                             </div>
                             
                             <div class="form-group"><label class="col-lg-2 control-label">Hora Entrada</label>

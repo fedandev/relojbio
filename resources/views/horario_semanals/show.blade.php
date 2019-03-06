@@ -29,7 +29,7 @@
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Hora Entrada</label>
+                            <div class="form-group"><label class="col-lg-2 control-label">Horas a realizar</label>
                                 <div class="col-lg-2"><p class="form-control-static">{{  $horario_semanal->horariosemanal_horas }} </p></div>
                             </div>
                             
