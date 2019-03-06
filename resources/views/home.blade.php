@@ -279,7 +279,7 @@
                     ]
                 }]
             });
-        }*/
+        }*/s
     </script>
     
 @endsection
