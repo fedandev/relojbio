@@ -8,7 +8,7 @@
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
     $maxExtras = ajuste('max_hours_ext_per_day');
-    $empleado_header =  ($registros_ok->count() > 0 ? App\Models\Empleado::where('empleado_cedula',$registros_ok[0]['fk_empleado_cedula'] )->first() : ''); 
+    $SeparoEmpleados = ajuste('hoja_por_empleado');
 	$totalHoras = 0;
 	$tiempoTrabajado = new SumaTiempos();
 @endphp
@@ -41,11 +41,10 @@
 			@if($registros_ok->count())
 				 @php
 	                $i=0;
-	                $first_cedula = $empleado_header->empleado_cedula;
 	            @endphp
 				@foreach($registros_ok as $registro)
 					<?php $i++; ?>
-                    @if ($i == 29 || $registro['fk_empleado_cedula'] <> $first_cedula)
+                    @if ($i == 29 )
                         @php
 			                $i=0;
 			                echo '<tr>';
@@ -55,8 +54,6 @@
 							echo '</tr>';
 			                echo '</table>';
 			                $tiempoTrabajado = new SumaTiempos();
-			                $first_cedula = $registro['fk_empleado_cedula'];
-			                $empleado_header = App\Models\Empleado::where('empleado_cedula',$registro['fk_empleado_cedula'] )->first();
 			            @endphp
         			     
                         <div id="footer">

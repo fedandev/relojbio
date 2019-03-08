@@ -25,8 +25,9 @@
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Lunes</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Lunes</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_lunes == "1")
                                             <i class="fa fa-check text-navy"></i>
@@ -35,12 +36,25 @@
                                         @endif    
                                     </p>
                                 </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_lunes_mh == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                                
                             </div>
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Martes</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Martes</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_martes == "1")
                                             <i class="fa fa-check text-navy"></i>
@@ -49,12 +63,25 @@
                                         @endif    
                                     </p>
                                 </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_martes_mh == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                                
                             </div>
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Miercoles</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Miercoles</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_miercoles == "1")
                                             <i class="fa fa-check text-navy"></i>
@@ -63,12 +90,24 @@
                                         @endif    
                                     </p>
                                 </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_miercoles_mh == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Jueves</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Jueves</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_jueves == "1")
                                             <i class="fa fa-check text-navy"></i>
@@ -77,12 +116,24 @@
                                         @endif    
                                     </p>
                                 </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_jueves_mh == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Viernes</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Viernes</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_viernes == "1")
                                             <i class="fa fa-check text-navy"></i>
@@ -91,14 +142,11 @@
                                         @endif    
                                     </p>
                                 </div>
-                            </div>
-                            
-                            <div class="hr-line-dashed"></div>
-                            
-                            <div class="form-group"><label class="col-lg-2 control-label">Sabado</label>
-                                <div class="col-lg-10">
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
                                     <p class="form-control-static">
-                                        @if($turno->turno_sabado == "1")
+                                        @if($turno->turno_viernes_mh == "1")
                                             <i class="fa fa-check text-navy"></i>
                                         @else
                                             <i class="fa fa-times text-danger"></i>
@@ -109,10 +157,48 @@
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Domingo</label>
-                                <div class="col-lg-10">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Sabado</label>
+                                <div class="col-lg-1">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_sabado == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_sabado_mh == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Domingo</label>
+                                <div class="col-lg-1">
                                     <p class="form-control-static">
                                         @if($turno->turno_domingo == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                                
+                                <label class="col-lg-2 control-label">Aplica Medio Horario?</label>
+                                <div class="col-lg-4">
+                                    <p class="form-control-static">
+                                        @if($turno->turno_domingo_mh == "1")
                                             <i class="fa fa-check text-navy"></i>
                                         @else
                                             <i class="fa fa-times text-danger"></i>

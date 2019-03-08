@@ -8,6 +8,7 @@
     $now = date("D M d, Y G:i");
     $ultimo ='N';
     $i = 0;
+    $SeparoEmpleados = ajuste('hoja_por_empleado');
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -26,7 +27,7 @@
 		</div>
 		
 		<div id="logo">
-            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+            <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
         </div>
 		
 		<div style="clear:both"></div>

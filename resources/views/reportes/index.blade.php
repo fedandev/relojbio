@@ -42,8 +42,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Empleado</label>
                                 <div class="col-sm-4">
-                                    <select class="select2_demo_2 form-control" name="fk_empleado_cedula" id="fk_empleado_cedula" value="{{ old('fk_empleado_cedula') }}">
-                                        <option value="ALL">TODOS</option>
+                                    <select class="select2_demo_2 form-control" name="fk_empleado_cedula" id="fk_empleado_cedula" required value="{{ old('fk_empleado_cedula') }}">
                                         @include('layouts.empleadosXcedula');
                                     </select>
                                 </div>
@@ -53,8 +52,7 @@
                                 <label class="col-sm-2 control-label">Oficina</label>
                                 <div class="col-sm-4">
                                     <input type="hidden" name="oficina" id="id_oficina" value="{{ old('fk_oficina_id') }}"/>
-                                    <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field">
-                                        <option value="ALL">TODAS</option>
+                                    <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field" required>
                                         @include('layouts.oficinas')
                                     </select>
                                 </div>

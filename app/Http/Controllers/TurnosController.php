@@ -59,7 +59,7 @@ class TurnosController extends Controller
 	{
 		$this->authorize('update', $turno);
 		$turno->update($request->all());
-
+	
 		return redirect()->route('turnos.show', $turno->id)->with('info', 'Actualizado exitosamente.');
 	}
 

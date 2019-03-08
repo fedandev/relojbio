@@ -26,10 +26,11 @@
                                         <th data-hide="phone,tablet">Hora Entrada</th>
                                         <th data-hide="phone,tablet">Hora Salida</th>
                                         <th data-hide="phone,tablet">Aplica brake?</th>
+                                        <th data-hide="phone,tablet">Medio Horario?</th>
                                         <th data-hide="all">Hora Comienzo Brake</th>
                                         <th data-hide="all">Hora Fin Brake</th>
-                                        <th data-hide="phone,tablet">Tolerancia Llegada Tarde</th>
-                                        <th data-hide="phone,tablet">Tolerancia Salida Antes</th>
+                                        <th data-hide="all">Tolerancia Llegada Tarde</th>
+                                        <th data-hide="all">Tolerancia Salida Antes</th>
                                         <th class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
@@ -41,6 +42,11 @@
                                             <td>{{$horario->horario_entrada}}</td>
                                             <td>{{$horario->horario_salida}}</td>
                                             @if($horario->horario_haybrake == "S")
+                                                <td><i class="fa fa-check text-navy"></i></td>
+                                            @else
+                                                <td><i class="fa fa-times text-danger"></i></td>
+                                            @endif
+                                            @if($horario->horario_entrada_m)
                                                 <td><i class="fa fa-check text-navy"></i></td>
                                             @else
                                                 <td><i class="fa fa-times text-danger"></i></td>

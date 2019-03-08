@@ -9,6 +9,15 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 
 - Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
 
+- Agregar advertencia en modificacion de horarios cuando se existen registros en fechas que el cliente tenia dicho horario asociado.
+
+- agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
+                Tener en cuenta fecha ingreso empleado (antiguedad). 
+                Analizar trabajador mensual (dias = meses trabajados * 1.6)
+                Analizar trabajador jornalero (dias = jornadas * 0.06)
+                
+- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste en horarios y horario semanal
+
 ---------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------URGENTE----------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
@@ -32,14 +41,7 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 
 - probar reportes con brake nocturno entre 2 dias
 
-- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste en horarios y horario semanal
-
 - arreglar diseño responsive en tablas (los botones quedan afuera)
-
-- agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
-                Tener en cuenta fecha ingreso empleado (antiguedad). 
-                Analizar trabajador mensual (dias = meses trabajados * 1.6)
-                Analizar trabajador jornalero (dias = jornadas * 0.06)
 
 - probar performance:
         funcionario     1               registros/dia   6

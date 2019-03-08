@@ -6,6 +6,7 @@
     $format_fecha=ajuste('date_format');
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
+    $SeparoEmpleados = ajuste('hoja_por_empleado');
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,7 +32,7 @@
     		</div>
     		
     		<div id="logo">
-                <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
             </div>
     		
     		<div style="clear:both"></div>
@@ -65,8 +66,9 @@
 		<table id="items">
 			<tr>
                 <th>Empleado</th>
+                <th>Inicio brake</th>
+                <th>Fin brake</th>
                 <th>Horario Salida</th>
-                <th>Entrada/Salida</th>
                 <th>Fecha/Hora</th>
 			</tr>
 			@if($registros_ok->count())
@@ -76,20 +78,11 @@
                 @foreach($registros_ok as $registro)
                 <?php $i++ ?>
                 <tr>
-                    <td>{{ $registro->empleado->empleado_cedula }} - {{ $registro->empleado->empleado_nombre }} {{ $registro->empleado->empleado_apellido }} </td>
-                    @php
-                        $horario = horarioAfecha($registro->empleado->id, $registro->registro_fecha);
-                        $salida = $horario[3];
-                    @endphp
-                    <td>{{ $salida }}</td>
-                    <td>
-                        @if ($registro->registro_tipo == "I")
-                            Entrada
-                        @else
-                            Salida
-                        @endif
-                    </td>
-                    <td>{{ $registro->registro_hora }}</td>
+                    <td>{{ $registro['empleado'] }}</td>
+                    <td>{{ $registro['inicio_brake']  }}</td>
+                    <td>{{ $registro['fin_brake']  }}</td>
+                    <td>{{ $registro['hora_salida'] }}</td>
+                    <td>{{ $registro['registro_fecha']  }}</td>
                 </tr>
                     @if ($i == 29)
                      
@@ -109,8 +102,9 @@
         			     
 			            <tr>
             			    <th>Empleado</th>
+            			    <th>Inicio brake</th>
+            			    <th>Fin brake</th>
                             <th>Horario Salida</th>
-                            <th>Entrada/Salida</th>
                             <th>Fecha/Hora</th>
             			</tr>
                     @endif

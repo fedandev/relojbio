@@ -7,8 +7,8 @@
     $format_fecha=ajuste('date_format');
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
-    $empleado_header =  ($registros_ok->count() > 0 ? $registros_ok[0]->empleado : ''); 
-    
+    $empleado_header =  ($registros_ok->count() > 0 ? App\Models\Empleado::where('empleado_cedula',$registros_ok[0]['fk_empleado_cedula'] )->first() : '');
+    $SeparoEmpleados = ajuste('hoja_por_empleado');
 @endphp
 
 
@@ -30,28 +30,23 @@
     	
 		<table id="items" >
 			<tr>
-				<th>ID</th>
                 <th>Empleado</th>
                 <th>Hora Entrada</th>
-                <th>Entrada/Salida</th>
+                <th>Fin Brake</th>
                 <th>Fecha/Hora</th>
                 <th>Diferencia</th>
 			</tr>
 			@if($registros_ok->count())
 			    @php
 	                $i=0;
-	                $first_cedula = $registros_ok[0]->empleado->empleado_cedula;
-	               
 	            @endphp
 	            @foreach($registros_ok as $registro)
 	                    <?php $i++; ?>
-	                    @if ($i == 29 || $registro->empleado->empleado_cedula <> $first_cedula)
+	                    @if ($i == 29 )
                          
                             @php
     			                $i=0;
     			                echo '</table>';
-    			                $first_cedula = $registro->empleado->empleado_cedula;
-    			                $empleado_header = $registro->empleado;
     			            @endphp
             			     
                             <div id="footer">
@@ -65,32 +60,19 @@
     			            @endphp
             			     
     			            <tr>
-                				<th>ID</th>
                                 <th>Empleado</th>
                                 <th>Hora Entrada</th>
-                                <th>Entrada/Salida</th>
+                                <th>Fin Brake</th>
                                 <th>Fecha/Hora</th>
                                 <th>Diferencia</th>
                 			</tr>
                         @endif
                         <tr>
-                            <td>{{ $registro->id }}</td>
-                            <td>{{ $registro->empleado->empleado_cedula }} - {{ $registro->empleado->empleado_nombre }} {{ $registro->empleado->empleado_apellido }}</td>
-                            @php
-                                $horario = horarioAfecha($registro->empleado->id, $registro->registro_fecha);
-                                $entrada = $horario[0];
-                            @endphp
-                            <td>{{ $entrada }}</td>
-                            <td>
-                                @if ($registro->registro_tipo == "I")
-                                    Entrada
-                                @else
-                                    Salida
-                                @endif
-                            </td>
-                            <td>{{ $registro->registro_hora }}</td>
-                            <td>{{  date('H:i:s', strtotime($registro->registro_hora) - strtotime($entrada)) }}</td>
-                           
+                            <td>{{ $registro['empleado'] }}</td>
+                            <td>{{ $registro['hora_entrada'] }}</td>
+                            <td>{{ $registro['fin_brake'] }}</td>
+                            <td>{{ $registro['registro_fecha']  }}</td>
+                            <td>{{  $registro['diferencia']  }}</td>
                         </tr>
                         
                    

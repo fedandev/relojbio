@@ -124,6 +124,9 @@ function horarioAfecha($idEmpleado, $fecha){
     $horario[1] = '';
     $horario[2] = '';
     $horario[3] = '';
+    $horario[4] = '';
+    $horario[5] = '';
+    $horario[6] = 'N';
 
     if(!is_null($trabaja)){
         if(!is_null($trabaja->fk_horariorotativo_id)){
@@ -131,14 +134,20 @@ function horarioAfecha($idEmpleado, $fecha){
             $trabajaElDia = trabajaDiaRotativo($trabaja->horariorotativo,$trabaja->trabaja_fechainicio, $fecha );
             
             if($trabajaElDia == "1"){
+                
                 if($trabaja->horariorotativo->horario->horario_haybrake == "S"){
                     $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
                     $horario[1] = $trabaja->horariorotativo->horario->horario_comienzobrake;
                     $horario[2] = $trabaja->horariorotativo->horario->horario_finbrake;
                     $horario[3] = $trabaja->horariorotativo->horario->horario_salida;
+                    $horario[4] = $trabaja->horariorotativo->horario->horario_tiempotarde;
+                    $horario[5] = $trabaja->horariorotativo->horario->horario_salidaantes;
+                    $horario[6] = 'S';
                 }else{
                     $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
-                    $horario[1]=  $trabaja->horariorotativo->horario->horario_salida;
+                    $horario[3]=  $trabaja->horariorotativo->horario->horario_salida;
+                    $horario[4] = $trabaja->horariorotativo->horario->horario_tiempotarde;
+                    $horario[5] = $trabaja->horariorotativo->horario->horario_salidaantes;
                 }
             }
         
@@ -146,14 +155,40 @@ function horarioAfecha($idEmpleado, $fecha){
             $trabajaElDia = trabajaDiaTurno($trabaja->turno, $fecha);
                 
             if($trabajaElDia == "1"){
-                if($trabaja->turno->horario->horario_haybrake == "S"){
-                    $horario[0] = $trabaja->turno->horario->horario_entrada;
-                    $horario[1] = $trabaja->turno->horario->horario_comienzobrake;
-                    $horario[2] = $trabaja->turno->horario->horario_finbrake;
-                    $horario[3] = $trabaja->turno->horario->horario_salida;
+                
+                $diaMedioHorario = diaMedioHorario($trabaja->turno,$fecha);
+                
+                if($diaMedioHorario == "0"){
+                    if($trabaja->turno->horario->horario_haybrake == "S"){
+                        $horario[0] = $trabaja->turno->horario->horario_entrada;
+                        $horario[1] = $trabaja->turno->horario->horario_comienzobrake;
+                        $horario[2] = $trabaja->turno->horario->horario_finbrake;
+                        $horario[3] = $trabaja->turno->horario->horario_salida;
+                        $horario[4] = $trabaja->turno->horario->horario_tiempotarde;
+                        $horario[5] = $trabaja->turno->horario->horario_salidaantes;
+                        $horario[6] = 'S';
+                    }else{
+                        $horario[0] = $trabaja->turno->horario->horario_entrada;
+                        $horario[3] = $trabaja->turno->horario->horario_salida;
+                        $horario[4] = $trabaja->turno->horario->horario_tiempotarde;
+                        $horario[5] = $trabaja->turno->horario->horario_salidaantes;
+                    }
                 }else{
-                    $horario[0] = $trabaja->turno->horario->horario_entrada;
-                    $horario[1] = $trabaja->turno->horario->horario_salida;
+                    if($trabaja->turno->horario->horario_haybrake_m == "S"){
+                        $horario[0] = $trabaja->turno->horario->horario_entrada_m;
+                        $horario[1] = $trabaja->turno->horario->horario_comienzobrake_m;
+                        $horario[2] = $trabaja->turno->horario->horario_finbrake_m;
+                        $horario[3] = $trabaja->turno->horario->horario_salida_m;
+                        $horario[4] = $trabaja->turno->horario->horario_tiempotarde;
+                        $horario[5] = $trabaja->turno->horario->horario_salidaantes;
+                        $horario[6] = 'S';
+                    }else{
+                        $horario[0] = $trabaja->turno->horario->horario_entrada_m;
+                        $horario[3] = $trabaja->turno->horario->horario_salida_m;
+                        $horario[4] = $trabaja->turno->horario->horario_tiempotarde;
+                        $horario[5] = $trabaja->turno->horario->horario_salidaantes;
+                    }
+                    
                 }
             }
         }
@@ -163,9 +198,9 @@ function horarioAfecha($idEmpleado, $fecha){
 
 function totalHorasAfecha($horario){
     $horas = '';
-    if(count($horario) == 2){
+    if(count($horario) == 4){
         $horas = date('H:i:s', strtotime($horario[1]) - strtotime($horario[0]));
-    }elseif(count($horario) == 4){
+    }elseif(count($horario) == 7){
         $horas = date('H:i:s', strtotime($horario[1]) - strtotime($horario[0]) + strtotime($horario[3]) - strtotime($horario[2]));
     }
     return $horas;
@@ -192,7 +227,10 @@ function totalExtras($registros, $horarioAhacer){
                 $tiempoTrabajado = new SumaTiempos();
                 
                 foreach ($tiempos as $parcial) {
-                    $tiempoTrabajado->sumaTiempo(new SumaTiempos($parcial));
+                    if(!is_null($parcial)){
+                        $tiempoTrabajado->sumaTiempo(new SumaTiempos($parcial));
+                    }
+                    
                 }
                 
                 if($horarioAhacer < $tiempoTrabajado->verTiempoFinal()){
@@ -395,4 +433,45 @@ function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
   
     
     
+}
+
+
+
+function diaMedioHorario($turno, $fecha){
+    $fecha_date = new datetime($fecha);
+    $dia = $fecha_date->format('D');
+    
+    if($dia=="Mon"){
+        $medioHorario =  $turno->turno_lunes_mh;
+    }
+    
+    if($dia=="Tue"){
+        $medioHorario =  $turno->turno_martes_mh;
+    }
+    
+    
+    if($dia=="Wed"){
+        $medioHorario =  $turno->turno_miercoles_mh;
+    }
+    
+    
+    if($dia=="Thu"){
+        $medioHorario =  $turno->turno_jueves_mh;
+    }
+    
+    if($dia=="Fri"){
+        $medioHorario =  $turno->turno_viernes_mh;
+    }
+    
+    
+    if($dia=="Sat"){
+        $medioHorario =  $turno->turno_sabado_mh;
+    }
+    
+    if($dia=="Sun"){
+        $medioHorario =  $turno->turno_domingo_mh;
+    }
+    
+
+    return $medioHorario;
 }
