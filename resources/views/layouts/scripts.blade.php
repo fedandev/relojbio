@@ -121,24 +121,6 @@
    
     // En headerpanel se utiliza
     $('span[data-action="refresh"]').click(function(event) {
-         
-           
-            $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
-            
-            $.ajax({
-                method: 'get',
-                url : "/flush",
-                data: {},
-                async: true,
-                success: function(response){
-                    
-                },
-                error: function(data){
-                    console.log(data);
-                },
-            
-            });
-       
       
         location.reload();
        

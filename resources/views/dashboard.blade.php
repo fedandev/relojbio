@@ -184,8 +184,10 @@
 @section('scripts')
 
     <script src="{{ secure_asset('js/plugins/jquery.peity.min.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('js/plugins/moment.min.js') }}" type="text/javascript"></script>
     <script src="{{ secure_asset('js/plugins/Chart.min.js') }}" type="text/javascript"></script>
-                        
+     
+    
     <script>
         $(document).ready(function () {
             $("#1").peity("pie", {
@@ -207,8 +209,7 @@
                 fill: ['#1ab394', '#d7d7d7', '#ffffff'],
                 width: 55
             })
-            
-            
+
             
             var lineData = {
                 labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
@@ -219,7 +220,19 @@
                         borderColor: "rgba(26,179,148,0.7)",
                         pointBackgroundColor: "rgba(26,179,148,1)",
                         pointBorderColor: "#fff",
-                        data: [48, 48, 60, 39, 56, 37, 30]
+                        data: [ 
+                             <?php
+                                if(!empty($arrayHorasTrabajadas)){
+                                    foreach($arrayHorasTrabajadas as $registro){
+                                         if ($registro === end($arrayHorasTrabajadas)) {
+                                            echo $registro[0];
+                                        }else{
+                                            echo $registro[0].",";
+                                        }
+                                    }
+                                }
+                            ?>
+                        ]
                     },
                     {
                         label: "Horas extras",

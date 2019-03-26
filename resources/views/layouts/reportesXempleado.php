@@ -7,3 +7,4 @@
 <option value="lf">Listado de faltas</option>
 <option value="es">Entradas y Salidas</option>
 <option value="lc">Libres Concedidos</option>
+<option value="her">Horas Extras Resumida</option>

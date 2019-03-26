@@ -52,7 +52,7 @@
                                 <label class="col-sm-2 control-label">Oficina</label>
                                 <div class="col-sm-4">
                                     <input type="hidden" name="oficina" id="id_oficina" value="{{ old('fk_oficina_id') }}"/>
-                                    <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field" required>
+                                    <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field" >
                                         @include('layouts.oficinas')
                                     </select>
                                 </div>
@@ -108,6 +108,8 @@
                     action = '/reportes/entradasYsalidas';
                 }else if(reporte == 'lc'){
                     action = '/reportes/libresConcedidos';
+                }else if(reporte == 'her'){
+                    action = '/reportes/HorasExtrasResumidas';
                 }
                 
                 $("#frmReportes").attr("action", action);

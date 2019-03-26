@@ -58,11 +58,14 @@ class ReportesController extends Controller
         }
         
         if($for == 'N'){
-            $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->get();
+            //$registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->get();
+            $registros =  v_inout($fechainicio,$fechafin,$empleados[0]->empleado_cedula );
+            
         }elseif($for == 'S'){
-            $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->get();
+            //$registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->get();
+            $registros =  v_inout($fechainicio,$fechafin);
         }
-        
+        $registros = collect($registros);
         $tiposRegistros = array(
             array("Nombre" => "Manual",
                   "Color" => "#62FF00",
@@ -874,6 +877,148 @@ class ReportesController extends Controller
             return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
         }elseif($Rpdf->ajuste_valor == 'download'){
             return $pdf->download('listado.pdf');             //Forzar descarga de PDF
+        }
+    }
+    
+    public function HorasExtrasResumidas(Request $request){
+        $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
+        $controller = 'reportes';
+		if (!Gate::allows('view-report', $controller)) {
+           return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
+        }
+        $for = "N";
+        
+        $minimo_extras = ajuste('minimo_extras');
+        $max_extras = ajuste('max_hours_ext_per_day');
+        
+        $fechainicio = $request->input('fechainicio');
+        $fechafin = $request->input('fechafin');
+        $cedula = $request->input('fk_empleado_cedula');
+        $fk_oficina_id = $request->input('fk_oficina_id');
+        
+        if($cedula !='' && $cedula != 'ALL'){
+            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
+            if($fk_oficina_id != NULL){
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+            }
+        }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
+            $for = "S";
+        }
+
+        if($for == 'N'){
+            $registros_inout =  v_inout($fechainicio,$fechafin,$empleados->empleado_cedula );
+        }elseif($for == 'S'){
+            $registros_inout =  v_inout($fechainicio,$fechafin);
+        }
+        $registros_sql = collect($registros_inout);
+        
+        $registros = [];
+        
+        $minimo_extras = ajuste('minimo_extras');
+        $max_extras = ajuste('max_hours_ext_per_day');
+        $i=0;
+        $empleado_cedula = "";
+        $Empleado_Anterior = new Empleado();
+        $primero = 0;
+        $entro = 0;
+
+        foreach($registros_sql as $registro){
+            $Empleado = Empleado::where('empleado_cedula', '=',$registro->r_cedula)->first();
+            
+            if($Empleado == null){
+                continue;
+            }
+            
+            if($empleado_cedula != $registro->r_cedula){
+                if($primero == 0){
+                    $Empleado_Anterior = $Empleado;
+                    $empleado_cedula = $registro->r_cedula;
+                    $horas_debe_trabajar_sum = new SumaTiempos();
+                    $horas_trabajadas = new SumaTiempos();
+                    $primero = 1;
+                }else{
+                    $entro = 1;
+                }
+            }
+            
+            if($entro == 1){
+    	        $horas_extras = "00:00:00";
+    	        
+    	        $inicio = strtotime($fechainicio);
+                $fin = strtotime($fechafin);
+    	        $EmpleadoAgregar = Empleado::where('empleado_cedula', '=',$empleado_cedula)->first();
+    	        
+    	        for($z=$inicio; $z<=$fin; $z+=86400){
+                    $fecha = date("Y-m-d", $z);
+                    $horario_Fecha = horarioAfecha($EmpleadoAgregar->id, $fecha);
+                    $horas = totalHorasAfecha($horario_Fecha);
+                    $horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas));
+                }
+    	        
+                if($horas_trabajadas->verTiempoFinal() != "00:00:00" && $horas_debe_trabajar_sum->verTiempoFinal() != "00:00:00"){
+                    $a = $horas_trabajadas->verTiempoFinal();
+                    $b = $horas_debe_trabajar_sum->verTiempoFinal();
+                    
+                    $datetime1 = DateTime::createFromFormat('H:i:s', $a);
+                    $datetime2 = DateTime::createFromFormat('H:i:s', $b);
+                    if($b < $a){
+                        $resu = $datetime1->diff($datetime2);
+                        $horas_extras = $resu->format("%H:%I:%S");
+                    }else{
+                        $horas_extras = '00:00:00';
+                    }
+                }
+                $r = [];
+                
+                $r['fk_empleado_cedula'] = $empleado_cedula;
+                $r['registro_fecha'] = $registro->r_fecha;
+                if($horas_debe_trabajar_sum->verTiempoFinal() == '00:00:00'){
+                    $r['horas_debe_trabajar']='No tiene horario asignado';
+                }else{
+                    $r['horas_debe_trabajar'] = $horas_debe_trabajar_sum->verTiempoFinal();
+                }
+                $r['horas_trabajadas'] = $horas_trabajadas->verTiempoFinal();
+                if($horas_extras == '00:00:00'){
+                    $r['horas_extras'] = '00:00:00';
+                }else{
+                    if($horas_extras <= $max_extras && $horas_extras >= $minimo_extras){
+                        $r['horas_extras'] = $horas_extras;
+                    }
+                }
+                $r['empleado'] = $Empleado_Anterior->empleado_nombre.' '.$Empleado_Anterior->empleado_apellido;
+                
+                $registros[$i] = $r;
+                $i++;
+                $entro = 0;
+                $horas_debe_trabajar_sum = new SumaTiempos();
+                $horas_trabajadas = new SumaTiempos();
+                $empleado_cedula = $registro->r_cedula;
+                $Empleado_Anterior = $Empleado;
+    	    }
+            
+    		$horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
+    
+    		//$horas_debe_trabajar = totalHorasAfecha($horario);
+    		//$horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas_debe_trabajar));
+    		
+    	    if($registro->r_total_horas != null){
+    		    $horas_trabajadas->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    		}
+        }
+        
+        $registros_ok = collect($registros);
+
+        if($registros_ok->count() > 0){
+            $pdf = PDF::loadView('pdf.horasExtrasResumidas', compact('registros_ok','fechainicio','fechafin','oficina'));
+            
+            if($Rpdf->ajuste_valor == 'stream'){
+                return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
+            }elseif($Rpdf->ajuste_valor == 'download'){
+                return $pdf->download('listado.pdf');             //Forzar descarga de PDF
+            }
+        }else{
+            return back()->with('warning', 'No se encontraron datos.')->withInput();
         }
     }
 }

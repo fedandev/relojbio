@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use App\Models\Oficina;
 use App\Models\Ajuste;
@@ -788,7 +789,7 @@ class HomeController extends Controller
     
     public function dashboard(){
        //$f_inicio_mes=  strtotime('first day of january this year');
-        
+         Artisan::call('cache:clear');
         $fechaActual = new DateTime();
         $hoy = $fechaActual->format('Y-m-d');
         
@@ -799,56 +800,74 @@ class HomeController extends Controller
         $f_fin_mes = $fechaActual->format('Y-m-d');
         $porcentajeHorasAtrabajar = 0;
         
-        $HorasTrabajadas = $this->HorasTrabajadas();
+        $HorasTrabajadas = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
         $LlegadasTardes = $this->LlegadasTardes($f_inicio_mes, $f_fin_mes);
         $HorasExtras = $this->HorasExtras($f_inicio_mes, $f_fin_mes);
         
         $TotalHorasAtrabajar = $this->TotalHorasAtrabajar($f_inicio_mes, $hoy);
-        //$porcentajeHorasTrabajadas = date('H:i:s',(strtotime($HorasTrabajadas)*100)) ;
-        //$porcentajeHorasTrabajadas = $porcentajeHorasTrabajadas/date($TotalHorasAtrabajar);
-        
+
         $segHorasTrabajadas = (((int)substr($HorasTrabajadas,0,2)) * 3600)+  (((int)substr($HorasTrabajadas,3,2)) * 60) +  (((int)substr($HorasTrabajadas,6,2)));    
         $segTotalHorasAtrabajar = (((int)substr($TotalHorasAtrabajar,0,2)) * 3600)+  (((int)substr($TotalHorasAtrabajar,3,2)) * 60) +  (((int)substr($TotalHorasAtrabajar,6,2))); 
         if($segHorasTrabajadas != 0 && $segTotalHorasAtrabajar !=0){
            $porcentajeHorasAtrabajar = ($segHorasTrabajadas*100)/$segTotalHorasAtrabajar;
-       
             $porcentajeHorasAtrabajar = round($porcentajeHorasAtrabajar,2); 
         }
-        
-        //$HorasExtras = 
-        //$TotalHorasDebeTrabajarEmpresa -> sacar el total de horas que deberia trabajar 
-            // la empresa hasta la fecha. Ver de agrupar por empleado y luego realizar la sumatoria. Con este valor y el de horas trabajadas se saca el porcentaje.
-            // para turnos rotativo multiplicar los dias de trabajo por la cantidad de horas del horario asociado a dicho turno
-            // los dias de trabajo son por semana, DUDA: Los dias libres que se indican son todos los dias libres de la semana?, 
-                    //si es si, falta agregar control agregar un control en agregar de horarios rotativos para que los dias de trabajo + dias libres= 7
+
+
+        //Horas de todo el año
+        $months = array("January", "Feb", "Mar","Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        $arrayHorasTrabajadas = array();
+        foreach ($months as $month) {
+            $fechaActual->modify('first day of '.$month.' '. date('Y'));
+            $f_inicio_mes = $fechaActual->format('Y-m-d');
             
+            $fechaActual->modify('last day of '.$month.' '. date('Y'));
+            $f_fin_mes = $fechaActual->format('Y-m-d');
+            
+            $HorasTrabajadas2 = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
+            //$LlegadasTardes = $this->LlegadasTardes($f_inicio_mes, $f_fin_mes);
+            //$HorasExtras = $this->HorasExtras($f_inicio_mes, $f_fin_mes);
+
+            $explode = explode(":", $HorasTrabajadas2);
+            $HorasNum = $explode[0];
+            
+            array_push($arrayHorasTrabajadas, $HorasNum);
+        }
+    
         
-        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar'));
+        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas'));
     }
     
     
     
-    public function HorasTrabajadas(){
-        $fechaActual = new DateTime();
-        
-        $fechaActual->modify('first day of this month');
-        $f_inicio_mes = $fechaActual->format('Y-m-d');
-        
-        $fechaActual->modify('last day of this month');
-        $f_fin_mes = $fechaActual->format('Y-m-d');
+    public function HorasTrabajadas($f_inicio_mes, $f_fin_mes){
+   
         
 
         
         //dd($f_inicio_mes, $f_fin_mes,$fechaActual );
         
         //Horas trabajadas en lo que va del mes
-        $registros = cacheQuery("select * from v_inout where registro_fecha between '".$f_inicio_mes."' and  '".$f_fin_mes."' and fk_empleado_cedula in (select empleado_cedula from empleados) order by registro_fecha", 30);
+        //$registros = cacheQuery("select * from v_inout where registro_fecha between '".$f_inicio_mes."' and  '".$f_fin_mes."' order by registro_fecha", 30);
         
-        
+        $registros =  v_inout($f_inicio_mes,$f_fin_mes);
+       
         $tiempoTrabajado = new SumaTiempos();
         foreach($registros as $registro){
-            if(!is_null($registro->registro_totalHoras)){
-                $tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
+            $empleado = Empleado::where('empleado_cedula','=' ,$registro->r_cedula)->first();
+            if(!is_null($registro->r_total_horas ) && $empleado){
+                $fecha = $registro->r_fecha;
+                $fechaSalida = $registro->r_salida;
+                
+                
+                $inconsitencia = inconsistencia_1($registros, $empleado->empleado_cedula , $fecha, $fechaSalida );
+                
+                if($inconsitencia == 'N'){
+                     $tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                }
+                
+                
+               
             }
             
         }
@@ -861,7 +880,7 @@ class HomeController extends Controller
     public function LlegadasTardes($f_inicio, $f_fin){
         
         
-        $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' and fk_empleado_cedula in (select empleado_cedula from empleados) " ;
+        $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' " ;
 
         $sql = $sql." order by registro_hora asc , registro_tipo ";
         
@@ -872,16 +891,23 @@ class HomeController extends Controller
 
         $iRegistros = 0;
         $registros_ok = [];
-        $horario = [];
+        
         //busco el horario a la fecha porque en un periodo de fechas pueden existir horarios distintos
         foreach($registros as $registro){
             $registro_fecha = $registro->registro_fecha;
             $registro_hora_d = new DateTime($registro->registro_hora);
             $registro_hora = $registro_hora_d->format('H:i:s');
+            $horario = [];
+            if ($registro->empleado){
+                 $empleado = $registro->empleado;
+                 $horario = horarioAfecha($empleado->id,$registro_fecha);
+                
+            }else{
+                  $horario[0] = '';
+            }
+           
             
-            $empleado = $registro->empleado;
-            
-            $horario = horarioAfecha($empleado->id,$registro_fecha);
+           
            
             if($horario[0] != ''){
                 
@@ -1021,31 +1047,55 @@ class HomeController extends Controller
     }
     
     public function HorasExtras($f_inicio, $f_fin){
-        $sql= "SELECT fk_empleado_cedula, registro_fecha, SEC_TO_TIME( SUM( TIME_TO_SEC( registro_totalHoras ) ) ) as sum_horas FROM v_inout WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  and fk_empleado_cedula in (select empleado_cedula from empleados)" ;
+        //$sql= "SELECT fk_empleado_cedula, registro_fecha, SEC_TO_TIME( SUM( TIME_TO_SEC( registro_totalHoras ) ) ) as sum_horas FROM v_inout WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  and fk_empleado_cedula in (select empleado_cedula from empleados)" ;
         
-        $sql = $sql." group by fk_empleado_cedula, registro_fecha ";
+        //$sql = $sql." group by fk_empleado_cedula, registro_fecha ";
         
-        $registros_sql =  DB::select($sql);
+        $registros_sql = v_inout($f_inicio,$f_fin);
+        $registros_sql =  collect($registros_sql);
         
         $minimo_extras = ajuste('minimo_extras');
         $max_extras = ajuste('max_hours_ext_per_day');
         $i=0;
         
-        $tiempoAcumulado = new SumaTiempos();         
-        foreach($registros_sql as $registro){
+        $registros_sql =  $registros_sql->groupBy('r_cedula');
+     
+        $tiempoAcumulado = new SumaTiempos();
+                 
+        foreach($registros_sql as $cedula => $fechas){
         
-            $Empleado = Empleado::where('empleado_cedula', '=',$registro->fk_empleado_cedula)->first();
+            $Empleado = Empleado::where('empleado_cedula', '=',$cedula)->first();
             
-    		$horario = horarioAfecha( $Empleado->id, $registro->registro_fecha);
-    
-    		$horas_debe_trabajar = totalHorasAfecha($horario);
-    		$horas_trabajadas =  $registro->sum_horas;
-    		$horas_extras = date('H:i:s', strtotime($horas_trabajadas) - strtotime($horas_debe_trabajar));
-    	    
-    	
-            if($horas_extras >= $minimo_extras && $horas_debe_trabajar<> '00:00:00' && $horas_extras <='12:59:59' ){
-                $tiempoAcumulado->sumaTiempo(new SumaTiempos($horas_extras));
-                $i++;
+            if($Empleado){
+                foreach($fechas->groupBy('r_fecha') as $fecha => $regs){
+                    $tiempoAcumuladoFecha = new SumaTiempos();
+                    $horario = horarioAfecha( $Empleado->id, $fecha);
+                    $horas_debe_trabajar = totalHorasAfecha($horario);
+                   
+                
+                    if ($horario[0] !=''){
+                        foreach($regs as $reg){
+                            $inconsitencia = inconsistencia_1($regs, $cedula , $fecha, $reg->r_salida );
+                            if($inconsitencia == 'N' && $reg->r_total_horas){
+                                $tiempoAcumuladoFecha->sumaTiempo(new SumaTiempos($reg->r_total_horas));
+                            }
+                            
+                        }
+                    		
+                		$horas_trabajadas =  $tiempoAcumuladoFecha->verTiempoFinal();
+                	
+                		$horas_extras = date('H:i:s', strtotime($horas_trabajadas) - strtotime($horas_debe_trabajar));
+                    	    
+                    	
+                        if($horas_extras >= $minimo_extras && $horas_debe_trabajar<> '00:00:00' && $horas_extras <='12:59:59' ){
+                            $tiempoAcumulado->sumaTiempo(new SumaTiempos($horas_extras));
+                            $i++;
+                        }
+                    }
+                   
+                    
+                }
+                
             }
     		
         }
@@ -1069,9 +1119,10 @@ class HomeController extends Controller
             foreach($Empleados as $empleado){
                 $horario = horarioAfecha($empleado->id, $dia);
                 
+                
                 $horas_debe_trabajar = totalHorasAfecha($horario);
                 
-                if($horas_debe_trabajar != ''){
+                if($horas_debe_trabajar != '' && $horario[0] != ''){
                     $tiempoAcumulado->sumaTiempo(new SumaTiempos($horas_debe_trabajar));
                 
                 }

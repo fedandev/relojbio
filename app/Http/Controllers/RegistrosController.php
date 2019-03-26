@@ -38,23 +38,24 @@ class RegistrosController extends Controller
 		$fdesde= $request->input('fdesde');
 		$fhasta= $request->input('fhasta');
 		
-		if($empleado_cedula and !$fdesde and !$fhasta){  
+
+		if($empleado_cedula != 'ALL' and !$fdesde and !$fhasta){  
 			
 			$registros = Registro::where('fk_empleado_cedula', '=', $empleado_cedula)->orderby('registro_hora','asc')->orderby('fk_empleado_cedula')->get();
 			
-		}elseif($empleado_cedula and $fdesde and !$fhasta){
+		}elseif($empleado_cedula != 'ALL' and $fdesde and !$fhasta){
 		
 			$registros = Registro::where('fk_empleado_cedula', '=', $empleado_cedula)->where('registro_fecha', '>=', $fdesde)->orderby('registro_hora', 'ASC')->orderby('fk_empleado_cedula')->get();
 			
-		}elseif($empleado_cedula and !$fdesde and $fhasta){
+		}elseif($empleado_cedula != 'ALL' and !$fdesde and $fhasta){
 		
 			$registros = Registro::where('fk_empleado_cedula', '=', $empleado_cedula)->where('registro_fecha', '<=', $fhasta)->orderby('registro_hora', 'ASC')->orderby('fk_empleado_cedula')->get();
 			
-		}elseif($empleado_cedula and $fdesde and $fhasta){
+		}elseif($empleado_cedula != 'ALL' and $fdesde and $fhasta){
 			
 			$registros = Registro::where('fk_empleado_cedula', '=', $empleado_cedula)->whereBetween('registro_fecha', array($fdesde,$fhasta))->orderby('registro_hora', 'ASC')->orderby('fk_empleado_cedula')->get();
 			
-		}elseif(!$empleado_cedula and $fdesde and $fhasta){
+		}elseif($empleado_cedula == 'ALL' and $fdesde and $fhasta){
 		
 			$registros = Registro::whereBetween('registro_fecha', array($fdesde,$fhasta))->orderby('registro_hora', 'ASC')->orderby('fk_empleado_cedula')->get();
 			

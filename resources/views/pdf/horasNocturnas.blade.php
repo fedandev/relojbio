@@ -106,7 +106,7 @@
                         		</div>
                         		
                         		<div id="logo">
-                                    <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                    <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
                                 </div>
                         		
                         		<div style="clear:both"></div>
@@ -167,7 +167,7 @@
                             		</div>
                             		
                             		<div id="logo">
-                                        <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                        <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
                                     </div>
                             		
                             		<div style="clear:both"></div>
@@ -241,7 +241,7 @@
                         		</div>
                         		
                         		<div id="logo">
-                                    <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                    <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
                                 </div>
                         		
                         		<div style="clear:both"></div>

@@ -17,7 +17,7 @@
     		                
     		                    <div class="col-sm-4">
     		                        <p class="font-bold">Empleados</p>
-    			                    <select class="select2_demo_2 form-control " name="ci" id="ci" value="{{ $empleado_cedula }}" required>
+    			                    <select class="select2_demo_2 form-control " name="ci" id="ci" value="{{ $empleado_cedula }}" required >
                                         @include('layouts.empleadosXcedula');
                                     </select>
     		                    </div>

@@ -41,7 +41,7 @@ function controllerFromRoute(){
     return $controller;
 }
 
-function cacheQuery($sql, $timeout = 60) {
+function cacheQuery($sql, $timeout = 1) {
     return Cache::remember(md5($sql), $timeout, function() use ($sql) {
         return DB::select(DB::raw($sql));
     });
@@ -198,9 +198,9 @@ function horarioAfecha($idEmpleado, $fecha){
 
 function totalHorasAfecha($horario){
     $horas = '';
-    if(count($horario) == 4){
-        $horas = date('H:i:s', strtotime($horario[1]) - strtotime($horario[0]));
-    }elseif(count($horario) == 7){
+    if($horario[6]=='N'){
+        $horas = date('H:i:s', strtotime($horario[3]) - strtotime($horario[0]));
+    }elseif($horario[6]=='S'){
         $horas = date('H:i:s', strtotime($horario[1]) - strtotime($horario[0]) + strtotime($horario[3]) - strtotime($horario[2]));
     }
     return $horas;
@@ -370,7 +370,6 @@ function trabajaDiaTurno($turno, $fecha){
     return $trabaja;
 }
 
-
 function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
    
     $diasTrabajo = $rotativo->horariorotativo_diastrabajo;
@@ -435,8 +434,6 @@ function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
     
 }
 
-
-
 function diaMedioHorario($turno, $fecha){
     $fecha_date = new datetime($fecha);
     $dia = $fecha_date->format('D');
@@ -474,4 +471,42 @@ function diaMedioHorario($turno, $fecha){
     
 
     return $medioHorario;
+}
+
+//(la vista no la uso mas porque anda muy lento) esta funcion hace lo mismo que dicha vista.
+function v_inout($fdesde,$fhasta, $cedula = ''){
+    
+    $query = "select r_cedula, r_fecha, r_entrada, r_salida, sec_to_time(timestampdiff(SECOND, r_entrada, r_salida)) as r_total_horas from (select  r1.fk_empleado_cedula as r_cedula, r1.registro_fecha as r_fecha, r1.registro_hora as r_entrada, (select r2.registro_hora from registros r2 where r2.registro_fecha between '".$fdesde."' and '".$fhasta."' and r2.registro_tipo = 'O' and r2.fk_empleado_cedula = r1.fk_empleado_cedula and r2.registro_hora > r1.registro_hora  group by r2.registro_hora having  timestampdiff(HOUR, r1.registro_hora , r2.registro_hora ) < 24 order by r2.registro_hora limit 1) as r_salida from registros r1 where r1.registro_fecha between '".$fdesde."' and '".$fhasta."'  and r1.registro_tipo = 'I' "  ;
+    
+    if($cedula!=''){
+        $query = $query." and r1.fk_empleado_cedula = '".$cedula."' ";
+    }
+    $query = $query." group by r1.registro_hora order by r1.registro_hora) t order by r_cedula, r_fecha, r_entrada;";
+
+   
+    return $registros = DB::select($query);
+}
+
+// Si en el mismo dia para el mismo empleado, existe la misma salida en 2 registros, es una inconsitencia. analiza datos devueltos en v_inout funcion de este archivo (la vista no la uso mas porque anda muy lento)
+function inconsistencia_1($registros, $empleado_cedula, $fecha, $fechaSalida ){
+    $inconsitencia = 'N';
+    $contSalidas = 0;
+    foreach($registros as $registro_ax){
+       $empleado_2 = $registro_ax->r_cedula;
+       $fechaSalida_2 = $registro_ax->r_salida;
+        if(!is_null($registro_ax->r_salida ) && $empleado_2){
+            $fecha_2 = $registro_ax->r_fecha;
+            if($fecha == $fecha_2 && $empleado_cedula == $empleado_2 && $fechaSalida == $fechaSalida_2 ){
+                 $contSalidas++;
+            }
+           
+        }
+    }
+    
+    
+    if ($contSalidas >1){
+        $inconsitencia = 'S';
+    }
+    
+    return $inconsitencia;
 }

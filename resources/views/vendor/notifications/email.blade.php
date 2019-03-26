@@ -311,7 +311,7 @@
                                     <td class="content-block">
                                         Si no solicitó restablecer la contraseña, no se requieren más acciones.
                                         Saludos,
-                                        RB+
+                                        SGRHH+
                                     </td>
                                 </tr>
                                 
@@ -320,7 +320,7 @@
                     </tr>
                 </table>
                 <div class="footer">
-                    <p class="m-t"> <small>RB+ &copy; 2018</small> </p>
+                    <p class="m-t"> <small>SGRHH+ &copy; 2018</small> </p>
                 </div></div>
         </td>
         <td></td>

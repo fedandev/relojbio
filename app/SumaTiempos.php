@@ -45,6 +45,7 @@ class SumaTiempos
             = intval($this->tiempo['horas'])
             + intval($tiempo->tiempo['horas'] + $horas);
     }
+    
     /**
      * Formatea y devuelve el tiempo final
      *

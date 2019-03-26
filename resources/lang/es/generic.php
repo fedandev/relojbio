@@ -12,4 +12,5 @@ return [
     'created' => 'Nuevo',
     'updated' => 'Modificado',
     'deleted' => 'Eliminado',
+    'dashboard' => 'Dashboard'
 ];

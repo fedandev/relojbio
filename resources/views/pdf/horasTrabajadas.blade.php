@@ -11,6 +11,7 @@
     $i = 0;
     $tiempoTrabajado = new SumaTiempos();
     $SeparoEmpleados = ajuste('hoja_por_empleado');
+    $maxHorasXdias = ajuste('max_hours_per_day');
 @endphp
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -68,94 +69,58 @@
                 <th>Total Horas</th>
 			</tr>
 			@if($registros->count())
-			    @foreach($registros->groupBy('fk_empleado_cedula') as $registro_group)
+			    @foreach($registros->groupBy('r_cedula') as $registro_group)
 		            @if($loop->last)
 		                @php
 		                    $ultimo='S';
 		                @endphp
 		            @endif
-		            @foreach($registro_group->sortBy('registro_fecha') as $registro)
-		                @if($loop->last)
-        			        @foreach($empleados as $empleado)
-        			            @if($empleado->empleado_cedula == $registro->fk_empleado_cedula)
-            			                @if($i <= 29)
-                    			            @php
-                    			                $i += 2;
-                    			            @endphp
-                			                <tr>
-                                                <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
-                                                <td>{{ formatFecha($registro->registro_fecha, $format_fecha) }}</td>    
-                                                <td>{{ formatHora($registro->registro_entrada, $format_hora)  }}</td>
-                                                <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
-                                                <td>{{ $registro->registro_totalHoras }}</td>
-                                            </tr>
-                                            @if($registro->registro_totalHoras != null)
-                                                @php
-                        							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
-                        						@endphp
-                        					@endif
-                        					<tr style="background-color: rgba(128, 128, 128, 0.2)">
-                    							<td colspan="3"></td>
-                    							<td>Total de Horas</td>
-                    							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
-                    						</tr>
-                    						@php
-                    							$tiempoTrabajado = new SumaTiempos();
-                    						@endphp
-                                        @else
-                                		    @php
-                    			                $i=1;
-                    			            @endphp
-                    			            <div id="footer">
-                                              <div class="page-number"></div>
-                                            </div>
-                    			            <div style="page-break-after:always;"></div>
-                                            </table>
-                                            <textarea id="header">HORAS TRABAJADAS</textarea>
-                                            
-                                    		<div id="identity">
-                                                <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-                                    			</textarea>
-                                    		</div>
-                                    		
-                                    		<div id="logo">
-                                                <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-                                                 
-                                            </div>
-                                    		
-                                    		<div style="clear:both"></div>
-                                    		
-                                    		<div id="meta-box">
-                                    			<table id="meta">
-                                                    <tr>
-                                                        <td class="meta-head">Fecha Inicio</td>
-                                                        <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="meta-head">Fecha Fin</td>
-                                                        <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
-                                                    </tr>
-                                                </table>
-                                    		</div>
-                                    		
-                                            <table id="items">
-                                    			<tr>
-                                    			    <th>Empleado</th>
-                                    				<th>Fecha</th>
-                                                    <th>Hora Entrada</th>
-                                                    <th>Hora Salida</th>
-                                                    <th>Total Horas</th>
-                                    			</tr>
-                                		@endif
-                                        @if($ultimo != 'S')
-                                            @if($SeparoEmpleados == 'S')
+		            @foreach($registro_group->sortBy('r_fecha') as $registro)
+		                @php
+		                    $inconsistencia= inconsistencia_1($registros, $registro->r_cedula, $registro->r_fecha, $registro->r_salida );
+		                @endphp
+    	                
+    	                @if($inconsistencia == 'N')
+    	                
+    		                @if($loop->last)
+            			        @foreach($empleados as $empleado)
+            			            @if($empleado->empleado_cedula == $registro->r_cedula)
+                			                @if($i <= 29)
+                        			            @php
+                        			                $i += 2;
+                        			            @endphp
+                    			                <tr>
+                                                    <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
+                                                    <td>{{ formatFecha($registro->r_fecha, $format_fecha) }}</td>    
+                                                    <td>{{ formatHora($registro->r_entrada, $format_hora)  }}</td>
+                                                    <td>{{ formatHora($registro->r_salida, $format_hora)   }}</td>
+                                                    @if($registro->r_total_horas > $maxHorasXdias)
+                                					    <td style="background-color: rgba(255, 0, 0, 0.2)">{{ $registro->r_total_horas }}</td>
+                                					@else
+                                					    <td>{{ $registro->r_total_horas }}</td>
+                                					@endif
+                                                </tr>
+                                                @if($registro->r_total_horas != null)
+                                                    @php
+                            							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                            						@endphp
+                            					@endif
+                            					    <tr style="background-color: rgba(128, 128, 128, 0.2)">
+                        							<td colspan="3"></td>
+                        							<td>Total de Horas</td>
+                        							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+                        						</tr>
                         						@php
                         							$tiempoTrabajado = new SumaTiempos();
                         						@endphp
-                                                <div id="footer">
+                                            @else
+                                    		    @php
+                        			                $i=1;
+                        			            @endphp
+                        			            <div id="footer">
                                                   <div class="page-number"></div>
                                                 </div>
-                                                <div style="page-break-after:always;"></div>
+                        			            <div style="page-break-after:always;"></div>
                                                 </table>
                                                 <textarea id="header">HORAS TRABAJADAS</textarea>
                                                 
@@ -165,7 +130,7 @@
                                         		</div>
                                         		
                                         		<div id="logo">
-                                                    <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                                    <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
                                                      
                                                 </div>
                                         		
@@ -192,76 +157,159 @@
                                                         <th>Hora Salida</th>
                                                         <th>Total Horas</th>
                                         			</tr>
-                                        	@endif
-                                        @endif
-        			            @endif
-        			        @endforeach
-        			    @else
-        			        @foreach($empleados as $empleado)
-        			            @if($empleado->empleado_cedula == $registro->fk_empleado_cedula)
-        			                @php
-            			                $i += 1;
-            			            @endphp
-            			            @if($i <= 29)
-            			                <tr>
-                                            <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
-                                            <td>{{ formatFecha($registro->registro_fecha, $format_fecha) }}</td>    
-                                            <td>{{ formatHora($registro->registro_entrada, $format_hora)  }}</td>
-                                            <td>{{ formatHora($registro->registro_salida, $format_hora)   }}</td>
-                                            <td>{{ $registro->registro_totalHoras }}</td>
-                                        </tr>
-                                        @if($registro->registro_totalHoras != null)
-                                            @php
-                    							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->registro_totalHoras));
-                    						@endphp
-                    					@endif
-                                    @else
-                            		    @php
-                			                $i=1;
+                                        			<tr>
+                                                        <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
+                                                        <td>{{ formatFecha($registro->r_fecha, $format_fecha) }}</td>    
+                                                        <td>{{ formatHora($registro->r_entrada, $format_hora)  }}</td>
+                                                        <td>{{ formatHora($registro->r_salida, $format_hora)   }}</td>
+                                                        @if($registro->r_total_horas >= $maxHorasXdias)
+                                    					    <td style="background-color: rgba(255, 0, 0, 0.2)">{{ $registro->r_total_horas }}</td>
+                                    					@else
+                                    					    <td>{{ $registro->r_total_horas }}</td>
+                                    					@endif
+                                                    </tr>
+                                                    @if($registro->r_total_horas != null)
+                                                        @php
+                                							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                                						@endphp
+                                					@endif
+                                    		@endif
+                                            @if($ultimo != 'S')
+                                                @if($SeparoEmpleados == 'S')
+                            						@php
+                            							$tiempoTrabajado = new SumaTiempos();
+                            						@endphp
+                                                    <div id="footer">
+                                                      <div class="page-number"></div>
+                                                    </div>
+                                                    <div style="page-break-after:always;"></div>
+                                                    </table>
+                                                    <textarea id="header">HORAS TRABAJADAS</textarea>
+                                                    
+                                            		<div id="identity">
+                                                        <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
+                                            			</textarea>
+                                            		</div>
+                                            		
+                                            		<div id="logo">
+                                                        <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                                         
+                                                    </div>
+                                            		
+                                            		<div style="clear:both"></div>
+                                            		
+                                            		<div id="meta-box">
+                                            			<table id="meta">
+                                                            <tr>
+                                                                <td class="meta-head">Fecha Inicio</td>
+                                                                <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="meta-head">Fecha Fin</td>
+                                                                <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
+                                                            </tr>
+                                                        </table>
+                                            		</div>
+                                            		
+                                                    <table id="items">
+                                            			<tr>
+                                            			    <th>Empleado</th>
+                                            				<th>Fecha</th>
+                                                            <th>Hora Entrada</th>
+                                                            <th>Hora Salida</th>
+                                                            <th>Total Horas</th>
+                                            			</tr>
+                                            	@endif
+                                            @endif
+            			            @endif
+            			        @endforeach
+            			    @else
+            			        @foreach($empleados as $empleado)
+            			            @if($empleado->empleado_cedula == $registro->r_cedula)
+            			                @php
+                			                $i += 1;
                 			            @endphp
-                			            <div id="footer">
-                                          <div class="page-number"></div>
-                                        </div>
-                			            <div style="page-break-after:always;"></div>
-                                        </table>
-                                        <textarea id="header">HORAS TRABAJADAS</textarea>
-                                        
-                                		<div id="identity">
-                                            <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-                                			</textarea>
-                                		</div>
-                                		
-                                		<div id="logo">
-                                            <img id="image" src="{{ public_path('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-                                             
-                                        </div>
-                                		
-                                		<div style="clear:both"></div>
-                                		
-                                		<div id="meta-box">
-                                			<table id="meta">
-                                                <tr>
-                                                    <td class="meta-head">Fecha Inicio</td>
-                                                    <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="meta-head">Fecha Fin</td>
-                                                    <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
-                                                </tr>
+                			            @if($i < 29)
+                			                <tr>
+                                                <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
+                                                <td>{{ formatFecha($registro->r_fecha, $format_fecha) }}</td>    
+                                                <td>{{ formatHora($registro->r_entrada, $format_hora)  }}</td>
+                                                <td>{{ formatHora($registro->r_salida, $format_hora)   }}</td>
+                                                @if($registro->r_total_horas >= $maxHorasXdias)
+                            					    <td style="background-color: rgba(255, 0, 0, 0.2)">{{ $registro->r_total_horas }}</td>
+                            					@else
+                            					    <td>{{ $registro->r_total_horas }}</td>
+                            					@endif
+                                            </tr>
+                                            @if($registro->r_total_horas != null)
+                                                @php
+                        							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                        						@endphp
+                        					@endif
+                                        @else
+                                		    @php
+                    			                $i=1;
+                    			            @endphp
+                    			            <div id="footer">
+                                              <div class="page-number"></div>
+                                            </div>
+                    			            <div style="page-break-after:always;"></div>
                                             </table>
-                                		</div>
-                                		
-                                        <table id="items">
-                                			<tr>
-                                			    <th>Empleado</th>
-                                				<th>Fecha</th>
-                                                <th>Hora Entrada</th>
-                                                <th>Hora Salida</th>
-                                                <th>Total Horas</th>
-                                			</tr>
-                            		@endif
-        			            @endif
-        			        @endforeach
+                                            <textarea id="header">HORAS TRABAJADAS</textarea>
+                                            
+                                    		<div id="identity">
+                                                <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
+                                    			</textarea>
+                                    		</div>
+                                    		
+                                    		<div id="logo">
+                                                <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
+                                                 
+                                            </div>
+                                    		
+                                    		<div style="clear:both"></div>
+                                    		
+                                    		<div id="meta-box">
+                                    			<table id="meta">
+                                                    <tr>
+                                                        <td class="meta-head">Fecha Inicio</td>
+                                                        <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="meta-head">Fecha Fin</td>
+                                                        <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
+                                                    </tr>
+                                                </table>
+                                    		</div>
+                                    		
+                                            <table id="items">
+                                    			<tr>
+                                    			    <th>Empleado</th>
+                                    				<th>Fecha</th>
+                                                    <th>Hora Entrada</th>
+                                                    <th>Hora Salida</th>
+                                                    <th>Total Horas</th>
+                                    			</tr>
+                                        			<tr>
+                                                    <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
+                                                    <td>{{ formatFecha($registro->r_fecha, $format_fecha) }}</td>    
+                                                    <td>{{ formatHora($registro->r_entrada, $format_hora)  }}</td>
+                                                    <td>{{ formatHora($registro->r_salida, $format_hora)   }}</td>
+                                                    @if($registro->r_total_horas >= $maxHorasXdias)
+                                					    <td style="background-color: rgba(255, 0, 0, 0.2)">{{ $registro->r_total_horas }}</td>
+                                					@else
+                                					    <td>{{ $registro->r_total_horas }}</td>
+                                					@endif
+                                                </tr>
+                                                @if($registro->r_total_horas != null)
+                                                    @php
+                            							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                            						@endphp
+                            					@endif
+                                		@endif
+            			            @endif
+            			        @endforeach
+        			        @endif
     			        @endif
     			    @endforeach
 			    @endforeach
@@ -274,7 +322,6 @@
             @endif		  
 		</table>
 	</div>
-	
 </body>
 </html>
 

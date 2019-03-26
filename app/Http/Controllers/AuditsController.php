@@ -16,7 +16,7 @@ class AuditsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'search', 'flush']]);
     }
 
 	public function index()
@@ -95,6 +95,7 @@ class AuditsController extends Controller
      
     public function flush(Request $request)
     {
+    	
         Cache::flush();
         return redirect()->route('main');
     }

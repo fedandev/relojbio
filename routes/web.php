@@ -14,9 +14,11 @@ Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios');
 Route::get('licencia/{id}','LicenciasController@getDiasLicencia');
 Route::get('tipolicencia/{id}','LicenciasController@getTiposLicencia');
 
+
 Route::post('/reportes/horasTrabajadasEmpleado', 'ReportesController@horasTrabajadasEmpleado')->name('reportes.horasTrabajadasEmpleado');
 Route::post('/reportes/llegadasTarde', 'ReportesController@llegadasTarde')->name('reportes.llegadasTarde');
 Route::post('/reportes/salidasAntes', 'ReportesController@salidasAntes')->name('reportes.salidasAntes');
+Route::post('/reportes/HorasExtrasResumidas', 'ReportesController@HorasExtrasResumidas')->name('reportes.HorasExtrasResumidas');
 Route::post('/reportes/horasNocturnas', 'ReportesController@horasNocturnas')->name('reportes.horasNocturnas');
 Route::post('/reportes/horasExtras', 'ReportesController@horasExtras')->name('reportes.horasExtras');
 Route::post('/reportes/listadoFaltas', 'ReportesController@listadoFaltas')->name('reportes.listadoFaltas');
@@ -24,7 +26,7 @@ Route::post('/reportes/entradasYsalidas', 'ReportesController@entradasYsalidas')
 Route::post('/reportes/libresConcedidos', 'ReportesController@libresConcedidos')->name('reportes.libresConcedidos');
 Route::post('/registros/load/excel', 'RegistrosController@loadExcel')->name('registros.loadExcel');
 Route::post('/search', 'AuditsController@search')->name('audits.search');
-Route::get('/flush', 'AuditsController@flush')->name('audits.flush');
+
 
 
 
@@ -58,7 +60,7 @@ Route::resource('horario_rotativos', 'HorarioRotativosController', ['only' => ['
 Route::resource('trabajas', 'TrabajasController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('licencia_detalles', 'LicenciaDetallesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('reportes', 'ReportesController',['only' => ['index', 'horasTrabajadasEmpleado']]);
-Route::resource('audits', 'AuditsController', ['only' => ['index', 'show', 'search']]);
+Route::resource('audits', 'AuditsController', ['only' => ['index', 'show', 'search','flush']]);
 
 
 Route::resource('tipo_libres', 'TipoLibresController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
