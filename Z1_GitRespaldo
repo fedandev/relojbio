@@ -18,6 +18,20 @@
         git push -f origin master
         
 
+
+6) Manejo de ramas o branch
+
+        https://git-scm.com/book/es/v1/Ramificaciones-en-Git-Procedimientos-b%C3%A1sicos-para-ramificar-y-fusionar
+        
+        git checkout -b nombre_rama    - crea rama y posiciona sobre ella
+        
+        
+        Realizar fusion a master:
+        
+                git checkout master   -mover a master
+                
+                git merge nombre_rama  -fusionar rama
+
 USER: fedandev
 pass: fernet$15
 
@@ -77,5 +91,5 @@ Ejecutar comandos en prod:
 Importar sql a base:
 
 
-        mysqldump -u fsantucho -p clock_db < bk-data-20181029.sql       
+        mysqldump -u fsantucho -p clock_db_armandugon < bk-data-20190423.sql       
         
