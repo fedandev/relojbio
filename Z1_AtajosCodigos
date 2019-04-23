@@ -28,3 +28,26 @@ php artisan migrate --path=/database/migrations/selected/
 Setear en php.ini  para cuando da error 500
 
     display_errors = On
+    
+    
+    
+    
+Deshabilitar laravel.log en archivo providers/appserviceprovider.php y comentar lo siguiente:
+// DB::listen(function($query) {
+            //     Log::info(
+            //         $query->sql,
+            //         $query->bindings,
+            //         $query->time
+            //     );
+            // });
+            
+            
+Escuchar sql
+
+DB::listen(function($query) {
+    Log::info(
+            $query->sql,
+            $query->bindings,
+            $query->time
+     );
+});

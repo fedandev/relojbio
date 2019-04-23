@@ -13,13 +13,17 @@ class AddMediohorarioToHorarios extends Migration
      */
     public function up()
     {
-        Schema::table('horarios', function (Blueprint $table) {
-            $table->string('horario_haybrake_m')->default('N')->nullable();
-            $table->time('horario_entrada_m')->nullable();
-            $table->time('horario_salida_m')->nullable();
-            $table->time('horario_comienzobrake_m')->nullable();
-            $table->time('horario_finbrake_m')->nullable();
-        });
+        if (!Schema::hasColumn('horarios', 'horario_haybrake_m')) {
+            //
+            Schema::table('horarios', function (Blueprint $table) {
+                $table->string('horario_haybrake_m')->default('N')->nullable();
+                $table->time('horario_entrada_m')->nullable();
+                $table->time('horario_salida_m')->nullable();
+                $table->time('horario_comienzobrake_m')->nullable();
+                $table->time('horario_finbrake_m')->nullable();
+            });
+        }
+        
         
        
     }

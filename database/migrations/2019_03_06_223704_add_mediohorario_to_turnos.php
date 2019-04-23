@@ -13,17 +13,19 @@ class AddMediohorarioToTurnos extends Migration
      */
     public function up()
     {
-        Schema::table('turnos', function (Blueprint $table) {
-           
-            $table->string('turno_lunes_mh')->default('0')->nullable();
-            $table->string('turno_martes_mh')->default('0')->nullable();
-            $table->string('turno_miercoles_mh')->default('0')->nullable();
-            $table->string('turno_jueves_mh')->default('0')->nullable();
-            $table->string('turno_viernes_mh')->default('0')->nullable();
-            $table->string('turno_sabado_mh')->default('0')->nullable();
-            $table->string('turno_domingo_mh')->default('0')->nullable();
-           
-        });
+        if (!Schema::hasColumn('turnos', 'turno_lunes_mh')) {
+            Schema::table('turnos', function (Blueprint $table) {
+               
+                $table->string('turno_lunes_mh')->default('0')->nullable();
+                $table->string('turno_martes_mh')->default('0')->nullable();
+                $table->string('turno_miercoles_mh')->default('0')->nullable();
+                $table->string('turno_jueves_mh')->default('0')->nullable();
+                $table->string('turno_viernes_mh')->default('0')->nullable();
+                $table->string('turno_sabado_mh')->default('0')->nullable();
+                $table->string('turno_domingo_mh')->default('0')->nullable();
+               
+            });
+        }
         
     }
 

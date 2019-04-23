@@ -73,17 +73,17 @@
                                         <div class="col-md-4">
                                             <ul class="stat-list m-t-lg">
                                                 <li>
-                                                    <h2 class="no-margins">4346 hs</h2>
-                                                    <small>Total horas trabajadas en el semestre</small>
+                                                    <h2 class="no-margins">{{ $HorasTrabajadasAnual }} hs</h2>
+                                                    <small>Total horas trabajadas en el año</small>
                                                     <div class="progress progress-mini">
-                                                        <div class="progress-bar" style="width: 48%;"></div>
+                                                        <div class="progress-bar" style="width: 100%;"></div>
                                                     </div>
                                                 </li>
                                                 <li>
-                                                    <h2 class="no-margins ">1222 hs </h2>
+                                                    <h2 class="no-margins ">{{ $horasTrabajadasMesAnterior }} hs </h2>
                                                     <small>Total horas trabajadas en el ultimo mes</small>
                                                     <div class="progress progress-mini">
-                                                        <div class="progress-bar" style="width: 60%;"></div>
+                                                        <div class="progress-bar" style="width: 100%;"></div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -119,7 +119,9 @@
                                     <i class="fa fa-trophy fa-5x"></i>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h3 class="float-right">#1 Federico Santucho </h3>
+                                    @if($rankingEmpleados[0]['porcentaje'] <> 0)
+                                    <h3 class="float-right">#1 {{  $rankingEmpleados[0]['empleado']}} </h3>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -127,46 +129,41 @@
                             
                         <div class="row">
                             <div class="col-lg-12">
-                                <table class="table table-hover margin bottom">
+                                <table class=" footable table table-stripped" data-page="true" >
                                     <thead>
                                         <tr>
-                                            <th style="width: 1%" class="text-center">#</th>
-                                            <th>Empleado</th>
-                                            <th class="text-center">%</th>
+                                            <th data-sort-ignore="true" style="width: 1%" class="text-center">#</th>
+                                            <th data-sort-ignore="true">Empleado</th>
+                                            <th data-sort-ignore="true" class="text-center" >%</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $i = 0;
+                                        @endphp
+                                        @foreach($rankingEmpleados as $empleado)
+                                        @php
+                                            $i++;
+                                        @endphp
                                         <tr>
-                                            <td class="text-center">2</td>
-                                            <td> Roberto Repplin</td>
-                                            <td class="text-center"> <span class="pie empleado">1/5</span></td>
+                                            <td class="text-center">{{ $i }}</td>
+                                            <td> {{ $empleado['empleado'] }} </td>
+                                            <td class="text-center" data-toggle="tooltip" data-placement="left" title=" {{ $empleado['porcentaje'] }} %"> <span class="pie empleado" >{{ $empleado['porcentaje'] }}/100</span></td>
                                         </tr>
-                                         <tr>
-                                            <td class="text-center">2</td>
-                                            <td> Roberto Repplin</td>
-                                            <td class="text-center"> <span class="pie empleado">1/5</span></td>
-                                        </tr>
-                                         <tr>
-                                            <td class="text-center">2</td>
-                                            <td> Roberto Repplin</td>
-                                            <td class="text-center"> <span class="pie empleado">1/5</span></td>
-                                        </tr>
-                                         <tr>
-                                            <td class="text-center">2</td>
-                                            <td> Roberto Repplin</td>
-                                            <td class="text-center"> <span class="pie empleado">1/5</span></td>
-                                        </tr>
-                                         <tr>
-                                            <td class="text-center">2</td>
-                                            <td> Roberto Repplin</td>
-                                            <td class="text-center"> <span class="pie empleado">1/5</span></td>
-                                        </tr>
-                                    
+                                        @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3">
+                                                <ul class="pagination pull-left"></ul>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>  
                         </div>
-                            
+                        
+                        
                         
                     </div>
                 </div>
@@ -176,7 +173,9 @@
            
         </div>
         
-        
+        <div class="row">
+            @include('vendor.home_layouts.table_autorizaciones', ['advertencias' => $advertencias])
+        </div>
         
     </div>
 @endsection
@@ -220,14 +219,14 @@
                         borderColor: "rgba(26,179,148,0.7)",
                         pointBackgroundColor: "rgba(26,179,148,1)",
                         pointBorderColor: "#fff",
-                        data: [ 
-                             <?php
+                        data: [  
+                             <?php 
                                 if(!empty($arrayHorasTrabajadas)){
                                     foreach($arrayHorasTrabajadas as $registro){
                                          if ($registro === end($arrayHorasTrabajadas)) {
-                                            echo $registro[0];
+                                            echo $registro;
                                         }else{
-                                            echo $registro[0].",";
+                                            echo $registro.",";
                                         }
                                     }
                                 }
@@ -240,7 +239,19 @@
                         borderColor: "rgba(76,57,254,1)",
                         pointBackgroundColor: "rgba(76,57,254,1)",
                         pointBorderColor: "#fff",
-                        data: [65, 59, 40, 51, 36, 25, 40]
+                        data: [  
+                             <?php 
+                                if(!empty($arrayHorasExtras)){
+                                    foreach($arrayHorasExtras as $registro){
+                                         if ($registro === end($arrayHorasExtras)) {
+                                            echo $registro;
+                                        }else{
+                                            echo $registro.",";
+                                        }
+                                    }
+                                }
+                            ?>
+                        ]
                     },
                     {
                         label: "Llegadas tardes",
@@ -248,7 +259,19 @@
                         borderColor: "rgba(250,160,25,1)",
                         pointBackgroundColor: "rgba(250,160,25,1)",
                         pointBorderColor: "#fff",
-                        data: [10, 8, 7, 9, 6, 8, 11]
+                        data: [  
+                             <?php 
+                                if(!empty($arrayLlegadasTardes)){
+                                    foreach($arrayLlegadasTardes as $registro){
+                                         if ($registro === end($arrayLlegadasTardes)) {
+                                            echo $registro;
+                                        }else{
+                                            echo $registro.",";
+                                        }
+                                    }
+                                }
+                            ?>
+                        ]
                     }
                 ]
             };

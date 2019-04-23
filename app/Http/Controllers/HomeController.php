@@ -11,6 +11,7 @@ use App\Models\Ajuste;
 use App\Models\Registro;
 use App\Models\Empleado;
 use App\Models\Trabaja;
+use App\Models\Estadistica;
 use DateTime;
 use Carbon\Carbon;
 use Mail;
@@ -34,449 +35,7 @@ class HomeController extends Controller
         //'registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual',
         return view('home', compact('advertencias'));
     }
-    
-    /*public function LlegadasTardeMesAnterior(){
-        $fechaActual = new DateTime();
-        $fechaActual->modify('first day of last month');
-        $fechainicio = $fechaActual->format('Y/m/d');
-        
-        $fechaActual->modify('last day of this month');
-        $fechafin = $fechaActual->format('Y/m/d');
-        
-        $sql= "SELECT a1.*, a2.id as IdOficina, a2.oficina_nombre FROM registros a1, oficinas a2, empleados a3 WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."'  AND registro_tipo='I' AND a1.fk_empleado_cedula = a3.empleado_cedula AND a3.fk_oficina_id = a2.id" ;
-        $sql = $sql." order by registro_fecha asc, fk_empleado_cedula, registro_tipo";
-        $registros_sql =  DB::select($sql);
-        $registros = Registro::hydrate($registros_sql); // paso a collection de registros
-
-        $tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
-
-        $iRegistros = 0;
-        $registros_ok = [];
-        $i = 0;
-        $z = 0;
-        //busco el horario a la fecha porque en un periodo de fechas pueden existir horarios distintos
-        foreach($registros as $registro){
-            $registro_fecha = $registro->registro_fecha;
-            $registro_hora_d = new DateTime($registro->registro_hora);
-            $registro_hora = $registro_hora_d->format('H:i:s');
-            
-            $empleado = $registro->Empleado;
-            $horario = $empleado->HorarioEnFecha($registro_fecha);
-            
-            if(!is_null($horario)){
-                if(!is_null($horario->fk_horariorotativo_id)){
-                    $horario_ax = $horario->horariorotativo->horario;
-                }elseif(!is_null($horario->fk_turno_id)){
-                    $horario_ax = $horario->turno->horario;
-                }
-                if(!is_null($horario_ax)){
-                    $hay_brake = $horario_ax->horario_haybrake;
-                    
-                    $date = new DateTime($registro_fecha.' '.$horario_ax->horario_entrada); 
-                    
-                    $tolerencia_tarde = $horario_ax->horario_tiempotarde;
-                    $date_tol = new DateTime($registro_fecha.' '.$tolerencia_tarde); 
-                    
-                    $minutes_tarde = $date_tol->format('i');
-                    $date= $date->modify('+'.$minutes_tarde.' minutes');
-                    $hora = $date->format('H:i:s');
-                    $horaTope = $horario_ax->horario_comienzobrake;
-                    
-                    if($registro_hora > $hora && $registro_hora  < $horaTope ){
-                        if($z == 0){
-                            $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                            $registros_ok[$iRegistros][1] = 0;
-                            $iRegistros = $iRegistros + 1;
-                            $z=1;
-                        }else{
-                            $entre = "no";
-                            $idRegistro = 0;
-                            for($y=0;$y<=count($registros_ok)-1;$y++){
-                                if($registros_ok[$y][0] == $registro->oficina_nombre){
-                                    $entre = "si";
-                                    $idRegistro = $y;
-                                }
-                            }
-                            if($entre == "no"){
-                                $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                                $registros_ok[$iRegistros][1] = 1;
-                                $iRegistros = $iRegistros + 1;
-                            }else{
-                                $registros_ok[$idRegistro][1] = ($registros_ok[$idRegistro][1])+1;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        $registros_ok = collect($registros_ok);
-
-        if($registros_ok->count() > 0){
-            //Devuelvos los datos para cargarlos en la grafica
-            return $registros_ok;
-        }else{
-            return back()->with('warning', 'No se encontraron datos para la grafica "Llegadas Tarde por oficina (Mes Anterior)".')->withInput();
-        }
-    }
-    
-    public function LlegadasTardeMesActual(){
-        $fechaActual = new DateTime();
-        $fechaActual->modify('first day of this month');
-        $fechainicio = $fechaActual->format('Y/m/d');
-        
-        $fechaActual->modify('last day of this month');
-        $fechafin = $fechaActual->format('Y/m/d');
-        
-        $sql= "SELECT a1.*, a2.id as IdOficina, a2.oficina_nombre FROM registros a1, oficinas a2, empleados a3 WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."'  AND registro_tipo='I' AND a1.fk_empleado_cedula = a3.empleado_cedula AND a3.fk_oficina_id = a2.id" ;
-        $sql = $sql." order by registro_fecha asc, fk_empleado_cedula, registro_tipo";
-        $registros_sql =  DB::select($sql);
-        $registros = Registro::hydrate($registros_sql); // paso a collection de registros
-
-        $tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
-
-        $iRegistros = 0;
-        $registros_ok = [];
-        $i = 0;
-        $z = 0;
-        
-        //busco el horario a la fecha porque en un periodo de fechas pueden existir horarios distintos
-        foreach($registros as $registro){
-            $registro_fecha = $registro->registro_fecha;
-            $registro_hora_d = new DateTime($registro->registro_hora);
-            $registro_hora = $registro_hora_d->format('H:i:s');
-            
-            $empleado = $registro->Empleado;
-            $horario = $empleado->HorarioEnFecha($registro_fecha);
-           
-            if(!is_null($horario)){
-                if(!is_null($horario->fk_horariorotativo_id)){
-                    $horario_ax = $horario->horariorotativo->horario;
-                }elseif(!is_null($horario->fk_turno_id)){
-                    $horario_ax = $horario->turno->horario;
-                }
-                if(!is_null($horario_ax)){
-                    $hay_brake = $horario_ax->horario_haybrake;
-                    
-                    $date = new DateTime($registro_fecha.' '.$horario_ax->horario_entrada); 
-                    
-                    $tolerencia_tarde = $horario_ax->horario_tiempotarde;
-                    $date_tol = new DateTime($registro_fecha.' '.$tolerencia_tarde); 
-                    
-                    $minutes_tarde = $date_tol->format('i');
-                    $date= $date->modify('+'.$minutes_tarde.' minutes');
-                    $hora = $date->format('H:i:s');
-                    $horaTope = $horario_ax->horario_comienzobrake;
-                    
-                    if($registro_hora > $hora && $registro_hora  < $horaTope ){
-                        
-                        if($z == 0){
-                            $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                            $registros_ok[$iRegistros][1] = 0;
-                            $iRegistros = $iRegistros + 1;
-                            $z=1;
-                        }else{
-                            $entre = "no";
-                            $idRegistro = 0;
-                            for($y=0;$y<=count($registros_ok)-1;$y++){
-                                if($registros_ok[$y][0] == $registro->oficina_nombre){
-                                    $entre = "si";
-                                    $i = $y;
-                                }
-                            }
-                            if($entre == "no"){
-                                $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                                $registros_ok[$iRegistros][1] = 1;
-                                $iRegistros = $iRegistros + 1;
-                            }else{
-                                $registros_ok[$i][1] = $registros_ok[$i][1]+1;
-                            }
-                        }
-                    }
-                }    
-            }
-        }
-        
-        $registros_ok = collect($registros_ok);
-        
-        if($registros_ok->count() > 0){
-            //Devuelvos los datos para cargarlos en la grafica
-            return $registros_ok;
-        }
-    }
-    
-    public function horasNocturnasMesAnterior(){
-        $fechaActual = new DateTime();
-        $fechaActual->modify('first day of last month');
-        $fechainicio = $fechaActual->format('Y/m/d');
-        
-        $fechaActual->modify('last day of this month');
-        $fechafin = $fechaActual->format('Y/m/d');
-        
-        $inicioNoche = ajuste('nocturnal_start');
-        $finNoche = ajuste('nocturnal_end');
-        
-        $sql= "SELECT a1.*, a3.id as IdOficina, a3.oficina_nombre FROM v_inout a1, empleados a2, oficinas a3 WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."' " ;
-        $sql= $sql. "AND ((TIME( registro_entrada ) >= '".$inicioNoche."' AND TIME( registro_entrada ) <=  '23:59:59') OR  (TIME( registro_salida ) >=  '00:00:00' AND TIME( registro_salida ) <=  '".$finNoche."')) ";
-        $sql = $sql. " AND a1.fk_empleado_cedula = a2.empleado_cedula AND a2.fk_oficina_id = a3.id";
-        $sql = $sql." order by registro_fecha asc ";
-
-        $registros = DB::select($sql);
-        $registros = collect($registros);
-        
-        $registros_ok = [];
-        $iRegistros = 0;
-        $i = 0;
-        $z = 0;
-     
-        foreach($registros as $registro){
-            $entrada = new DateTime($registro->registro_entrada);
-            $entrada = $entrada->format('H:i:s');
-            $salida = new DateTime($registro->registro_salida);
-            $salida = $salida->format('H:i:s');
-            
-            if($z == 0){
-                if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }
-            }else{
-                $entre = "no";
-                $idRegistro = 0;
-                for($y=0;$y<=count($registros_ok)-1;$y++){
-                    if($registros_ok[$y][0] == $registro->oficina_nombre){
-                        $entre = "si";
-                        $idRegistro = $y;
-                    }
-                }
-                if($entre == "no"){
-                    if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }
-                }else{
-                    if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }
-                }
-            }
-        }
-        
-        $registros_dev = [];
-        $y = 0;
-        
-        foreach($registros_ok as $registro_ok){
-            $registros_dev[$y][0] = $registro_ok[0];
-            $horas_cortadas = explode(":", $registro_ok[1]);
-            $registros_dev[$y][1] = $horas_cortadas[0] + $horas_cortadas[1] / 100;
-            $y++;
-        }
-        
-        $registros_dev = collect($registros_dev);
-
-        return $registros_dev;
-    }
-
-    public function horasNocturnasMesActual(){
-        $fechaActual = new DateTime();
-        $fechaActual->modify('first day of this month');
-        $fechainicio = $fechaActual->format('Y/m/d');
-        
-        $fechaActual->modify('last day of this month');
-        $fechafin = $fechaActual->format('Y/m/d');
-        
-        $inicioNoche = ajuste('nocturnal_start');
-        $finNoche = ajuste('nocturnal_end');
-        
-        $sql= "SELECT a1.*, a3.id as IdOficina, a3.oficina_nombre FROM v_inout a1, empleados a2, oficinas a3 WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."' " ;
-        $sql= $sql. "AND ((TIME( registro_entrada ) >= '".$inicioNoche."' AND TIME( registro_entrada ) <=  '23:59:59') OR  (TIME( registro_salida ) >=  '00:00:00' AND TIME( registro_salida ) <=  '".$finNoche."')) ";
-        $sql = $sql. " AND a1.fk_empleado_cedula = a2.empleado_cedula AND a2.fk_oficina_id = a3.id";
-        $sql = $sql." order by registro_fecha asc ";
-
-        $registros = DB::select($sql);
-        $registros = collect($registros);
-        
-        $registros_ok = [];
-        $iRegistros = 0;
-        $i = 0;
-        $z = 0;
-     
-        foreach($registros as $registro){
-            $entrada = new DateTime($registro->registro_entrada);
-            $entrada = $entrada->format('H:i:s');
-            $salida = new DateTime($registro->registro_salida);
-            $salida = $salida->format('H:i:s');
-            
-            if($z == 0){
-                if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                    $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                    $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                    $registros_ok[$iRegistros][1] = $nocturnidad;
-                    $iRegistros = $iRegistros + 1;
-                    $z=1;
-                }
-            }else{
-                $entre = "no";
-                $idRegistro = 0;
-                for($y=0;$y<=count($registros_ok)-1;$y++){
-                    if($registros_ok[$y][0] == $registro->oficina_nombre){
-                        $entre = "si";
-                        $idRegistro = $y;
-                    }
-                }
-                if($entre == "no"){
-                    if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$iRegistros][0] = $registro->oficina_nombre;
-                        $registros_ok[$iRegistros][1] = $nocturnidad;
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }
-                }else{
-                    if($entrada < $inicioNoche && $entrada > $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada > $salida && $salida > $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($finNoche) - strtotime($entrada));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada >= $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($entrada));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }elseif($entrada < $inicioNoche && $entrada < $salida && $salida <= $finNoche){
-                        $nocturnidad = date('H:i:s', strtotime("00:00:00") + strtotime($salida) - strtotime($inicioNoche));
-                        $registros_ok[$i][1] = date('H:i:s', strtotime($registros_ok[$i][1]) + strtotime($nocturnidad));
-                        
-                        $iRegistros = $iRegistros + 1;
-                        $z=1;
-                    }
-                }
-            }
-        }
-        
-        $registros_dev = [];
-        $y = 0;
-        
-        foreach($registros_ok as $registro_ok){
-            $registros_dev[$y][0] = $registro_ok[0];
-            $horas_cortadas = explode(":", $registro_ok[1]);
-            $registros_dev[$y][1] = $horas_cortadas[0] + $horas_cortadas[1] / 100;
-            $y++;
-        }
-        
-        $registros_dev = collect($registros_dev);
-
-        return $registros_dev;
-    }*/
-    
+ 
     public function advertencias(){
         $trabajas = Trabaja::all();
         $fecha_actual=date("Y-m-d");
@@ -788,8 +347,10 @@ class HomeController extends Controller
     
     
     public function dashboard(){
-       //$f_inicio_mes=  strtotime('first day of january this year');
-         Artisan::call('cache:clear');
+         $advertencias = $this->advertencias();
+         
+         
+        //DATOS CARDS
         $fechaActual = new DateTime();
         $hoy = $fechaActual->format('Y-m-d');
         
@@ -812,39 +373,106 @@ class HomeController extends Controller
            $porcentajeHorasAtrabajar = ($segHorasTrabajadas*100)/$segTotalHorasAtrabajar;
             $porcentajeHorasAtrabajar = round($porcentajeHorasAtrabajar,2); 
         }
+        
+        //RANKING EMPLEADOS
+        $rankingEmpleados = [];
+        $rankingEmpleados = $this->rankingEmpleados($f_inicio_mes,$f_fin_mes);
 
 
+        //DATOS GRAFICA
+        $fechaActual = new DateTime();
+        $fechaActual2 = new DateTime();
+        $hoy = $fechaActual->format('Y-m-d');
         //Horas de todo el año
-        $months = array("January", "Feb", "Mar","Apr", "May","Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        $months = array("January", "February", "March","April", "May","June", "July", "August", "September", "October", "November", "December");
         $arrayHorasTrabajadas = array();
+        $arrayLlegadasTardes = array();
+        $arrayHorasExtras = array();
+        $mesAnterior = $fechaActual2->modify('-1 month');
+        $mesAnterior = $mesAnterior->format('Y-m-d');
+        $tiempoTrabajadoAnual = new SumaTiempos();
+        $horasTrabajadasMesAnterior = '00:00';
+        $HorasTrabajadasAnual = '00:00';
+        
         foreach ($months as $month) {
+            $LlegadasTardes2 = '00:00';
+            $HorasExtras2 = '00:00';
+            $HorasTrabajadas2 = '00:00';
+            
+            
             $fechaActual->modify('first day of '.$month.' '. date('Y'));
             $f_inicio_mes = $fechaActual->format('Y-m-d');
             
             $fechaActual->modify('last day of '.$month.' '. date('Y'));
             $f_fin_mes = $fechaActual->format('Y-m-d');
             
-            $HorasTrabajadas2 = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
-            //$LlegadasTardes = $this->LlegadasTardes($f_inicio_mes, $f_fin_mes);
-            //$HorasExtras = $this->HorasExtras($f_inicio_mes, $f_fin_mes);
-
+            
+            $Estadistica = Estadistica::where('fecha_desde','>=', $f_inicio_mes)->where('fecha_hasta','<=', $f_fin_mes )->first();
+           
+           
+            if($Estadistica){
+                $HorasTrabajadas2 = $Estadistica->total_horas_trabajadas;
+                $LlegadasTardes2  = $Estadistica->total_llegadas_tardes;
+                $HorasExtras2     = $Estadistica->total_horas_extras;
+                
+            }else{
+                
+                if ($f_fin_mes < $hoy){
+                    $HorasTrabajadas2 = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
+                    $LlegadasTardes2 = $this->LlegadasTardes($f_inicio_mes, $f_fin_mes);
+                    $HorasExtras2 = $this->HorasExtras($f_inicio_mes, $f_fin_mes);
+                    $TotalHorasAtrabajar = $this->TotalHorasAtrabajar($f_inicio_mes, $f_fin_mes);
+                    
+                    $Estadistica = new Estadistica();
+    				$Estadistica->total_horas_trabajadas = $HorasTrabajadas2;
+    				$Estadistica->total_llegadas_tardes = $LlegadasTardes2;
+    				$Estadistica->total_horas_extras = $HorasExtras2;
+    				$Estadistica->fecha_desde = $f_inicio_mes;
+    				$Estadistica->fecha_hasta = $f_fin_mes;		
+    				$Estadistica->total_debe_trabajar = $TotalHorasAtrabajar;
+    				$Estadistica->save();
+                }
+            }
+            
             $explode = explode(":", $HorasTrabajadas2);
             $HorasNum = $explode[0];
-            
             array_push($arrayHorasTrabajadas, $HorasNum);
+            
+            $explode = explode(":", $LlegadasTardes2);
+            $HorasNum = $explode[0];
+            array_push($arrayLlegadasTardes, $HorasNum);
+            
+            $explode = explode(":", $HorasExtras2);
+            $HorasNum = $explode[0];
+            array_push($arrayHorasExtras, $HorasNum);
+            
+            if($mesAnterior >= $f_inicio_mes && $mesAnterior <= $f_fin_mes){
+                $horasTrabajadasMesAnterior = $HorasTrabajadas2;
+            }
+            
+            if($HorasTrabajadas2 != '00:00'){
+                 $tiempoTrabajadoAnual->sumaTiempo(new SumaTiempos($HorasTrabajadas2));
+            }
+            
         }
-    
+       
+        $HorasTrabajadasAnual = $tiempoTrabajadoAnual->verTiempoFinal();
         
-        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas'));
+        $explode = explode(":", $HorasTrabajadasAnual);
+        $HorasTrabajadasAnual = $explode[0];
+        
+        $explode = explode(":", $horasTrabajadasMesAnterior);
+        $horasTrabajadasMesAnterior = $explode[0];
+        
+        
+        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas','arrayLlegadasTardes','arrayHorasExtras','horasTrabajadasMesAnterior','HorasTrabajadasAnual','rankingEmpleados', 'advertencias'));
     }
+    
     
     
     
     public function HorasTrabajadas($f_inicio_mes, $f_fin_mes){
    
-        
-
-        
         //dd($f_inicio_mes, $f_fin_mes,$fechaActual );
         
         //Horas trabajadas en lo que va del mes
@@ -865,8 +493,6 @@ class HomeController extends Controller
                 if($inconsitencia == 'N'){
                      $tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
                 }
-                
-                
                
             }
             
@@ -884,7 +510,7 @@ class HomeController extends Controller
 
         $sql = $sql." order by registro_hora asc , registro_tipo ";
         
-        $registros_sql =  DB::select($sql);
+        $registros_sql =  cacheQuery($sql);
         
         $registros = Registro::hydrate($registros_sql); // paso a collection de registros
 
@@ -956,7 +582,7 @@ class HomeController extends Controller
                     $f_inicio = $horario_entrada_2->format('Y-m-d H:i:s');
                     $f_fin = $horario_salida->format('Y-m-d H:i:s');
                     $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."' order by registro_hora limit 1" ;
-                    $reg_sql =  DB::select($sql);
+                    $reg_sql =  cacheQuery($sql);
                     
                     if($reg_sql[0]->registro_hora == $registro_hora_d->format('Y-m-d H:i:s')){
                         $ok='S';
@@ -990,7 +616,7 @@ class HomeController extends Controller
                             $f_inicio = $horario_finbrake_2->format('Y-m-d H:i:s');
                             $f_fin = $horario_salida->format('Y-m-d H:i:s');
                             $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."'  order by registro_hora limit 1" ;
-                            $reg_sql =  DB::select($sql);
+                            $reg_sql =  cacheQuery($sql);
                             
                             if($reg_sql){
                                 if($reg_sql[0]->registro_hora == $registro_hora_d->format('Y-m-d H:i:s')){
@@ -1110,8 +736,10 @@ class HomeController extends Controller
         $start_date = new DateTime($f_inicio);
         $end_date= new DateTime($hoy);
         
-        $Empleados =  Empleado::where('empleado_estado' ,"=", "Activo")->get();
-       
+        //$Empleados =  Empleado::where('empleado_estado' ,"=", "Activo")->get();
+        $Empleados =  cacheQuery("Select * from empleados where empleado_estado = 'Activo' ");
+        
+        
         for($i = $start_date; $i <= $end_date; $i->modify('+1 day')){
            
             $dia =  $i->format("Y-m-d");
@@ -1136,6 +764,98 @@ class HomeController extends Controller
         
     }
     
-    
+    public function rankingEmpleados($f_inicio, $f_fin){
+        $rankingEmpleados =[];
+        $Empleados =  cacheQuery("Select * from empleados where empleado_estado = 'Activo' ");
+        $iEmpleados = 0;
+        $tiempoAcumulado = new SumaTiempos();    
+       
+        
+        foreach($Empleados as $empleado){
+            $start_date = new DateTime($f_inicio);
+            $end_date= new DateTime($f_fin);
+            
+            //HORAS TRABAJADAS
+            $registros =  v_inout($f_inicio,$f_fin, $empleado->empleado_cedula);
+       
+            $tiempoTrabajado = new SumaTiempos();
+            foreach($registros as $registro){
+                
+                if(!is_null($registro->r_total_horas ) && $empleado){
+                    $fecha = $registro->r_fecha;
+                    $fechaSalida = $registro->r_salida;
+                    
+                    
+                    $inconsitencia = inconsistencia_1($registros, $empleado->empleado_cedula , $fecha, $fechaSalida );
+                    
+                    if($inconsitencia == 'N'){
+                         $tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                    }
+                    
+                    
+                   
+                }
+                
+            }
+            
+            $HorasTrabajadas = $tiempoTrabajado->verTiempoFinal();
+            
+            //HORAS A TRABAJAR
+            $tiempoTrabajado = new SumaTiempos();
+            
+            for($i = $start_date; $i <= $end_date; $i->modify('+1 day')){
+           
+                $dia =  $i->format("Y-m-d");
+            
+                $horario = horarioAfecha($empleado->id, $dia);
+                $horas_debe_trabajar = totalHorasAfecha($horario);
+                
+                if($horas_debe_trabajar != '' && $horario[0] != ''){
+                   
+                    $tiempoTrabajado->sumaTiempo(new SumaTiempos($horas_debe_trabajar));
+                
+                }
+                
+            }
+            $TotalHorasAtrabajar = $tiempoTrabajado->verTiempoFinal();
+            
+            //PORCENTAJE
+            $porcentajeHorasAtrabajar = 0;
+            $segHorasTrabajadas = (((int)substr($HorasTrabajadas,0,2)) * 3600)+  (((int)substr($HorasTrabajadas,3,2)) * 60) +  (((int)substr($HorasTrabajadas,6,2)));    
+            $segTotalHorasAtrabajar = (((int)substr($TotalHorasAtrabajar,0,2)) * 3600)+  (((int)substr($TotalHorasAtrabajar,3,2)) * 60) +  (((int)substr($TotalHorasAtrabajar,6,2))); 
+            if($segHorasTrabajadas != 0 && $segTotalHorasAtrabajar !=0){
+               $porcentajeHorasAtrabajar = ($segHorasTrabajadas*100)/$segTotalHorasAtrabajar;
+                $porcentajeHorasAtrabajar = round($porcentajeHorasAtrabajar,2); 
+            }
+        
+            $R = [];
+                
+            $r['fk_empleado_cedula']=$empleado->empleado_cedula;
+            $r['empleado']=$empleado->empleado_nombre.' '.$empleado->empleado_apellido;
+            $r['porcentaje']=$porcentajeHorasAtrabajar;
+            //$r['HT']=$HorasTrabajadas;
+            //$r['HAT']=$TotalHorasAtrabajar;
+            $rankingEmpleados[$iEmpleados] = $r;
+            $iEmpleados = $iEmpleados + 1;
+        }
+        
+        
+        $sortArray = array();
+
+        foreach($rankingEmpleados as $e){
+            foreach($e as $key=>$value){
+                if(!isset($sortArray[$key])){
+                    $sortArray[$key] = array();
+                }
+                $sortArray[$key][] = $value;
+            }
+        }
+        
+        $orderby = "porcentaje"; //change this to whatever key you want from the array 
+        
+        array_multisort($sortArray[$orderby],SORT_DESC,$rankingEmpleados); 
+       
+        return $rankingEmpleados;
+    }
     
 }

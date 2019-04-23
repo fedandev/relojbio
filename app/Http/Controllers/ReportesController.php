@@ -907,10 +907,11 @@ class ReportesController extends Controller
         }
 
         if($for == 'N'){
-            $registros_inout =  v_inout($fechainicio,$fechafin,$empleados->empleado_cedula );
+            $registros_inout =  v_inout($fechainicio,$fechafin,$empleados[0]->empleado_cedula );
         }elseif($for == 'S'){
             $registros_inout =  v_inout($fechainicio,$fechafin);
         }
+        
         $registros_sql = collect($registros_inout);
         
         $registros = [];
@@ -930,6 +931,8 @@ class ReportesController extends Controller
                 continue;
             }
             
+            $ultimo = count($registros_sql)-1;
+            
             if($empleado_cedula != $registro->r_cedula){
                 if($primero == 0){
                     $Empleado_Anterior = $Empleado;
@@ -940,6 +943,15 @@ class ReportesController extends Controller
                 }else{
                     $entro = 1;
                 }
+            }
+            
+            if($registros_sql[$ultimo] == $registro){
+                $horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
+
+        	    if($registro->r_total_horas != null){
+        		    $horas_trabajadas->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+        		}
+        		$entro = 1;
             }
             
             if($entro == 1){
@@ -984,6 +996,8 @@ class ReportesController extends Controller
                 }else{
                     if($horas_extras <= $max_extras && $horas_extras >= $minimo_extras){
                         $r['horas_extras'] = $horas_extras;
+                    }else{
+                        $r['horas_extras'] = '00:00:00';
                     }
                 }
                 $r['empleado'] = $Empleado_Anterior->empleado_nombre.' '.$Empleado_Anterior->empleado_apellido;
@@ -998,7 +1012,7 @@ class ReportesController extends Controller
     	    }
             
     		$horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
-    
+            
     		//$horas_debe_trabajar = totalHorasAfecha($horario);
     		//$horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas_debe_trabajar));
     		
@@ -1008,7 +1022,7 @@ class ReportesController extends Controller
         }
         
         $registros_ok = collect($registros);
-
+        
         if($registros_ok->count() > 0){
             $pdf = PDF::loadView('pdf.horasExtrasResumidas', compact('registros_ok','fechainicio','fechafin','oficina'));
             

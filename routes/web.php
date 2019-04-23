@@ -6,9 +6,9 @@ Auth::routes();
 Route::get('/registros/load', 'RegistrosController@Excel')->name('registros.load');
 Route::get('/registros/search', 'RegistrosController@search')->name('registros.search');
 
-Route::get('/', 'HomeController@index')->name('main');
-Route::get('/home', 'HomeController@index');
-Route::get('/dashboard', 'HomeController@dashboard');
+Route::get('/', 'HomeController@dashboard');
+Route::get('/home', 'HomeController@dashboard');
+Route::get('/dashboard', 'HomeController@dashboard')->name('main');
 Route::get('/dispositivos/download/{dispositivo}', 'DispositivosController@download')->name('dispositivos.download');
 Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios');
 Route::get('licencia/{id}','LicenciasController@getDiasLicencia');
@@ -66,3 +66,5 @@ Route::resource('audits', 'AuditsController', ['only' => ['index', 'show', 'sear
 Route::resource('tipo_libres', 'TipoLibresController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('libre_detalles', 'LibreDetallesController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 
+
+Route::resource('estadisticas', 'EstadisticasController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);

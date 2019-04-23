@@ -41,8 +41,14 @@ function controllerFromRoute(){
     return $controller;
 }
 
-function cacheQuery($sql, $timeout = 1) {
-    return Cache::remember(md5($sql), $timeout, function() use ($sql) {
+function cacheQuery($sql, $timeout = 60) {
+    $key = md5($sql);
+    if(Cache::has($key)){
+         $content = Cache::get($key);
+         return $content;
+    }
+    
+    return Cache::remember($key, $timeout, function() use ($sql) {
         return DB::select(DB::raw($sql));
     });
 }
@@ -484,7 +490,8 @@ function v_inout($fdesde,$fhasta, $cedula = ''){
     $query = $query." group by r1.registro_hora order by r1.registro_hora) t order by r_cedula, r_fecha, r_entrada;";
 
    
-    return $registros = DB::select($query);
+    //return $registros = DB::select($query);
+    return $registros = cacheQuery($query);
 }
 
 // Si en el mismo dia para el mismo empleado, existe la misma salida en 2 registros, es una inconsitencia. analiza datos devueltos en v_inout funcion de este archivo (la vista no la uso mas porque anda muy lento)
@@ -499,14 +506,11 @@ function inconsistencia_1($registros, $empleado_cedula, $fecha, $fechaSalida ){
             if($fecha == $fecha_2 && $empleado_cedula == $empleado_2 && $fechaSalida == $fechaSalida_2 ){
                  $contSalidas++;
             }
-           
         }
     }
-    
     
     if ($contSalidas >1){
         $inconsitencia = 'S';
     }
-    
     return $inconsitencia;
 }

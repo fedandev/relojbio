@@ -91,3 +91,31 @@ Stack trace:
 [11-Feb-2019 00:49:13 UTC] PHP Fatal error:  Cannot use [] for reading in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 750
 [03-Mar-2019 16:09:58 UTC] PHP Fatal error:  Maximum execution time of 300 seconds exceeded in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 1026
 [24-Mar-2019 21:29:07 UTC] PHP Fatal error:  Can't use method return value in write context in /home/ubuntu/workspace/app/Http/Controllers/HomeController.php on line 1060
+[27-Mar-2019 02:48:21 UTC] PHP Fatal error:  Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Debug\ExceptionHandler] is not instantiable. in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php:945
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(785): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(658): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(609): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(733): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(159): Illum in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 945
+[27-Mar-2019 02:48:23 UTC] PHP Fatal error:  Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Debug\ExceptionHandler] is not instantiable. in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php:945
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(785): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(658): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(609): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(733): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(159): Illum in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 945
+[27-Mar-2019 02:48:26 UTC] PHP Fatal error:  Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Debug\ExceptionHandler] is not instantiable. in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php:945
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(785): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(658): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(609): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(733): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(159): Illum in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 945
+[27-Mar-2019 02:48:27 UTC] PHP Fatal error:  Uncaught Illuminate\Contracts\Container\BindingResolutionException: Target [Illuminate\Contracts\Debug\ExceptionHandler] is not instantiable. in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php:945
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(785): Illuminate\Container\Container->notInstantiable('Illuminate\\Cont...')
+#1 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(658): Illuminate\Container\Container->build('Illuminate\\Cont...')
+#2 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(609): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(733): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(159): Illum in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 945
