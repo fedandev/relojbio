@@ -26,13 +26,8 @@ class HomeController extends Controller
     }
 
     public function index(){
-        /*$registrosPieMesAnt = $this->LlegadasTardeMesAnterior();
-        $registrosPieMesActual = $this->LlegadasTardeMesActual();
-        $registrosHorasNoctAnterior = $this->horasNocturnasMesAnterior();
-        $registrosHorasNoctActual = $this->horasNocturnasMesActual();*/
         $advertencias = $this->advertencias();
         $this->ChequeoLicencia();
-        //'registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual',
         return view('home', compact('advertencias'));
     }
  
@@ -345,7 +340,6 @@ class HomeController extends Controller
         }
     }
     
-    
     public function dashboard(){
          $advertencias = $this->advertencias();
          
@@ -467,9 +461,6 @@ class HomeController extends Controller
         
         return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas','arrayLlegadasTardes','arrayHorasExtras','horasTrabajadasMesAnterior','HorasTrabajadasAnual','rankingEmpleados', 'advertencias'));
     }
-    
-    
-    
     
     public function HorasTrabajadas($f_inicio_mes, $f_fin_mes){
    

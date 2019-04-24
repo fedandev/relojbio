@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-       
+       EliminarRegistrosDuplicados::class
     ];
 
     /**
@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('registros:delete')->dailyAt('11:00');
         // $schedule->command('inspire')
         //          ->hourly();
     }

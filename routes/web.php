@@ -13,6 +13,7 @@ Route::get('/dispositivos/download/{dispositivo}', 'DispositivosController@downl
 Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios');
 Route::get('licencia/{id}','LicenciasController@getDiasLicencia');
 Route::get('tipolicencia/{id}','LicenciasController@getTiposLicencia');
+Route::get('/registros/modal/{registro_id?}', 'RegistrosController@showModal');
 
 
 Route::post('/reportes/horasTrabajadasEmpleado', 'ReportesController@horasTrabajadasEmpleado')->name('reportes.horasTrabajadasEmpleado');
@@ -26,10 +27,9 @@ Route::post('/reportes/entradasYsalidas', 'ReportesController@entradasYsalidas')
 Route::post('/reportes/libresConcedidos', 'ReportesController@libresConcedidos')->name('reportes.libresConcedidos');
 Route::post('/registros/load/excel', 'RegistrosController@loadExcel')->name('registros.loadExcel');
 Route::post('/search', 'AuditsController@search')->name('audits.search');
+Route::post('/registros/del', 'RegistrosController@del')->name('registros.del');
 
-
-
-
+Route::put('/registros/modalUpdate/{registro_id}', 'RegistrosController@updateModal');
 
 Route::resource('menus', 'MenusController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
 Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);

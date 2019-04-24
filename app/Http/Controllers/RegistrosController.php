@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegistroRequest;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
 
 class RegistrosController extends Controller
 {
@@ -134,6 +135,15 @@ class RegistrosController extends Controller
 		return redirect()->route('registros.index')->with('info', 'Eliminado exitosamente.');
 	}
 	
+	public function del(Request $request){
+		$this->validate($request, [
+            'delid' => 'required',
+        ]);
+		$delid = $request->input('delid');
+		Registro::whereIn('id', $delid)->delete();
+		return back()->with('info', 'Registros seleccionados eliminados exitosamente.');
+	}
+	
 	public function Excel(Request $request){
 		$this->authorize('create', Registro::class);
 		return view('registros.load', compact('registro'));
@@ -183,4 +193,33 @@ class RegistrosController extends Controller
 		}
 		return redirect()->route('registros.load')->with('info', 'Registros cargado correctamente.');
 	}
+	
+	public function showModal($registro_id){
+    	$registro = Registro::find($registro_id);
+        return response()->json($registro);
+    }
+    
+    public function updateModal(Request $request, $registro_id)
+    {
+    	$registro = Registro::find($registro_id);
+    	
+    	$hora = $request->input('registro_hora');
+		$fecha = $request->input('registro_fecha');
+		$t = $fecha. ' '. $hora;
+		
+		$datetime = new \DateTime($t);
+	
+        $registro->registro_hora = $datetime;
+        $registro->registro_fecha = $request->registro_fecha;
+        $registro->registro_tipo = $request->registro_tipo;
+        $registro->registro_comentarios = $request->registro_comentarios;
+        $registro->fk_empleado_cedula = $request->fk_empleado_cedula;
+        $registro->fk_dispositivo_id = $request->fk_dispositivo_id;
+     
+        $registro->save();
+        Session::flash('info', 'Registro modificado correctamente');
+        return response()->json($registro);
+        
+        
+    }
 }

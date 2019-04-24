@@ -17,7 +17,7 @@
         
         git push -f origin master
         
-
+        git push -u origin nombre_rama
 
 6) Manejo de ramas o branch
 
