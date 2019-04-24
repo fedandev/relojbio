@@ -9,7 +9,7 @@
                     <div class="ibox-title">
                        
                         <h5>
-                            <i class="fa fa-edit"></i> Horario Rotativo /
+                            <i class="fa fa-edit"></i> Turno Rotativo /
                             @if($horario_rotativo->id)
                                 Editar #{{$horario_rotativo->id}}
                             @else

@@ -27,15 +27,17 @@
 5) Consolidar los cambios a la rama 1_hnos_armand_ugon
     en consola de c9 realizar lo siguiente
     
-        -   Posicionarse en rama "desarrollo"
+        -   Posicionarse en rama "1_hnos_armand_ugon"
 
                 git checkout 1_hnos_armand_ugon
                 
         - Realizar merge de los cambios:
                 
-                git merge 1_hnos_armand_ugon
-                
-
+                git merge desarrollo
+        
+        - Subir cambios
+        
+                git push -u origin 1_hnos_armand_ugon
 
 3) Ir a CPANEL y actualizar el repositorio de la empresa para que se suban los cambios al ambiente oficial de la empresa
 

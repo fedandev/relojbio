@@ -11,7 +11,7 @@ return [
     'EmpresasController' => 'Empresas',
     'FeriadosController' => 'Feriados',
     'HomeController' => 'Inicio',
-    'HorarioRotativosController' => 'Horarios Rotativos',
+    'HorarioRotativosController' => 'Turnos Rotativos',
     'HorariosController' => 'Horarios',
     'HorarioSemanalsController' => 'Horarios Semanales',
     'LicenciasController' => 'Licencias',

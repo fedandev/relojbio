@@ -1,0 +1,16 @@
+en consola 
+crontab -e
+aprieto i (para insertar)
+* * * * * php /Applications/mamp/apache2/htdocs/*********/artisan schedule:run >> /dev/null 2>&1
+
+para salir esc :wq
+
+para ver si esta bien
+
+crontab -l
+
+tiene que aparecer el creado
+
+para correr la parte de los chedule escribir en consola
+
+php artisan schedule:run

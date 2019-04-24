@@ -10,7 +10,7 @@
                     <div class="ibox-title">
                        
                         <h5>
-                            <i class="fa fa-edit"></i> Horario Rotativo / Ver "{{$horario_rotativo->horariorotativo_nombre}}"
+                            <i class="fa fa-edit"></i> Turno Rotativo / Ver "{{$horario_rotativo->horariorotativo_nombre}}"
                         </h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
