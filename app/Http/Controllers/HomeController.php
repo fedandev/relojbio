@@ -357,12 +357,12 @@ class HomeController extends Controller
         $hoy = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('first day of this month');
-        $fechaActual->modify('first day of february');
+        //$fechaActual->modify('first day of february');
         
         $f_inicio_mes = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('last day of this month');
-        $fechaActual->modify('last day of february');
+        //$fechaActual->modify('last day of february');
         
         $f_fin_mes = $fechaActual->format('Y-m-d');
         
