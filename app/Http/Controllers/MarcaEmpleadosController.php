@@ -26,12 +26,20 @@ class MarcaEmpleadosController extends Controller
 		//Falta la parte de chequear si esta autorizado para ver y entrar en este formulario
 		$latitud = ajuste('latitud');
 		$longitud = ajuste('longitud');
-        return view('marcaempleado.index', compact('latitud', 'longitud'));
+		
+        return view('marcaempleado.index', compact('latitud', 'longitud','rango_max'));
 	}
 	
     public function store(MarcaEmpleadoRequest $request){
         
         if(auth()->user()->fk_empleado_cedula != ''){
+        	$distancia = $request->input('distancia');
+        	$distancia = $distancia * 1000;
+        	$rango_max = ajuste('rango_gps');
+        
+        	if($distancia > $rango_max){
+        		return redirect()->route('marcaempleado.index')->with('error', 'Fuera de rango');
+        	}
         	$fecha = new DateTime();
         	$hoy = $fecha->format('Y-m-d');
         	$fechahora = $request->input('hora');

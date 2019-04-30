@@ -19,7 +19,7 @@
                         <input type="hidden" name="longitud" id="longitud" value="{{ $longitud }}">
                         <input type="hidden" name="latitudNow" id="latitudNow" >
                         <input type="hidden" name="longitudNow" id="longitudNow">
-                        
+                        <input type="hidden" name="distancia" id="distancia">
                         <span id="liveclock"></span>
                         
                         <div class='col-lg-3'>
@@ -112,44 +112,18 @@
     }
     
     
-    function validarPosicion(){
-        
-        latFija = document.getElementById('latitud').value;
-        lonFija =document.getElementById('longitud').value;
-        distancia = Dist(document.getElementById('latitudNow').value,document.getElementById('longitudNow').value,latFija, lonFija );    
-        
-        if(distancia > 1.000){
-             msg="<div class='alert alert-danger alert-dismissable'>  <i class='fa fa-times-circle'></i> <button aria-hidden='true' data-dismiss='alert' class='close' type='button'>×</button> Fuera de Rango</div>";
-           
-            document.getElementById('common').innerHTML = msg;
-            return false;
-        }
-        
-        return true;
-    }
-    
-    
     $(document).ready(function(){
         
-    $('#formMarca').on('submit', function(e){
-        e.preventDefault();
-        
-        latFija = document.getElementById('latitud').value;
-        lonFija =document.getElementById('longitud').value;
-        distancia = Dist(document.getElementById('latitudNow').value,document.getElementById('longitudNow').value,latFija, lonFija );    
-        
-        if(distancia > 0.100){
-             msg="<div class='alert alert-danger alert-dismissable'>  <i class='fa fa-times-circle'></i> <button aria-hidden='true' data-dismiss='alert' class='close' type='button'>×</button> Fuera de Rango</div>";
-           
-            document.getElementById('common').innerHTML = msg;
-            return false;
-        }else{
+        $('#formMarca').on('submit', function(e){
+            e.preventDefault();
+            latFija = document.getElementById('latitud').value;
+            lonFija =document.getElementById('longitud').value;
+            distancia = Dist(document.getElementById('latitudNow').value,document.getElementById('longitudNow').value,latFija, lonFija );    
+            document.getElementById('distancia').value = distancia;
             this.submit();
-        }
-        
-        
+            
+        });
     });
-});
  </script>
      
      
