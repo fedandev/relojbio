@@ -9,6 +9,7 @@ use App\Models\Registro;
 use App\Models\Ajuste;
 use App\Models\Oficina;
 use App\Models\Trabaja;
+use App\Models\Feriado;
 use DateTime;
 use Barryvdh\DomPDF\Facade as PDF;
 use Dompdf\Options;
@@ -753,12 +754,7 @@ class ReportesController extends Controller
 		if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
-   
-                
-        // $registros = DB::table('v_inout')->whereBetween('registro_fecha', array($fechainicio,$fechafin))->where('fk_empleado_cedula',$cedula)->orderBy('registro_entrada', 'asc')->get();
-        // $registros = "SELECT fk_empleado_cedula, registro_fecha, SUM(registro_totalHoras) FROM v_inout WHERE registro_fecha between '".$fechainicio."' and  '".$fechafin."'";
-        
-          
+    
         $fechainicio = $request->input('fechainicio');
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
@@ -770,13 +766,11 @@ class ReportesController extends Controller
         if($cedula !='' && $cedula != 'ALL'){
             $sql = $sql. " AND fk_empleado_cedula = '".$cedula."'";
             $oficina = Oficina::find($fk_oficina_id);
-        
         }
         
         if($fk_oficina_id > 0 && $cedula == 'ALL' ){
             $sql = $sql. " AND fk_empleado_cedula IN (SELECT empleado_cedula FROM empleados WHERE fk_oficina_id = ".$fk_oficina_id.")";
             $oficina = Oficina::find($fk_oficina_id);
-           
         }
         
         $sql = $sql." group by fk_empleado_cedula, registro_fecha ";
@@ -795,20 +789,19 @@ class ReportesController extends Controller
         $minimo_extras = ajuste('minimo_extras');
         $max_extras = ajuste('max_hours_ext_per_day');
         $i=0;
-                
-        foreach($registros_sql as $registro){
         
+        foreach($registros_sql as $registro){
             $Empleado = Empleado::where('empleado_cedula', '=',$registro->fk_empleado_cedula)->first();
             
             if($Empleado == null){
                 continue;
             }
+            
     		$horario = horarioAfecha( $Empleado->id, $registro->registro_fecha);
-    
+            
     		$horas_debe_trabajar = totalHorasAfecha($horario);
     		$horas_trabajadas =  $registro->sum_horas;
     		$horas_extras = date('H:i:s', strtotime($horas_trabajadas) - strtotime($horas_debe_trabajar));
-    	    
     	
             if($horas_extras >= $minimo_extras && $horas_debe_trabajar<> '00:00:00' && $horas_extras <='12:59:59' ){
                 $r = [];
@@ -888,9 +881,6 @@ class ReportesController extends Controller
         }
         $for = "N";
         
-        $minimo_extras = ajuste('minimo_extras');
-        $max_extras = ajuste('max_hours_ext_per_day');
-        
         $fechainicio = $request->input('fechainicio');
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
@@ -920,6 +910,7 @@ class ReportesController extends Controller
         $max_extras = ajuste('max_hours_ext_per_day');
         $i=0;
         $empleado_cedula = "";
+        $fecha = "";
         $Empleado_Anterior = new Empleado();
         $primero = 0;
         $entro = 0;
@@ -935,22 +926,55 @@ class ReportesController extends Controller
             
             if($empleado_cedula != $registro->r_cedula){
                 if($primero == 0){
+                    $fecha = $registro->r_fecha;
                     $Empleado_Anterior = $Empleado;
                     $empleado_cedula = $registro->r_cedula;
                     $horas_debe_trabajar_sum = new SumaTiempos();
                     $horas_trabajadas = new SumaTiempos();
+                    $horas_dia = new SumaTiempos();
+                    $horas_libre_feriado = new SumaTiempos();
                     $primero = 1;
                 }else{
+                    $horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
+                    $horas = totalHorasAfecha($horario);
+        	        $datetime1 = DateTime::createFromFormat('H:i:s', $horas_dia->verTiempoFinal());
+                    $datetime2 = DateTime::createFromFormat('H:i:s', $horas);
+                    if($horas < $horas_dia->verTiempoFinal()){
+                        $resu = $datetime1->diff($datetime2);
+                        if($resu->format("%H:%I:%S") >= $minimo_extras){
+                            $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                        }else{
+                            $horas_trabajadas->sumaTiempo(new SumaTiempos($horas));
+                        }
+                    }else{
+                        $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                    }
                     $entro = 1;
                 }
             }
             
             if($registros_sql[$ultimo] == $registro){
+                if($fecha == $registro->r_fecha){
+    	            if($horario[0] == "00:00:00" && $horario[3] == "00:00:00"){
+    	                $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));   
+    	            }else{
+    	                $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    	            }
+                }
                 $horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
-
-        	    if($registro->r_total_horas != null){
-        		    $horas_trabajadas->sumaTiempo(new SumaTiempos($registro->r_total_horas));
-        		}
+                $horas = totalHorasAfecha($horario);
+    	        $datetime1 = DateTime::createFromFormat('H:i:s', $horas_dia->verTiempoFinal());
+                $datetime2 = DateTime::createFromFormat('H:i:s', $horas);
+                if($horas < $horas_dia->verTiempoFinal()){
+                    $resu = $datetime1->diff($datetime2);
+                    if($resu->format("%H:%I:%S") >= $minimo_extras){
+                        $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                    }else{
+                        $horas_trabajadas->sumaTiempo(new SumaTiempos($horas));
+                    }
+                }else{
+                    $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                }
         		$entro = 1;
             }
             
@@ -972,9 +996,15 @@ class ReportesController extends Controller
                     $a = $horas_trabajadas->verTiempoFinal();
                     $b = $horas_debe_trabajar_sum->verTiempoFinal();
                     
-                    $datetime1 = DateTime::createFromFormat('H:i:s', $a);
-                    $datetime2 = DateTime::createFromFormat('H:i:s', $b);
-                    if($b < $a){
+                    if($a > "99:59:59"){
+                        $datetime1 = DateTime::createFromFormat('HH:i:s', $a);
+                        $datetime2 = DateTime::createFromFormat('HH:i:s', $b);
+                    }else{
+                        $datetime1 = DateTime::createFromFormat('H:i:s', $a);
+                        $datetime2 = DateTime::createFromFormat('H:i:s', $b);
+                    }
+                    
+                    if($a > $b){
                         $resu = $datetime1->diff($datetime2);
                         $horas_extras = $resu->format("%H:%I:%S");
                     }else{
@@ -1001,23 +1031,56 @@ class ReportesController extends Controller
                     }
                 }
                 $r['empleado'] = $Empleado_Anterior->empleado_nombre.' '.$Empleado_Anterior->empleado_apellido;
+                $r['horas_libre_feriado'] = $horas_libre_feriado->verTiempoFinal();
                 
                 $registros[$i] = $r;
                 $i++;
                 $entro = 0;
+                $fecha = $registro->r_fecha;
                 $horas_debe_trabajar_sum = new SumaTiempos();
                 $horas_trabajadas = new SumaTiempos();
+                $horas_dia = new SumaTiempos();
+                $horas_libre_feriado = new SumaTiempos();
                 $empleado_cedula = $registro->r_cedula;
                 $Empleado_Anterior = $Empleado;
     	    }
             
     		$horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
             
-    		//$horas_debe_trabajar = totalHorasAfecha($horario);
-    		//$horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas_debe_trabajar));
-    		
     	    if($registro->r_total_horas != null){
-    		    $horas_trabajadas->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    	        if($fecha == $registro->r_fecha){
+    	            if($horario[0] == "00:00:00" && $horario[3] == "00:00:00"){
+    	                $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));   
+    	            }else{
+    	                $feriado = Feriado::where('feriado_fecha','=',$registro->r_fecha)->first();
+    	                if($feriado == null){
+    	                    $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    	                }else{
+    	                    if($feriado->feriado_laborable == 1){
+    	                        $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    	                    }else{
+    	                        $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));   
+    	                    }
+    	                }
+    	            }
+    	        }else{
+    	            $horas = totalHorasAfecha($horario);
+        	        $datetime1 = DateTime::createFromFormat('H:i:s', $horas_dia->verTiempoFinal());
+                    $datetime2 = DateTime::createFromFormat('H:i:s', $horas);
+                    if($horas < $horas_dia->verTiempoFinal()){
+                        $resu = $datetime1->diff($datetime2);
+                        if($minimo_extras <= $resu->format("%H:%I:%S")){
+                            $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                        }else{
+                            $horas_trabajadas->sumaTiempo(new SumaTiempos($horas));
+                        }
+                    }else{
+                        $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
+                    }
+                    $fecha = $registro->r_fecha;
+                    $horas_dia = new SumaTiempos();
+                    $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+    	        }
     		}
         }
         

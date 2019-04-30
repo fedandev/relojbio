@@ -11,6 +11,7 @@
     $SeparoEmpleados = ajuste('hoja_por_empleado');
 	$totalHoras = 0;
 	$tiempoTrabajado = new SumaTiempos();
+	$TrabajadoLibreFeriado = new SumaTiempos();
 @endphp
 
 
@@ -18,7 +19,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<title>HORAS EXTRAS</title>
+	<title>HORAS EXTRAS RESUMIDAS</title>
 	<link rel="stylesheet" href="{{ asset('css/pdf2.css') }}" />
 </head>
 
@@ -36,6 +37,7 @@
 				<th>Horas a Trabajar</th>
 				<th>Horas Trabajadas</th>
 				<th>Horas Extras</th>
+				<th>Horas Feriados/Libre</th>
 			</tr>
 			@if($registros_ok->count())
 				 @php
@@ -50,9 +52,11 @@
 			                echo 	'<td colspan="4"></td>';
 							echo	'<td>Total de Horas</td>';
 							echo	'<td>'. $tiempoTrabajado->verTiempoFinal() .'</td>';
+							echo	'<td>'. $TrabajadoLibreFeriado->verTiempoFinal() .'</td>';
 							echo '</tr>';
 			                echo '</table>';
 			                $tiempoTrabajado = new SumaTiempos();
+			                $TrabajadoLibreFeriado = new SumaTiempos();
 			            @endphp
         			     
                         <div id="footer">
@@ -71,6 +75,7 @@
 							<th>Horas a Trabajar</th>
 							<th>Horas Trabajadas</th>
 							<th>Horas Extras</th>
+							<th>Horas Feriados/Libre</th>
 						</tr>
                     @endif
 					@if($loop->last)
@@ -80,14 +85,17 @@
 							<td>{{ $registro['horas_debe_trabajar'] }}</td>
 							<td>{{ $registro['horas_trabajadas'] }}</td>
 							<td>{{ $registro['horas_extras'] }}</td>
+							<td>{{ $registro['horas_libre_feriado'] }}</td>
 						</tr>
 						@php
 							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro['horas_extras']));
+							$TrabajadoLibreFeriado->sumaTiempo(new SumaTiempos($registro['horas_libre_feriado']));
 						@endphpp
 						<tr>
 							<td colspan="3"></td>
 							<td>Total de Horas</td>
 							<td>{{ $tiempoTrabajado->verTiempoFinal() }}</td>
+							<td>{{ $TrabajadoLibreFeriado->verTiempoFinal() }}</td>
 						</tr>
 						@php
 							$totalHoras = 0;
@@ -99,9 +107,11 @@
 							<td>{{ $registro['horas_debe_trabajar'] }}</td>
 							<td>{{ $registro['horas_trabajadas'] }}</td>
 							<td>{{ $registro['horas_extras'] }}</td>
+							<td>{{ $registro['horas_libre_feriado'] }}</td>
 						</tr>
 						@php
 							$tiempoTrabajado->sumaTiempo(new SumaTiempos($registro['horas_extras']));
+							$TrabajadoLibreFeriado->sumaTiempo(new SumaTiempos($registro['horas_libre_feriado']));
 						@endphp
 					@endif
 				@endforeach

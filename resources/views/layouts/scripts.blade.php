@@ -1,3 +1,4 @@
+<script src="{{ secure_asset('js/serviceWorker.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/jquery.metisMenu.js') }}" type="text/javascript"></script>  <!-- menu desplegable en navbar -->
@@ -177,5 +178,7 @@
        
         
     }
+    
+    
    
 </script>  

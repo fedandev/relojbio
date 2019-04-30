@@ -26,13 +26,15 @@ class HomeController extends Controller
     }
 
     public function index(){
-        $advertencias = $this->advertencias();
+	    $advertencias = $this->advertencias();
         $this->ChequeoLicencia();
         return view('home', compact('advertencias'));
+	
     }
  
     public function advertencias(){
-        $trabajas = Trabaja::all();
+        $trabajas = Trabaja::with(['empleado','Turno'])->get();
+        
         $fecha_actual=date("Y-m-d");
         $datos3 = explode("-",$fecha_actual);
     	$month=$datos3[1];
@@ -85,13 +87,13 @@ class HomeController extends Controller
     
     private function diasFaltados($diasQueTrabaja, $trabaja, $fechaInicio, $fechaFin){
         $cedula = $trabaja->empleado->empleado_cedula;
-        $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
+        $registros = Registro::where('fk_empleado_cedula', '=', $cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
         $registros_array = array();
         foreach($registros as $registro){
             array_push($registros_array, $registro->registro_fecha);
         }
         $registros_ok = array_diff($diasQueTrabaja,$registros_array);
-        
+       
         return $registros_ok;
     }
     
@@ -104,9 +106,12 @@ class HomeController extends Controller
 
         $registros_sql =  DB::select($sql);
         $registros = Registro::hydrate($registros_sql); // paso a collection de registros
+        
+       
 
-        $tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
-
+        //$tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
+        
+       
         $iRegistros = 0;
         $registros_ok = [];
         
@@ -228,6 +233,7 @@ class HomeController extends Controller
     	$last_cell=$diaSemana+$ultimoDiaMes;
     	$x=0;
     	$diastrab = array();
+    
     	for($i=1;$i<=42;$i++){
     		if($i==$diaSemana){
     			// determinamos en que dia empieza
@@ -285,6 +291,7 @@ class HomeController extends Controller
     			$day++;
     		}
     	}
+    	
     	return $diastrab;
     }
     
@@ -341,18 +348,25 @@ class HomeController extends Controller
     }
     
     public function dashboard(){
-         $advertencias = $this->advertencias();
-         
+        
+        $advertencias = $this->advertencias();
+        
          
         //DATOS CARDS
         $fechaActual = new DateTime();
         $hoy = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('first day of this month');
+        $fechaActual->modify('first day of february');
+        
         $f_inicio_mes = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('last day of this month');
+        $fechaActual->modify('last day of february');
+        
         $f_fin_mes = $fechaActual->format('Y-m-d');
+        
+       
         $porcentajeHorasAtrabajar = 0;
         
         $HorasTrabajadas = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
@@ -470,10 +484,12 @@ class HomeController extends Controller
         //$registros = cacheQuery("select * from v_inout where registro_fecha between '".$f_inicio_mes."' and  '".$f_fin_mes."' order by registro_fecha", 30);
         
         $registros =  v_inout($f_inicio_mes,$f_fin_mes);
+        $empleados = Empleado::get();
        
         $tiempoTrabajado = new SumaTiempos();
         foreach($registros as $registro){
-            $empleado = Empleado::where('empleado_cedula','=' ,$registro->r_cedula)->first();
+            //$empleado = Empleado::where('empleado_cedula','=' ,$registro->r_cedula)->first();
+            $empleado = $empleados->whereIn('empleado_cedula', $registro->r_cedula)->first();
             if(!is_null($registro->r_total_horas ) && $empleado){
                 $fecha = $registro->r_fecha;
                 $fechaSalida = $registro->r_salida;
@@ -497,14 +513,19 @@ class HomeController extends Controller
     public function LlegadasTardes($f_inicio, $f_fin){
         
         
-        $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' " ;
+        // $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' " ;
 
-        $sql = $sql." order by registro_hora asc , registro_tipo ";
+        // $sql = $sql." order by registro_hora asc , registro_tipo ";
         
-        $registros_sql =  cacheQuery($sql);
+        // $registros_sql =  cacheQuery($sql);
         
-        $registros = Registro::hydrate($registros_sql); // paso a collection de registros
+        // $registros = Registro::hydrate($registros_sql); // paso a collection de registros
 
+        $registros = Registro::whereBetween('registro_fecha',[$f_inicio, $f_fin])
+                                ->where('registro_tipo','I')
+                                ->orderBy('registro_hora', 'asc')
+                                ->orderBy('registro_tipo')
+                                ->with('empleado')->get();
 
         $iRegistros = 0;
         $registros_ok = [];
@@ -678,11 +699,9 @@ class HomeController extends Controller
         $registros_sql =  $registros_sql->groupBy('r_cedula');
      
         $tiempoAcumulado = new SumaTiempos();
-                 
+        $empleados = Empleado::get();         
         foreach($registros_sql as $cedula => $fechas){
-        
-            $Empleado = Empleado::where('empleado_cedula', '=',$cedula)->first();
-            
+            $Empleado = $empleados->whereIn('empleado_cedula', $cedula)->first();
             if($Empleado){
                 foreach($fechas->groupBy('r_fecha') as $fecha => $regs){
                     $tiempoAcumuladoFecha = new SumaTiempos();

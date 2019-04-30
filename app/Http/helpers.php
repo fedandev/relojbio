@@ -6,6 +6,7 @@ use App\Models\Menu;
 use App\Models\Trabaja;
 use App\Models\Registro;
 use App\Models\LicenciaDetalle;
+use App\Models\Feriado;
 use App\SumaTiempos;
 
 function isActiveRoute($route, $output = 'active'){   
@@ -155,6 +156,9 @@ function horarioAfecha($idEmpleado, $fecha){
                     $horario[4] = $trabaja->horariorotativo->horario->horario_tiempotarde;
                     $horario[5] = $trabaja->horariorotativo->horario->horario_salidaantes;
                 }
+            }else{
+                $horario[0] = "00:00:00";
+                $horario[3]=  "00:00:00";
             }
         
         }elseif(!is_null($trabaja->fk_turno_id)){
@@ -196,6 +200,9 @@ function horarioAfecha($idEmpleado, $fecha){
                     }
                     
                 }
+            }else{
+                $horario[0] = "00:00:00";
+                $horario[3]=  "00:00:00";
             }
         }
     } 
@@ -236,7 +243,6 @@ function totalExtras($registros, $horarioAhacer){
                     if(!is_null($parcial)){
                         $tiempoTrabajado->sumaTiempo(new SumaTiempos($parcial));
                     }
-                    
                 }
                 
                 if($horarioAhacer < $tiempoTrabajado->verTiempoFinal()){
@@ -299,7 +305,6 @@ function RegistrosLibres($arrayDias, $cedulaEmpleado, $tipoLibre, $entrada, $sal
 		$registroEntrada->registro_registrado = "NO";
 		$registroEntrada->fk_empleado_cedula = $cedulaEmpleado;
 		
-		
 		$registroEntrada->save();
 		
 		$registroSalida = new Registro();
@@ -334,7 +339,6 @@ function diff_horas($hora_inicio, $hora_fin){
     $diff_seconds -= $diff_hours   * 3600;
     $diff_minutes  = floor($diff_seconds/60);
     $diff_seconds -= $diff_minutes * 60;
-    
 }
 
 function trabajaDiaTurno($turno, $fecha){
@@ -349,11 +353,9 @@ function trabajaDiaTurno($turno, $fecha){
         $trabaja =  $turno->turno_martes;
     }
     
-    
     if($dia=="Wed"){
         $trabaja =  $turno->turno_miercoles;
     }
-    
     
     if($dia=="Thu"){
         $trabaja =  $turno->turno_jueves;
@@ -363,7 +365,6 @@ function trabajaDiaTurno($turno, $fecha){
         $trabaja =  $turno->turno_viernes;
     }
     
-    
     if($dia=="Sat"){
         $trabaja =  $turno->turno_sabado;
     }
@@ -372,39 +373,31 @@ function trabajaDiaTurno($turno, $fecha){
         $trabaja =  $turno->turno_domingo;
     }
     
-
     return $trabaja;
 }
 
 function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
-   
     $diasTrabajo = $rotativo->horariorotativo_diastrabajo;
     $diasLibre = $rotativo->horariorotativo_diaslibres;
     $fecha_date = new datetime($fecha);
     $dia = $fecha_date->format('D');
     
-    
     $start_date = new DateTime($fechaInicio);
     $end_date= new DateTime($fecha);
-    
     
     $contTrabajo = 0;
     $contLibres = 0;
     $cuentoLibres = 'N';
     for($i = $start_date; $i <= $end_date; $i->modify('+1 day')){
-       
         $dia =  $i->format("Y-m-d");
-        
-        
+
         if($dia == $fecha){
-            
             if($cuentoLibres == 'S'){
                  $trabaja = '0';
             }else{
                  $trabaja = '1';
             }
         }
-        
         
         if($cuentoLibres == 'S'){
              $contLibres++;
@@ -413,8 +406,6 @@ function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
         if ($cuentoLibres == 'N'){
             $contTrabajo++;
         }
-        
-        
         
         if($contTrabajo == $diasTrabajo){
             $contTrabajo = 0;
@@ -427,17 +418,8 @@ function trabajaDiaRotativo($rotativo, $fechaInicio, $fecha){
             $cuentoLibres ='N';
             
         }
-        
-        
-        
     }
-
-    
    return $trabaja;
-  
-  
-    
-    
 }
 
 function diaMedioHorario($turno, $fecha){
@@ -452,11 +434,9 @@ function diaMedioHorario($turno, $fecha){
         $medioHorario =  $turno->turno_martes_mh;
     }
     
-    
     if($dia=="Wed"){
         $medioHorario =  $turno->turno_miercoles_mh;
     }
-    
     
     if($dia=="Thu"){
         $medioHorario =  $turno->turno_jueves_mh;
@@ -466,7 +446,6 @@ function diaMedioHorario($turno, $fecha){
         $medioHorario =  $turno->turno_viernes_mh;
     }
     
-    
     if($dia=="Sat"){
         $medioHorario =  $turno->turno_sabado_mh;
     }
@@ -474,7 +453,6 @@ function diaMedioHorario($turno, $fecha){
     if($dia=="Sun"){
         $medioHorario =  $turno->turno_domingo_mh;
     }
-    
 
     return $medioHorario;
 }

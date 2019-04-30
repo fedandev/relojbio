@@ -1,4 +1,4 @@
-<div style="margin-top: 3px">
+<div style="margin-top: 3px" id="common">
     @if(session()->has('info'))
         <div class="alert alert-info alert-dismissable">
             <i class="fa fa-info-circle"></i> 

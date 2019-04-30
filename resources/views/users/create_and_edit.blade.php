@@ -61,9 +61,18 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Estado</label>
                                     <div class="col-sm-4">
-                                        <select class="select2_demo_2 form-control" name="estado" id="estado-field" value="{{ old('estado', $user->estado) }}">
+                                        <select class="form-control" name="estado" id="estado-field" value="{{ old('estado', $user->estado) }}">
                                             <option value="ACTIVO">Activo</option>
                                             <option value ="BAJA">Baja</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Empleado</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="fk_empleado_cedula" id="fk_empleado_cedula-field" value="{{ old('fk_empleado_cedula', $user->fk_empleado_cedula) }}">
+                                            @include('layouts.empleadosXcedula');
                                         </select>
                                     </div>
                                 </div>
@@ -120,6 +129,8 @@
                                 
                                 <div class="hr-line-dashed"></div>
                                 
+                                
+                                
                                 <div class="form-group">
                                     <div class="col-sm-4 col-sm-offset-2">
                                         <a class="btn btn-white" href="{{ route('users.index') }}"> Cancelar</a>
@@ -164,4 +175,15 @@
   
 <!--</script>-->
 
+
+    <script>
+        $(document).ready(function() {
+            var empleado_cedula = $("#fk_empleado_cedula-field").attr('value');
+            
+            if(empleado_cedula!=''){
+                $('#fk_empleado_cedula-field option[value="'+ empleado_cedula +'"]').prop("selected", true);
+            }
+        
+        });
+    </script>
 @endsection

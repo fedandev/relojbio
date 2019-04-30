@@ -35,5 +35,6 @@ return [
     'TurnosController' => 'Turnos',
     'UsersController' => 'Usuarios',
     'LicenciaDetallesController' => 'Asignar Licencia',
-    'LibreDetallesController' => 'Libres Concedidos'
+    'LibreDetallesController' => 'Libres Concedidos',
+    'MarcaEmpleadosController' => 'Marcar Entrada/Salida',
 ];

@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nombre','estado','observaciones','email', 'password',
+        'nombre','estado','observaciones','email', 'password', 'fk_empleado_cedula'
     ];
 
     /**
@@ -41,4 +41,8 @@ class User extends Authenticatable
         return $menus;
     }
     
+    
+    public function Empleado(){
+        return $this->hasOne('App\Models\Empleado','empleado_cedula','fk_empleado_cedula');
+    }
 }

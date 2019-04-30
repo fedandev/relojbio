@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<?php use App\Models\Registro; ?>
+
     
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">

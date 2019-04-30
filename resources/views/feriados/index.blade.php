@@ -28,6 +28,7 @@
                                         <th data-hide="phone,tablet">Coeficiente</th>
                                         <th data-hide="phone,tablet">Minimo Horas</th>
                                         <th data-hide="phone,tablet">Fecha</th>
+                                        <th data-hide="phone,tablet">Laborable?</th>
                                         <th class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
@@ -39,7 +40,11 @@
                                             <td>{{$feriado->feriado_coeficiente}}</td>
                                             <td>{{$feriado->feriado_minimo}}</td>
                                             <td>{{ formatFecha($feriado->feriado_fecha) }}</td>
-                                            
+                                            @if($feriado->feriado_laborable == "1")
+                                                <td><i class="fa fa-check text-navy"></i></td>
+                                            @else
+                                                <td><i class="fa fa-times text-danger"></i></td>
+                                            @endif
                                             <td class="text-right">
                                               
                                                 <a class="btn btn-xs btn-default" href="{{ route('feriados.show', $feriado->id) }}">
