@@ -11,7 +11,7 @@
                 </div>
 				
 				<div class="ibox-content">
-				    <form action="{{ route('marcaempleado.store') }}" method="POST" accept-charset="UTF-8" class="form-horizontal" id="formMarca" onsubmit="event.preventDefault(); validarPosicion();">
+				    <form action="{{ route('marcaempleado.store') }}" method="POST" accept-charset="UTF-8" class="form-horizontal" id="formMarca">
                         
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         
@@ -118,7 +118,7 @@
         lonFija =document.getElementById('longitud').value;
         distancia = Dist(document.getElementById('latitudNow').value,document.getElementById('longitudNow').value,latFija, lonFija );    
         
-        if(distancia > 0.100){
+        if(distancia > 1.000){
              msg="<div class='alert alert-danger alert-dismissable'>  <i class='fa fa-times-circle'></i> <button aria-hidden='true' data-dismiss='alert' class='close' type='button'>×</button> Fuera de Rango</div>";
            
             document.getElementById('common').innerHTML = msg;
@@ -127,6 +127,29 @@
         
         return true;
     }
+    
+    
+    $(document).ready(function(){
+        
+    $('#formMarca').on('submit', function(e){
+        e.preventDefault();
+        
+        latFija = document.getElementById('latitud').value;
+        lonFija =document.getElementById('longitud').value;
+        distancia = Dist(document.getElementById('latitudNow').value,document.getElementById('longitudNow').value,latFija, lonFija );    
+        
+        if(distancia > 0.100){
+             msg="<div class='alert alert-danger alert-dismissable'>  <i class='fa fa-times-circle'></i> <button aria-hidden='true' data-dismiss='alert' class='close' type='button'>×</button> Fuera de Rango</div>";
+           
+            document.getElementById('common').innerHTML = msg;
+            return false;
+        }else{
+            this.submit();
+        }
+        
+        
+    });
+});
  </script>
      
      
