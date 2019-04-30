@@ -119,3 +119,4 @@ Stack trace:
 #2 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php(609): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array)
 #3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(733): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
 #4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(159): Illum in /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 945
+[30-Apr-2019 19:51:58 UTC] PHP Fatal error:  Cannot use [] for reading in /home/ubuntu/workspace/app/Http/Controllers/ReportesController.php on line 918

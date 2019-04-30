@@ -46,6 +46,26 @@ class SumaTiempos
             + intval($tiempo->tiempo['horas'] + $horas);
     }
     
+    public function restaTiempo(SumaTiempos $tiempo)
+    {
+        // Segundos
+        $this->tiempo['segundos']
+            = floatval($tiempo->tiempo['segundos'])
+            - floatval($this->tiempo['segundos']);
+        $minutos = intval($this->tiempo['segundos'] / 60);
+        $this->tiempo['segundos'] -= $minutos * 60;
+        // Minutos
+        $this->tiempo['minutos']
+            = intval($tiempo->tiempo['minutos'] + $minutos)
+            - intval($this->tiempo['minutos']);
+        $horas = intval($this->tiempo['minutos'] / 60);
+        $this->tiempo['minutos'] -= $horas * 60;
+        // Horas
+        $this->tiempo['horas']
+            = intval($tiempo->tiempo['horas'] + $horas)
+            - intval($this->tiempo['horas']);
+    }
+    
     /**
      * Formatea y devuelve el tiempo final
      *
