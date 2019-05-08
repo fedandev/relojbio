@@ -48,10 +48,12 @@ class LibreDetallesController extends Controller
 	public function store(LibreDetalleRequest $request)
 	{
 		//$this->authorize('store', LibreDetalle::class);	
-		// $this->validate($request, [
-  //          'horario_nombre' => 'required|string|max:191',
-  //          'horario_entrada' => 'required',
-  //      ]);
+		 $this->validate($request, [
+            'fecha_desde' => 'required',
+            'fecha_hasta' => 'required',
+            'fk_tipo_libre_id' => 'required',
+            'fk_empleado_id' => 'required',
+        ]);
 		//CREO LOS REGISTROS DEL DÍA LIBRE
 		$retorno = $this->countDiasLibres($request);
         if($retorno[0] != "Error"){

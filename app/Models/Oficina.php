@@ -6,7 +6,7 @@ namespace App\Models;
 class Oficina extends Model //implements Auditable
 {       
     //use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['oficina_nombre', 'oficina_descripcion', 'oficina_codigo', 'oficina_estado', 'fk_sucursal_id', 'fk_dispositivo_id'];
+    protected $fillable = ['oficina_nombre', 'oficina_descripcion', 'oficina_codigo', 'oficina_estado', 'fk_sucursal_id', 'fk_dispositivo_id','oficina_latitud', 'oficina_longitud'];
     public $timestamps = false;
     
     public function Sucursal(){

@@ -8,5 +8,5 @@ return [
     'create' => 'Create',
     'show' => 'Show',
     'download' => 'Download',
-    'Excel' => 'Cargar Excel',
+    'Excel' => 'Load Excel',
 ];

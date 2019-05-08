@@ -35,7 +35,9 @@ class OficinasController extends Controller
 	public function create(Oficina $oficina)
 	{
 		$this->authorize('create', $oficina);
-		return view('oficinas.create_and_edit', compact('oficina'));
+		$latitud = ajuste('latitud');
+		$longitud = ajuste('longitud');
+		return view('oficinas.create_and_edit', compact('oficina', 'latitud', 'longitud'));
 	}
 
 	public function store(OficinaRequest $request)
@@ -54,7 +56,9 @@ class OficinasController extends Controller
 	public function edit(Oficina $oficina)
 	{
         $this->authorize('edit', $oficina);
-		return view('oficinas.create_and_edit', compact('oficina'));
+        $latitud = ajuste('latitud');
+		$longitud = ajuste('longitud');
+		return view('oficinas.create_and_edit', compact('oficina','latitud', 'longitud'));
 	}
 
 	public function update(OficinaRequest $request, Oficina $oficina)

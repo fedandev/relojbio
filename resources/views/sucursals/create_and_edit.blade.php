@@ -68,28 +68,17 @@
             </div>
         </div>
     </div>
-
-            
-
 @endsection
 
 
 @section('scripts')
-
     <script>
         $(document).ready(function(){
-            
-            
             var empresa_id = $("#fk_empresa_id-field").attr('value');
             if(empresa_id>0){
                 $('#fk_empresa_id-field option[value="'+ empresa_id +'"]').prop("selected", true);
             }
-            
-            
             $(".select2_demo_2").select2();
-        
         });
-                  
     </script>
-    
 @endsection

@@ -453,8 +453,64 @@ function diaMedioHorario($turno, $fecha){
     if($dia=="Sun"){
         $medioHorario =  $turno->turno_domingo_mh;
     }
-
     return $medioHorario;
+}
+
+function TomaExtras($idEmpleado, $fecha){
+    $trabaja = Trabaja::where('fk_empleado_id', '=', $idEmpleado)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->first();
+    $fecha_date = new datetime($fecha);
+    $dia = $fecha_date->format('D');
+    
+    if(is_null($trabaja)){
+        return true;
+    }
+    
+    if(!is_null($trabaja->fk_turno_id)){
+        if($dia=="Mon"){
+            if($trabaja->turno->turno_lunes_he == 1){
+                return true;
+            }
+        }
+    
+        if($dia=="Tue"){
+            if($trabaja->turno->turno_martes_he == 1){
+                return true;
+            }
+        }
+        
+        if($dia=="Wed"){
+            if($trabaja->turno->turno_miercoles_he == 1){
+                return true;
+            }
+        }
+        
+        if($dia=="Thu"){
+            if($trabaja->turno->turno_jueves_he == 1){
+                return true;
+            }
+        }
+        
+        if($dia=="Fri"){
+            if($trabaja->turno->turno_viernes_he == 1){
+                return true;
+            }
+        }
+        
+        if($dia=="Sat"){
+            if($trabaja->turno->turno_sabado_he == 1){
+                return true;
+            }
+        }
+        
+        if($dia=="Sun"){
+            if($trabaja->turno->turno_domingo_he == 1){
+                return true;
+            }
+        }
+        return false;
+    }else{
+        return true;
+    }
 }
 
 //(la vista no la uso mas porque anda muy lento) esta funcion hace lo mismo que dicha vista.
