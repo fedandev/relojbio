@@ -67,9 +67,10 @@ class MarcaEmpleadosController extends Controller
 				return redirect()->route('marcaempleado.index')->with('error', 'Imagen no se pudo guardar');
 			}
 		} else {
-			//return redirect()->route('marcaempleado.index')->with('error', 'Problema al machear imagen.');
+			return redirect()->route('marcaempleado.index')->with('error', 'Problema al machear imagen.');
 		}
         if(auth()->user()->fk_empleado_cedula != ''){
+        	
         	$rango_max = ajuste('rango_gps');
         	$rango_max = $rango_max/1000; //paso a km 
         	$latitud = $request->get('latitudNow');
@@ -82,13 +83,8 @@ class MarcaEmpleadosController extends Controller
         		
         		if($oficina_latitud != ''){
         			$distancia = distanceCalculation($latitud, $longitud, $oficina_latitud, $oficina_longitud);
-        			if($oficina->id ==3){
-        				dd($distancia,$latitud,$longitud, $oficina_latitud,$oficina_longitud );	
-        			}
-        			
         			if($distancia<=$rango_max){
         				$hay_rango_oficina = 'S';
-        				
         			}
         		}
         		

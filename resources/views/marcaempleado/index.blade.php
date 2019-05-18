@@ -103,15 +103,19 @@
        
         var geoSuccess = function(position) {
             startPos = position;
+            
             document.getElementById('latitudNow').value = startPos.coords.latitude;
             document.getElementById('longitudNow').value = startPos.coords.longitude;
         };
        
         
         navigator.geolocation.getCurrentPosition(geoSuccess);
+        
     }
 
+
     window.onload=show5
+    
      //-->
     
     function Dist(lat1, lon1, lat2, lon2) {
