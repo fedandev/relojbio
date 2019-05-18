@@ -44,7 +44,7 @@
                                                 <td>Baja</td>
                                             @endif
                                             <td>
-                                                <a href="{{ route('dispositivos.show', $oficina->sucursal->id) }}" target="_blank" data-toggle="tooltip" data-placement="right" title="Click para abrir en nueva pestaña">
+                                                <a href="{{ route('sucursals.show', $oficina->sucursal->id) }}" target="_blank" data-toggle="tooltip" data-placement="right" title="Click para abrir en nueva pestaña">
                                                     {{  $oficina->sucursal->sucursal_nombre }}
                                                 </a>
                                             </td>

@@ -17,6 +17,7 @@ class RegistrosController extends Controller
 		
     public function __construct(){
         $this->middleware('auth');
+        $this->middleware('auth.lock');
         $this->error = 'N';
         /*if (ajuste('audit') != 'S'){
     		Registro::disableAuditing();

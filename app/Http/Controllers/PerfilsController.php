@@ -15,6 +15,7 @@ class PerfilsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		Perfil::disableAuditing();
         }else{

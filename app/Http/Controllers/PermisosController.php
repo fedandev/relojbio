@@ -12,6 +12,7 @@ class PermisosController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('auth.lock');
     }
 
 	public function index()

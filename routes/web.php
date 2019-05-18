@@ -35,6 +35,7 @@ Auth::routes();
     Route::post('/registros/load/excel', 'RegistrosController@loadExcel')->name('registros.loadExcel');
     Route::post('/search', 'AuditsController@search')->name('audits.search');
     Route::post('/registros/del', 'RegistrosController@del')->name('registros.del');
+    
     Route::post('/marcaempleado/store', 'MarcaEmpleadosController@store')->name('marcaempleado.store');
     
     Route::put('/registros/modalUpdate/{registro_id}', 'RegistrosController@updateModal');
@@ -80,3 +81,5 @@ Auth::routes();
 
 
 
+    Route::get('login/locked', 'Auth\LoginController@locked')->middleware('auth')->name('login.locked');
+    Route::post('login/locked', 'Auth\LoginController@unlock')->name('login.unlock');

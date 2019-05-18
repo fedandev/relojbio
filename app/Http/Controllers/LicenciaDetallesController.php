@@ -18,6 +18,7 @@ class LicenciaDetallesController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		LicenciaDetalle::disableAuditing();
         }else{
@@ -184,6 +185,7 @@ class LicenciaDetallesController extends Controller
 						if($diaSem == 1){
 							
 						}
+						
 						$trabaja->turno->
 						
 						if($checksS != null || $checksD != null || $checksS != null){

@@ -117,22 +117,16 @@
                 $('#fk_empleado_cedula-field option[value="'+ ci +'"]').prop("selected", true);
             }
             
-            
             var datetime = $("#registro_hora-field").attr('value');
             var format = datetime.substr(-8);
             $("#registro_hora-field").val(format);
-            
             var dispositivo_id = $("#fk_dispositivo_id-field").attr('value');
+            
             if(dispositivo_id>0){
                 $('#fk_dispositivo_id-field option[value="'+ dispositivo_id +'"]').prop("selected", true);
             }
-            
             var registro_tipo = $("#registro_tipo-field").attr('value');
-            
-                $('#registro_tipo-field option[value="'+ registro_tipo +'"]').prop("selected", true);
-            
-            
-            
+            $('#registro_tipo-field option[value="'+ registro_tipo +'"]').prop("selected", true);
             $(".select2_demo_2").select2();
             
             

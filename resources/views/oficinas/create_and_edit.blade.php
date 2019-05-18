@@ -222,7 +222,7 @@
                 var position = {lat: latitud, lng: longitud};
                 
             }
-            alert(position);
+            
             $('#marker_latitud').val(latitud);
             $('#marker_longitud').val(longitud);
             

@@ -123,3 +123,7 @@ Stack trace:
 [03-May-2019 03:47:09 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\LicenciasController::getDiasLicencia() in /home/ubuntu/workspace/app/Http/Controllers/LicenciasController.php on line 113
 [03-May-2019 23:17:40 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\LicenciasController::getDiasLicencia() in /home/ubuntu/workspace/app/Http/Controllers/LicenciasController.php on line 107
 [03-May-2019 23:18:07 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\LicenciasController::getTiposLicencia() in /home/ubuntu/workspace/app/Http/Controllers/LicenciasController.php on line 107
+[16-May-2019 18:27:35 UTC] PHP Fatal error:  Class 'App\Http\Middleware\Middleware' not found in /home/ubuntu/workspace/app/Http/Middleware/AuthLock.php on line 7
+[16-May-2019 18:27:49 UTC] PHP Fatal error:  Class 'Middleware' not found in /home/ubuntu/workspace/app/Http/Middleware/AuthLock.php on line 7
+[16-May-2019 18:29:33 UTC] PHP Fatal error:  Class 'App\Http\Middleware\Middleware' not found in /home/ubuntu/workspace/app/Http/Middleware/AuthLock.php on line 9
+[17-May-2019 18:00:34 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/ubuntu/workspace/storage/framework/views/79ee1caa6bffda12849ca7a75389529d93958274.php on line 32

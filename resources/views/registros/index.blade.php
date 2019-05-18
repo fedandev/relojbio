@@ -64,8 +64,7 @@
 				    
                     <div class="table-responsive">
                         @if($registros->count())
-                        <!--<form action="{{ route('registros.del') }}" method="post" onsubmit="return confirm('Esta seguro que desea eliminar los registros seleccionados?')";>
-                            {!! csrf_field() !!}-->
+                        
                             <table class="footable table table-stripped " data-filter=#filter data-page="true">
                                 <thead>
                                     <tr>    
@@ -95,26 +94,13 @@
                                                 <td>Salida</td>
                                             @endif
                                             <td class="text-right">
-                                              
                                                 <a class="btn btn-xs btn-default" href="{{ route('registros.show', $registro->id) }}">
                                                     <i class="fa fa-eye"></i> 
                                                 </a>
                                                 
-                                                <!--<a class="btn btn-xs btn-default open_modal" value =href="{{ route('registros.edit', $registro->id) }}">-->
-                                                <!--    <i class="fa fa-edit"></i> -->
-                                                <!--</a>-->
-                                                
                                                 <button class="btn btn-xs btn-default open_modal" value="{{ $registro->id }}" type="button">
                                                     <i class="fa fa-edit"></i> 
                                                 </button>
-        
-                                                <!--<form action="{{ route('registros.destroy', $registro->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Esta seguro que desea eliminar?');">
-                                                    {{csrf_field()}}
-                                                    <input type="hidden" name="_method" value="DELETE">
-        
-                                                    <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> </button>
-                                                </form>-->
-                                                
                                             </td>
                                         </tr>
                                         @endif
@@ -238,7 +224,7 @@
                     type = "PUT"; //for updating existing resource
                     my_url += '/registros/modalUpdate/' + registro_id;
                 }
-                //console.log(formData);
+                
                 $.ajax({
                     type: type,
                     url: my_url,

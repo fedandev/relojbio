@@ -12,5 +12,6 @@ return [
     'created' => 'Nuevo',
     'updated' => 'Modificado',
     'deleted' => 'Eliminado',
-    'dashboard' => 'Dashboard'
+    'dashboard' => 'Dashboard',
+    'locked' => 'Pantalla de bloqueo'
 ];

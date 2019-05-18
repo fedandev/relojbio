@@ -86,7 +86,6 @@
     
     
     function alertaVerde($msg){
-        
         toastr.options = {
             closeButton: true,
             progressBar: true,
@@ -94,7 +93,6 @@
             timeOut: 4000
         };
         toastr.success($msg, '');
-        
     }
     
     //Alerta al presionar boton eliminar en tablas

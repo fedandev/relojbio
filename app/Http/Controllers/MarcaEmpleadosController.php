@@ -9,12 +9,14 @@ use App\Http\Requests\MarcaEmpleadoRequest;
 
 use App\Models\Registro;
 use App\Models\Empleado;
+use App\Models\Oficina;
 use DateTime;
 
 class MarcaEmpleadosController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		Dispositivo::disableAuditing();
         }else{
@@ -26,94 +28,74 @@ class MarcaEmpleadosController extends Controller
 		//Falta la parte de chequear si esta autorizado para ver y entrar en este formulario
 		$latitud = ajuste('latitud');
 		$longitud = ajuste('longitud');
-		$this->Prueba();
+		
         return view('marcaempleado.index', compact('latitud', 'longitud','rango_max'));
 	}
 	
-	
-	public function Prueba(){
-		$Empleado = Empleado::where('empleado_cedula',"48806420")->first();		//PONER FOREACH PARA QUE RECORRA TODOS LOS EMPLEADOS
-		$fecha = "2019-04-30";													//CAMBIAR A FECHA DE HOY
-		$horario = horarioAfecha( $Empleado->id, $fecha);
-		
-		if($horario[6] == "S"){
-			//Horario con brake
-			$reg_x_dia_min = 4;
+	public function guardar(Request $request){
+		$data = $request->get('image');
+		if (preg_match('/data:image\/(gif|jpeg|png);base64,(.*)/i', $data, $matches)) {
+			$imageType = $matches[1];
+			$imageData = base64_decode($matches[2]);
+			$image = imagecreatefromstring($imageData);
+			$filename = md5($imageData) . '.png';
 			
-		}else{
-			//Horario sin brake
-			$reg_x_dia_min = 4;
-			$registros = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$Empleado->empleado_cedula)->get();
-			$cant_reg = count($registros);
-			if($cant_reg < 4){
-				//LE FALTO MARCAR
-				if($this->ChequearSalidaEntrada($entradas) == "Entrada"){
-					dd("Se olvido de marcar entrada");
-				}else{
-					dd("Se olvido de marcar salida");
-				}
-			}elseif($cant_reg%2!=0){
-				//MARCO MAS DE 4 REGISTROS PERO LE FALTO MARCAR UNO (O LE SOBRA UNO? COMO SE ESO?)
-				$entradas = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$Empleado->empleado_cedula)->where('registro_tipo','I')->get();
-				if($this->ChequearSalidaEntrada($entradas) == "Entrada"){
-					dd($entradas);
-				}else{
-					dd("Se olvido de marcar salida");
-				}
-			}else{
-				//TIENE TODAS LAS MARCAS PERO NO SE SI CADA ENTRADA TIENE SU SALIDA, AHORA VOY A CHEQUEAR ESO
-				$entradas = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$Empleado->empleado_cedula)->where('registro_tipo','I')->get();
-				$salidas = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$Empleado->empleado_cedula)->where('registro_tipo','O')->get();
-				if(count($entradas) != count($salidas)){
-					if($this->ChequearSalidaEntrada($entradas) == "Entrada"){
-						dd("Se equivoco puse salida en vez de entrada");
-					}elseif($this->ChequearSalidaEntrada($entradas) == "Salida"){
-						dd("Se equivoco puse entrada en vez de salida");
-					}
-				}
+			if (imagepng($image, public_path().'/images/' . $filename)) {
+				
+				//$return = $this->store($request);
+				//echo json_encode(array('filename' => '/images/' . $filename));
+			} else {
+				//return redirect()->route('marcaempleado.index')->with('error', 'Usuario no permitido para realizar marcas');
 			}
+		} else {
+			return redirect()->route('marcaempleado.index')->with('error', 'Usuario no permitido para realizar marcas');
 		}
+		
 	}
-	
-	public function ChequearSalidaEntrada($entradas){
-		if(count($entradas)%2!=0){
-			return "Entrada";
-		}else{
-			return "Salida";
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
     public function store(MarcaEmpleadoRequest $request){
-        
+    	
+    	$data = $request->input('imageData');
+		if (preg_match('/data:image\/(gif|jpeg|png);base64,(.*)/i', $data, $matches)) {
+			$imageType = $matches[1];
+			$imageData = base64_decode($matches[2]);
+			$image = imagecreatefromstring($imageData);
+			$filename = md5($imageData) . '.png';
+			
+			if (imagepng($image, public_path().'/images/marcas/' . $filename)) {
+			} else {
+				return redirect()->route('marcaempleado.index')->with('error', 'Imagen no se pudo guardar');
+			}
+		} else {
+			//return redirect()->route('marcaempleado.index')->with('error', 'Problema al machear imagen.');
+		}
         if(auth()->user()->fk_empleado_cedula != ''){
-        	$distancia = $request->input('distancia');
-        	$distancia = $distancia * 1000;
         	$rango_max = ajuste('rango_gps');
+        	$rango_max = $rango_max/1000; //paso a km 
+        	$latitud = $request->get('latitudNow');
+        	$longitud = $request->get('longitudNow');
+        	$oficinas = Oficina::all();
+        	$hay_rango_oficina = 'N';
+        	foreach($oficinas as $oficina){
+        		$oficina_latitud = $oficina->oficina_latitud;
+        		$oficina_longitud = $oficina->oficina_longitud;
+        		
+        		if($oficina_latitud != ''){
+        			$distancia = distanceCalculation($latitud, $longitud, $oficina_latitud, $oficina_longitud);
+        			if($oficina->id ==3){
+        				dd($distancia,$latitud,$longitud, $oficina_latitud,$oficina_longitud );	
+        			}
+        			
+        			if($distancia<=$rango_max){
+        				$hay_rango_oficina = 'S';
+        				
+        			}
+        		}
+        		
+        	}
+        	
         
-        	if($distancia > $rango_max){
+        	if($hay_rango_oficina = 'S'){
         		return redirect()->route('marcaempleado.index')->with('error', 'Fuera de rango');
         	}
         	$fecha = new DateTime();
@@ -139,7 +121,7 @@ class MarcaEmpleadosController extends Controller
 				$registro->registro_hora = $hoy." ".$fechahora;
 				$registro->registro_fecha = $fecha->format('Y-m-d');
 				$registro->registro_tipomarca = 'Mobile';
-				$registro->registro_comentarios = "Cargado desde Mobile";
+				$registro->registro_comentarios = "Cargado desde Mobile - Imagen ".$filename;
 				$registro->registro_tipo = $tipo_marca;
 				$registro->registro_registrado = "NO";
 				$registro->fk_empleado_cedula = auth()->user()->fk_empleado_cedula;
@@ -153,7 +135,7 @@ class MarcaEmpleadosController extends Controller
 					$registro->registro_hora = $hoy." ".$fechahora;
 					$registro->registro_fecha = $hoy;
 					$registro->registro_tipomarca = 'Mobile';
-					$registro->registro_comentarios = "Cargado desde Mobile";
+					$registro->registro_comentarios = "Cargado desde Mobile - Imagen ".$filename;
 					$registro->registro_tipo = $tipo_marca;
 					$registro->registro_registrado = "NO";
 					$registro->fk_empleado_cedula = auth()->user()->fk_empleado_cedula;
@@ -166,7 +148,7 @@ class MarcaEmpleadosController extends Controller
 					$registro->registro_hora = $hoy." ".$fechahora;
 					$registro->registro_fecha = $fecha->format('Y-m-d');
 					$registro->registro_tipomarca = 'Mobile';
-					$registro->registro_comentarios = "Cargado desde Mobile";
+					$registro->registro_comentarios = "Cargado desde Mobile - Imagen ".$filename;
 					$registro->registro_tipo = $tipo_marca;
 					$registro->registro_registrado = "NO";
 					$registro->fk_empleado_cedula = auth()->user()->fk_empleado_cedula;
@@ -179,6 +161,16 @@ class MarcaEmpleadosController extends Controller
         }else{
         	return redirect()->route('marcaempleado.index')->with('error', 'Usuario no permitido para realizar marcas');
         }
+        
+        
+             
+        
+        
 	}
+	
+	
+	
+	
+	   
 	
 }

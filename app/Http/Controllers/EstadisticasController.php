@@ -12,6 +12,7 @@ class EstadisticasController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth.lock');
     }
 
 	public function index()
