@@ -13,6 +13,7 @@ class LicenciasController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		Licencia::disableAuditing();
         }else{
@@ -20,28 +21,24 @@ class LicenciasController extends Controller
         }*/
     }
 
-	public function index()
-	{
+	public function index(){
 		$this->authorize('show', Licencia::class);
 		$licencias = Licencia::with('LicenciaDetalles')->get();
 		
 		return view('licencias.index', compact('licencias'));
 	}
 
-    public function show(Licencia $licencia)
-    {
+    public function show(Licencia $licencia){
     	$this->authorize('show', $licencia);
         return view('licencias.show', compact('licencia'));
     }
 
-	public function create(Licencia $licencia)
-	{
+	public function create(Licencia $licencia){
 		$this->authorize('create', $licencia);
 		return view('licencias.create_and_edit', compact('licencia'));
 	}
 
-	public function store(LicenciaRequest $request)
-	{
+	public function store(LicenciaRequest $request){
 		$this->authorize('store', Licencia::class);	
 		$this->validate($request, [
             'licencia_anio' => 'required|integer|max:2060',
@@ -49,18 +46,17 @@ class LicenciasController extends Controller
             'fk_tipolicencia_id' => 'required|integer',
             'fk_empleado_id' => 'required|integer',
         ]);
+        
 		$licencia = Licencia::create($request->all());
 		return redirect()->route('licencias.show', $licencia->id)->with('info', 'Creado exitosamente.');
 	}
 
-	public function edit(Licencia $licencia)
-	{
+	public function edit(Licencia $licencia){
         $this->authorize('edit', $licencia);
 		return view('licencias.create_and_edit', compact('licencia'));
 	}
 
-	public function update(LicenciaRequest $request, Licencia $licencia)
-	{
+	public function update(LicenciaRequest $request, Licencia $licencia){
 		$this->authorize('update', $licencia);
 		$this->validate($request, [
             'licencia_anio' => 'required|integer|max:2060',
@@ -73,8 +69,7 @@ class LicenciasController extends Controller
 		return redirect()->route('licencias.show', $licencia->id)->with('info', 'Actualizado exitosamente.');
 	}
 
-	public function destroy(Licencia $licencia)
-	{
+	public function destroy(Licencia $licencia){
 		$this->authorize('destroy', $licencia);
 		$cascade_del = ajuste('cascade_delete');
 		

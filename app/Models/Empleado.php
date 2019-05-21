@@ -35,7 +35,7 @@ class Empleado extends Model //implements Auditable
     }
     
     public function HorarioEnFecha($fecha){
-        $trabaja = Trabaja::where('fk_empleado_id', '=', $this->id)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->first();
+        $trabaja = Trabaja::where('fk_empleado_id', '=', $this->id)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->with(['turno', 'HorarioRotativo', 'HorarioSemanal'])->first();
         return $trabaja;
     }
     

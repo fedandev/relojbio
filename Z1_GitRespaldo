@@ -17,6 +17,20 @@
         
         git push -f origin master
         
+        git push -u origin nombre_rama
+
+6) Manejo de ramas o branch
+
+        https://git-scm.com/book/es/v1/Ramificaciones-en-Git-Procedimientos-b%C3%A1sicos-para-ramificar-y-fusionar
+        
+        git checkout -b nombre_rama    - crea rama y posiciona sobre ella
+        
+        
+        Realizar fusion a master:
+        
+                git checkout master   -mover a master
+                
+                git merge nombre_rama  -fusionar rama
 
 USER: fedandev
 pass: fernet$15
@@ -77,5 +91,35 @@ Ejecutar comandos en prod:
 Importar sql a base:
 
 
-        mysqldump -u fsantucho -p clock_db < bk-data-20181029.sql       
+        mysql -u fsantucho -p clock_db_armandugon < bk-data-20190423.sql       
         
+Exportar
+
+        mysqldump -u fsantucho -p clock_db_armandugon > bk-data-20190427.sql    
+
+Scaffold: 
+
+        php artisan make:scaffold Audit --schema="user_id:integer, event:string, auditable_id:integer, auditable_type:string, old_values:text,
+        new_values:text, url:text, ip_address:string , user_agent:string, tags:string"
+        
+        
+        php artisan make:scaffold LicenciaDetalle --schema="fecha_desde:date, fecha_hasta:date, aplica_sabado:string, aplica_domingo:string, aplica_libre:string, comentarios:string, licencia_id"
+        
+        faker en logs/index
+        
+        
+        php artisan make:scaffold TipoLibre --schema="nombre:string, descripcion:string"
+
+
+Migrar solo algunos archivos:
+
+        php artisan migrate --path=/database/migrations/selected/
+
+
+Exportar sql de la migracion:
+
+        php artisan migrate --pretend --no-ansi > migrate.sql
+
+Setear en php.ini  para cuando da error 500
+
+         display_errors = On

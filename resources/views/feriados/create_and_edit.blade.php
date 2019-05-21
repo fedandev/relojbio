@@ -65,6 +65,19 @@
                                     <div class="col-sm-2"><input class="form-control" type="date" name="feriado_fecha" id="feriado_fecha-field" value="{{ old('feriado_fecha', $feriado->feriado_fecha ) }}"></div>
                                 </div>
                                 
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Laborable?</label>
+                                    <div class="col-sm-3">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="feriado_laborable" id="feriado_laborable-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="feriado_laborable" id="feriado_laborable-field" value="1"  {{ $feriado->feriado_laborable == '1' ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 <div class="hr-line-dashed"></div>
 
                                 <div class="form-group">

@@ -49,6 +49,19 @@
                             </div>
                             
                             <div class="hr-line-dashed"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Laborable?</label>
+                                <div class="col-lg-1">
+                                    <p class="form-control-static">
+                                        @if($feriado->feriado_laborable == "1")
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif    
+                                    </p>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">

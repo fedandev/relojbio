@@ -23,21 +23,19 @@ class HomeController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        $this->middleware('auth.lock');
     }
 
     public function index(){
-        /*$registrosPieMesAnt = $this->LlegadasTardeMesAnterior();
-        $registrosPieMesActual = $this->LlegadasTardeMesActual();
-        $registrosHorasNoctAnterior = $this->horasNocturnasMesAnterior();
-        $registrosHorasNoctActual = $this->horasNocturnasMesActual();*/
-        $advertencias = $this->advertencias();
+	    $advertencias = $this->advertencias();
         $this->ChequeoLicencia();
-        //'registrosPieMesAnterior','registrosPieMesActual','registrosHorasNoctAnterior','registrosHorasNoctActual',
         return view('home', compact('advertencias'));
+	
     }
  
     public function advertencias(){
-        $trabajas = Trabaja::all();
+        $trabajas = Trabaja::with(['empleado','Turno'])->get();
+        
         $fecha_actual=date("Y-m-d");
         $datos3 = explode("-",$fecha_actual);
     	$month=$datos3[1];
@@ -90,13 +88,13 @@ class HomeController extends Controller
     
     private function diasFaltados($diasQueTrabaja, $trabaja, $fechaInicio, $fechaFin){
         $cedula = $trabaja->empleado->empleado_cedula;
-        $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
+        $registros = Registro::where('fk_empleado_cedula', '=', $cedula)->where('registro_fecha', '>=',$fechaInicio)->where('registro_fecha', '<=',$fechaFin)->get();
         $registros_array = array();
         foreach($registros as $registro){
             array_push($registros_array, $registro->registro_fecha);
         }
         $registros_ok = array_diff($diasQueTrabaja,$registros_array);
-        
+       
         return $registros_ok;
     }
     
@@ -109,9 +107,12 @@ class HomeController extends Controller
 
         $registros_sql =  DB::select($sql);
         $registros = Registro::hydrate($registros_sql); // paso a collection de registros
+        
+       
 
-        $tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
-
+        //$tiempo = Ajuste::where('ajuste_nombre','leave_earn' )->first();
+        
+       
         $iRegistros = 0;
         $registros_ok = [];
         
@@ -233,6 +234,7 @@ class HomeController extends Controller
     	$last_cell=$diaSemana+$ultimoDiaMes;
     	$x=0;
     	$diastrab = array();
+    
     	for($i=1;$i<=42;$i++){
     		if($i==$diaSemana){
     			// determinamos en que dia empieza
@@ -290,6 +292,7 @@ class HomeController extends Controller
     			$day++;
     		}
     	}
+    	
     	return $diastrab;
     }
     
@@ -307,58 +310,73 @@ class HomeController extends Controller
                 $dif_dias = Carbon::parse($vencimiento)->diffInDays(Carbon::parse($now));
                 $empresa = Empresa::where('empresa_estado','1')->first();
                 
-                if($dif_dias == 7 ){
-                    $fecha_det = explode('-', $vencimiento);
+                if($dif_dias <= 7 && $registro->pago_prox_mail == null){
                     
+                    
+                    
+                    $fecha_det = explode('-', $vencimiento);
                     
                     $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1], 'empresa' => $empresa->empresa_nombre); 
                     
                     Mail::send('common.mail', $data, function($message) use ($empresa){
                         if($empresa->empresa_email2 == null){
-                            $message->to($empresa->empresa_email)->subject('Recordatorio de vencimiento');
+                            $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
                         }else{
-                            $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Recordatorio de vencimiento');
+                            $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
                         }
                     });
                     
-                    $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
+                    $fecha_nueva = date("d-m-Y",strtotime($vencimiento."- 1 days")); 
 
                     $Update = DB::update('UPDATE pagos SET pago_prox_mail = ? WHERE id= ?',[$fecha_nueva, $registro->id]);
                 }elseif($dif_dias == 1){
                     $fecha_det = explode('-', $vencimiento);
                     
-                    $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1], 'empresa' => $empresa->empresa_nombre); 
-                    
-                    Mail::send('common.mail_vencido', $data, function($message) use ($empresa){
-                       if($empresa->empresa_email2 == null){
-                            $message->to($empresa->empresa_email)->subject('Recordatorio de vencimiento');
-                        }else{
-                            $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Recordatorio de vencimiento');
-                        }
-                    });
-                    
-                    $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
-
-                    $Update = DB::update('UPDATE pagos SET pago_prox_mail = ? WHERE id= ?',['01-01-1999', $registro->id]);
+                    if($registro->pago_prox_mail != '01-01-1999'){
+                        $data = array('vencimiento_dia' => $fecha_det[0], 'vencimiento_mes' => $fecha_det[1], 'empresa' => $empresa->empresa_nombre); 
+                        
+                        Mail::send('common.mail_vencido', $data, function($message) use ($empresa){
+                           if($empresa->empresa_email2 == null){
+                                $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                            }else{
+                                $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                            }
+                        });
+                        
+                        $fecha_nueva = date("d-m-Y",strtotime($now."+ 6 days")); 
+    
+                        $Update = DB::update('UPDATE pagos SET pago_prox_mail = ? WHERE id= ?',['01-01-1999', $registro->id]);
+                    }
                 }
             }
         }
     }
     
-    
     public function dashboard(){
-         $advertencias = $this->advertencias();
-         
+        if (auth()->user()->fk_empleado_cedula){
+            return redirect()->route('marcaempleado.index');
+        }
+        
+        
+        $this->ChequeoLicencia();
+        $advertencias = $this->advertencias();
+        
          
         //DATOS CARDS
         $fechaActual = new DateTime();
         $hoy = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('first day of this month');
+        //$fechaActual->modify('first day of february');
+        
         $f_inicio_mes = $fechaActual->format('Y-m-d');
         
         $fechaActual->modify('last day of this month');
+        //$fechaActual->modify('last day of february');
+        
         $f_fin_mes = $fechaActual->format('Y-m-d');
+        
+       
         $porcentajeHorasAtrabajar = 0;
         
         $HorasTrabajadas = $this->HorasTrabajadas($f_inicio_mes, $f_fin_mes);
@@ -468,9 +486,6 @@ class HomeController extends Controller
         return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas','arrayLlegadasTardes','arrayHorasExtras','horasTrabajadasMesAnterior','HorasTrabajadasAnual','rankingEmpleados', 'advertencias'));
     }
     
-    
-    
-    
     public function HorasTrabajadas($f_inicio_mes, $f_fin_mes){
    
         //dd($f_inicio_mes, $f_fin_mes,$fechaActual );
@@ -479,10 +494,12 @@ class HomeController extends Controller
         //$registros = cacheQuery("select * from v_inout where registro_fecha between '".$f_inicio_mes."' and  '".$f_fin_mes."' order by registro_fecha", 30);
         
         $registros =  v_inout($f_inicio_mes,$f_fin_mes);
+        $empleados = Empleado::get();
        
         $tiempoTrabajado = new SumaTiempos();
         foreach($registros as $registro){
-            $empleado = Empleado::where('empleado_cedula','=' ,$registro->r_cedula)->first();
+            //$empleado = Empleado::where('empleado_cedula','=' ,$registro->r_cedula)->first();
+            $empleado = $empleados->whereIn('empleado_cedula', $registro->r_cedula)->first();
             if(!is_null($registro->r_total_horas ) && $empleado){
                 $fecha = $registro->r_fecha;
                 $fechaSalida = $registro->r_salida;
@@ -506,14 +523,19 @@ class HomeController extends Controller
     public function LlegadasTardes($f_inicio, $f_fin){
         
         
-        $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' " ;
+        // $sql= "SELECT * FROM registros WHERE registro_fecha between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I' " ;
 
-        $sql = $sql." order by registro_hora asc , registro_tipo ";
+        // $sql = $sql." order by registro_hora asc , registro_tipo ";
         
-        $registros_sql =  cacheQuery($sql);
+        // $registros_sql =  cacheQuery($sql);
         
-        $registros = Registro::hydrate($registros_sql); // paso a collection de registros
+        // $registros = Registro::hydrate($registros_sql); // paso a collection de registros
 
+        $registros = Registro::whereBetween('registro_fecha',[$f_inicio, $f_fin])
+                                ->where('registro_tipo','I')
+                                ->orderBy('registro_hora', 'asc')
+                                ->orderBy('registro_tipo')
+                                ->with('empleado')->get();
 
         $iRegistros = 0;
         $registros_ok = [];
@@ -687,11 +709,9 @@ class HomeController extends Controller
         $registros_sql =  $registros_sql->groupBy('r_cedula');
      
         $tiempoAcumulado = new SumaTiempos();
-                 
+        $empleados = Empleado::get();         
         foreach($registros_sql as $cedula => $fechas){
-        
-            $Empleado = Empleado::where('empleado_cedula', '=',$cedula)->first();
-            
+            $Empleado = $empleados->whereIn('empleado_cedula', $cedula)->first();
             if($Empleado){
                 foreach($fechas->groupBy('r_fecha') as $fecha => $regs){
                     $tiempoAcumuladoFecha = new SumaTiempos();

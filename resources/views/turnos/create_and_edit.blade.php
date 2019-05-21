@@ -54,11 +54,21 @@
                                     </div>
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_lunes_mh" id="turno_lunes_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_lunes_mh" id="turno_lunes_mh-field" value="1" {{ $turno->turno_lunes_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_lunes_he" id="turno_lunes_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_lunes_he" id="turno_lunes_he-field" value="1" {{ $turno->turno_lunes_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -76,11 +86,21 @@
                                     </div>
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_martes_mh" id="turno_martes_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_martes_mh" id="turno_martes_mh-field" value="1" {{ $turno->turno_martes_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_martes_he" id="turno_martes_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_martes_he" id="turno_martes_he-field" value="1" {{ $turno->turno_martes_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -98,11 +118,21 @@
                                     </div>
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_miercoles_mh" id="turno_miercoles_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_miercoles_mh" id="turno_miercoles_mh-field" value="1" {{ $turno->turno_miercoles_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_miercoles_he" id="turno_miercoles_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_miercoles_he" id="turno_miercoles_he-field" value="1" {{ $turno->turno_miercoles_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -121,11 +151,21 @@
                                     
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_jueves_mh" id="turno_jueves_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_jueves_mh" id="turno_jueves_mh-field" value="1" {{ $turno->turno_jueves_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_jueves_he" id="turno_jueves_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_jueves_he" id="turno_jueves_he-field" value="1" {{ $turno->turno_jueves_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -144,11 +184,21 @@
                                     </div>
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_viernes_mh" id="turno_viernes_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_viernes_mh" id="turno_viernes_mh-field" value="1" {{ $turno->turno_viernes_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_viernes_he" id="turno_viernes_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_viernes_he" id="turno_viernes_he-field" value="1" {{ $turno->turno_viernes_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -168,11 +218,21 @@
                                     
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_sabado_mh" id="turno_sabado_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_sabado_mh" id="turno_sabado_mh-field" value="1" {{ $turno->turno_sabado_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_sabado_he" id="turno_sabado_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_sabado_he" id="turno_sabado_he-field" value="1" {{ $turno->turno_sabado_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>
@@ -191,11 +251,21 @@
                                     </div>
                                     
                                     <label class="col-sm-2 control-label">Aplica Medio Horario?</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-1">
                                         <div class="i-checks">
                                             <label> 
                                                 <input  type="hidden" name="turno_domingo_mh" id="turno_domingo_mh-field-1" value="0">
                                                 <input type="checkbox" class="form-control" name="turno_domingo_mh" id="turno_domingo_mh-field" value="1" {{ $turno->turno_domingo_mh == 1 ? 'checked' : '' }}>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <label class="col-sm-2 control-label">Aplica Horas Extras?</label>
+                                    <div class="col-sm-1">
+                                        <div class="i-checks">
+                                            <label> 
+                                                <input  type="hidden" name="turno_domingo_he" id="turno_domingo_he-field-1" value="0">
+                                                <input type="checkbox" class="form-control" name="turno_domingo_he" id="turno_domingo_he-field" value="1" {{ $turno->turno_domingo_he == 1 ? 'checked' : '' }}>
                                             </label>
                                         </div>
                                     </div>

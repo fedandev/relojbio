@@ -1,0 +1,50 @@
+1) Posicionarse en rama "desarrollo"
+
+    git checkout desarrollo
+    
+2) Terminado los cambios subirlos en la rama actual (desarrollo)
+
+
+        git add -A
+    
+        git commit -m "Descripcion cambio"
+  
+        git push -u origin desarrollo
+        
+3) Ir a CPANEL y actualizar el repositorio para que se suban los cambios al ambiente de https://prueba1.sysclock.com:
+
+        GIT VERSION CONTROL
+            
+        Boton Administrar en el repositorio git_desarrollo
+        
+        Pestaña Pull or Deploy
+        
+        Presionar boton "Update from remote"
+        
+4) Validar el cambio en el ambiente https://prueba1.sysclock.com/
+
+
+5) Consolidar los cambios a la rama 1_hnos_armand_ugon
+    en consola de c9 realizar lo siguiente
+    
+        -   Posicionarse en rama "1_hnos_armand_ugon"
+
+                git checkout 1_hnos_armand_ugon
+                
+        - Realizar merge de los cambios:
+                
+                git merge desarrollo
+        
+        - Subir cambios
+        
+                git push -u origin 1_hnos_armand_ugon
+
+3) Ir a CPANEL y actualizar el repositorio de la empresa para que se suban los cambios al ambiente oficial de la empresa
+
+        GIT VERSION CONTROL
+            
+        Boton Administrar en el repositorio git_hnos_armand_ugon
+        
+        Pestaña Pull or Deploy
+        
+        Presionar boton "Update from remote"

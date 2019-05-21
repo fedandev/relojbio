@@ -12,6 +12,7 @@ class TipoLibresController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		TipoLibre::disableAuditing();
         }else{

@@ -1,0 +1,25 @@
+{
+    "name" : "SGRRHH",    
+    "display" : "standalone",
+    "start_url" : "https://reloj-biometrico-v3-fsantucho.c9users.io",
+    "short_name" : "SGRRHH",
+    "theme_color" : "transparent",
+    "description" : "",
+    "orientation" : "any",
+    "background_color" : "transparent",
+    "prefer_related_applications" : false,
+    "generated" : "true",
+    "icons": [
+        {
+          "src": "images/icons/icon-64x64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        },
+        {
+          "src": "images/icons/icon-144x144.png",
+          "sizes": "144x144",
+          "type": "image/png"
+        }
+        
+      ]
+}

@@ -1,7 +1,36 @@
 @extends('layouts.app')
 
+@section('styles')
+<style type="text/css">
+    .input-group {
+      position: relative !important;
+      display: flex !important;
+    
+      align-items: stretch !important;
+      width: 100% !important;
+    }
+    
+    .input-group-prepend{
+        display: flex !important;
+    }
+    .input-group>.input-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle), .input-group>.input-group-append:last-child>.input-group-text:not(:last-child), .input-group>.input-group-append:not(:last-child)>.btn, .input-group>.input-group-append:not(:last-child)>.input-group-text, .input-group>.input-group-prepend>.btn, .input-group>.input-group-prepend>.input-group-text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .btn {
+        margin-bottom: 0px !important;
+    }
+    
+    #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+      }
+</style>
+@endsection
+
 @section('content')
-<?php use App\Models\Oficina; ?>
+
     
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -60,6 +89,25 @@
                                         </select>
                                     </div>
                                 </div>
+                             
+                                <input type="hidden" name="oficina_latitud" id="oficina_latitud-field" value="{{ old('oficina_latitud', $oficina->oficina_latitud ) }}">
+                                <input type="hidden" name="oficina_longitud" id="oficina_longitud-field" value="{{ old('oficina_longitud', $oficina->oficina_longitud ) }}">
+                                <input type="hidden" name="latitud" id="latitud" value="{{ $latitud }}">
+                                <input type="hidden" name="longitud" id="longitud" value="{{ $longitud }}">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label">Ubicación</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group m-b">
+                                            <span class="input-group-prepend" data-toggle="tooltip" data-placement="right" title="Click para abrir el mapa">
+                                                <button type="button" class="btn btn-primary open_modal"> <i class="fa fa-map-marker"></i> </button>
+                                            </span> 
+                                            <input class="form-control" type="text" name="oficina_ubic" id="oficina_ubic-field" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                
                                 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Sucursal</label>
@@ -94,13 +142,13 @@
         </div>
     </div>
 
-            
+     @include('layouts.mapa');       
 
 @endsection
 
 
 @section('scripts')
-
+    
     <script>
         $(document).ready(function(){
             
@@ -116,9 +164,176 @@
             }
             
             $(".select2_demo_2").select2();
+            
+            //MODAL----
+
+            $(document).on('click','.open_modal',function(){
+            
+                $('#myModal').modal('show');
+                var latitud =  parseFloat($('#oficina_latitud-field').val());
+                var longitud =  parseFloat($('#oficina_longitud-field').val());
+                
+                $('#marker_latitud').val(latitud);
+                $('#marker_longitud').val(longitud);
+                
+                if(latitud){
+                    var position = {lat: latitud, lng: longitud};
+                }else{
+                    var latitud  =  parseFloat($('#latitud').val());
+                    var longitud =  parseFloat($('#longitud').val());
+                    var position = {lat: latitud, lng: longitud};
+                }
+                
+                placeMarker(position);
+                $('#address-field').val("");
+            });
         
+            //update ***************************
+            $("#btn-save").click(function (e) {
+                searchAddress2();
+            });
+            
+            $('#address-field').on('keypress', function (e) {
+                if(e.which === 13){
+                    searchCords();
+                }
+            });
+            
+            $("#btn_search").click(function (e) {
+                searchCords();
+            });
+            
+            var map ;
+            var marker;
+           
         });
-                  
+        
+        function initMap() {
+            var latitud =  parseFloat($('#oficina_latitud-field').val());
+            var longitud =  parseFloat($('#oficina_longitud-field').val());
+            
+            
+            
+            if(latitud){
+                var position = {lat: latitud, lng: longitud};
+            }else{
+                var latitud  =  parseFloat($('#latitud').val());
+                var longitud =  parseFloat($('#longitud').val());
+                var position = {lat: latitud, lng: longitud};
+                
+            }
+            
+            $('#marker_latitud').val(latitud);
+            $('#marker_longitud').val(longitud);
+            
+            
+            map = new google.maps.Map( document.getElementById('map'), {zoom: 12, center: position, mapTypeId: google.maps.MapTypeId.ROADMAP});
+         
+            google.maps.event.addListener(map, 'click', function(event) {
+                    var coordenadas = event.latLng;
+                    var lat = coordenadas.lat();
+                    var lng = coordenadas.lng();
+                    $('#marker_latitud').val(lat);
+                    $('#marker_longitud').val(lng);
+                    placeMarker(event.latLng);
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({'latLng': event.latLng}, function(results, status) {
+                         if (status == google.maps.GeocoderStatus.OK) {
+                            var address=results[0]['formatted_address'];
+                            $('#address-field').val(address); 
+                            
+                         }
+                    });
+            });
+            
+            searchAddress();
+            
+        }   
+        
+        function placeMarker(location) {
+            if (!marker || !marker.setPosition) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                });
+                
+            } else {
+                marker.setPosition(location);
+                map.setCenter(location); 
+            }
+         
+        }
+      
+        function searchCords(){
+            var geocoder = new google.maps.Geocoder();
+            var address = $('#address-field').val();
+           
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    var lat = results[0].geometry.location.lat(function(a) { return a;});
+                    var lng = results[0].geometry.location.lng(function(a) { return a;});
+                    var position = results[0].geometry.location;
+                    placeMarker(position);
+                    $('#marker_latitud').val(lat);
+                    $('#marker_longitud').val(lng);
+                }
+            });
+            
+        }
+        
+        function searchAddress(){
+            var latitud =  parseFloat($('#marker_latitud').val());
+            var longitud =  parseFloat($('#marker_longitud').val());
+            if(latitud){
+                var position = {lat: latitud, lng: longitud};
+            }else{
+                var latitud  =  parseFloat($('#latitud').val());
+                var longitud =  parseFloat($('#longitud').val());
+                var position = {lat: latitud, lng: longitud};
+            }
+         
+          
+            marker = new google.maps.Marker({position: position, map: map, draggable:true});
+         
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'latLng': position}, function(results, status) {
+                 if (status == google.maps.GeocoderStatus.OK) {
+                    var address=results[0]['formatted_address'];
+                    $('#oficina_ubic-field').val(address); 
+                    
+                 }
+            });
+            
+        }
+        
+        function searchAddress2(){
+            var latitud =  parseFloat($('#marker_latitud').val());
+            var longitud =  parseFloat($('#marker_longitud').val());
+            if(latitud){
+                var position = {lat: latitud, lng: longitud};
+            }else{
+                var latitud  =  parseFloat($('#latitud').val());
+                var longitud =  parseFloat($('#longitud').val());
+                var position = {lat: latitud, lng: longitud};
+            }
+         
+          
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+                 if (status == google.maps.GeocoderStatus.OK) {
+                    var address=results[0]['formatted_address'];
+                    $('#oficina_ubic-field').val(address); 
+                    $('#oficina_latitud-field').val($('#marker_latitud').val());
+                    $('#oficina_longitud-field').val($('#marker_longitud').val());
+                   
+                    $('#myModal').modal('hide');
+                 }
+            });
+            
+        }
+       
     </script>
+    
+    <script async defer  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTzG4eOmpvSSyO8RU_m37Py1LYjnKJYOo&callback=initMap">  </script>
     
 @endsection

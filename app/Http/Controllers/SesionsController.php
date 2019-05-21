@@ -12,6 +12,7 @@ class SesionsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('auth.lock');
         /*if (ajuste('audit') != 'S'){
     		Sesion::disableAuditing();
         }else{

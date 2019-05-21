@@ -6,10 +6,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LockableTrait;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,
+        LockableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nombre','estado','observaciones','email', 'password',
+        'nombre','estado','observaciones','email', 'password', 'fk_empleado_cedula'
     ];
 
     /**
@@ -41,4 +43,8 @@ class User extends Authenticatable
         return $menus;
     }
     
+    
+    public function Empleado(){
+        return $this->hasOne('App\Models\Empleado','empleado_cedula','fk_empleado_cedula');
+    }
 }

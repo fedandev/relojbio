@@ -47,8 +47,21 @@
                                 <div class="col-lg-10"><p class="form-control-static">{{  $user->estado }} </p></div>
                             </div>
                             
-                            <div class="hr-line-dashed"></div>
+                             <div class="hr-line-dashed"></div>
+                            @if($user->empleado)
+                            <div class="form-group"><label class="col-lg-2 control-label">Empleado </label>
+                                <div class="col-lg-3">
+                                    <p class="form-control-static">
+                                    
+                                     <a href="{{ route('empleados.show', $user->empleado->id) }}" target="_blank" data-toggle="tooltip" data-placement="right" title="Click para abrir en nueva pestaña">
+                                            {{  $user->empleado->empleado_nombre }} {{  $user->empleado->empleado_apellido }}
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
                             
+                            <div class="hr-line-dashed"></div>
+                            @endif
                             
                             <div class="form-group">
                                 <label class="col-lg-2 control-label">Perfiles</label>

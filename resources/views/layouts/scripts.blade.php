@@ -1,3 +1,4 @@
+<script src="{{ secure_asset('js/serviceWorker.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/jquery.metisMenu.js') }}" type="text/javascript"></script>  <!-- menu desplegable en navbar -->
@@ -14,6 +15,8 @@
 <script src="{{ secure_asset('js/plugins/jasny-bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/highcharts.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/exporting.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('js/plugins/pwstrength/pwstrength-bootstrap.min.js') }}"></script>
+<script src="{{ secure_asset('js/plugins/pwstrength/zxcvbn.js') }}"></script>
 
 <script type="text/javascript">
                     
@@ -85,7 +88,6 @@
     
     
     function alertaVerde($msg){
-        
         toastr.options = {
             closeButton: true,
             progressBar: true,
@@ -93,7 +95,6 @@
             timeOut: 4000
         };
         toastr.success($msg, '');
-        
     }
     
     //Alerta al presionar boton eliminar en tablas
@@ -177,5 +178,7 @@
        
         
     }
+    
+    
    
 </script>  

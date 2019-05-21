@@ -225,7 +225,10 @@ return [
             'created' => 'Creado',
             'updated' => 'Modificado',
             'deleted' => 'Eliminado',
-            'empresa_estado' => 'Estado'
+            'empresa_estado' => 'Estado',
+            'fk_tipo_libre_id' => 'Tipo de libre',
+            'fecha_desde' => 'Fecha inicio',
+            'fecha_hasta' => 'Fecha fin'
     ],
 
 ];

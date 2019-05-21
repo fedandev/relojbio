@@ -61,9 +61,11 @@
                             <div class="form-group"><label class="col-lg-2 control-label">Dispositivo</label>
                                 <div class="col-lg-10">
                                     <p class="form-control-static">
-                                        <a href="{{ route('dispositivos.show', $registro->dispositivo->id) }}" target="_blank" data-toggle="tooltip" data-placement="right" title="Click para abrir en nueva pestaña">
-                                            {{  $registro->dispositivo->dispositivo_nombre }}
-                                        </a>
+                                        @if(isset($registro->dispositivo->id))
+                                            <a href="{{ route('dispositivos.show', $registro->dispositivo->id) }}" target="_blank" data-toggle="tooltip" data-placement="right" title="Click para abrir en nueva pestaña">
+                                                {{  $registro->dispositivo->dispositivo_nombre }}
+                                            </a>
+                                        @endif
                                     </p>
                                 </div>
                             </div>
