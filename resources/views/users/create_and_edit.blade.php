@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-    
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -78,24 +76,29 @@
                                 </div>
                                 
                                 @if(!$user->id)
-                                
                                      <div class="hr-line-dashed"></div>
                                      
-                                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                        <label class="col-sm-2 control-label">Contraseña</label>
+                                    <div class="row" id="pwd-container1">
+                                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                            <label class="col-sm-2 control-label">Contraseña</label>
+                                            <div class="col-sm-6">
+                                                <input type="password" class="form-control example1" name="password" id="password-field" placeholder="Password" required>
+                                                @if ($errors->has('password'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
+                                                @endif    
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label"></label>
                                         <div class="col-sm-6">
-                                            <input type="password" class="form-control" name="password" id="password-field" required>
-                                            @if ($errors->has('password'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('password') }}</strong>
-                                                </span>
-                                            @endif    
+                                            <div class="pwstrength_viewport_progress"></div>
                                         </div>
                                     </div>
                                     <div class="form-group{{ $errors->has('password-confirm') ? ' has-error' : '' }}">
                                         <label class="col-sm-2 control-label">Confirmar Contraseña</label>
                                         <div class="col-sm-6">
-                                            <input type="password" class="form-control" name="password_confirmation" id="password-confirm-field" required>
+                                            <input type="password" class="form-control" name="password_confirmation" id="password-confirm-field" placeholder="Confirmar Password" required>
                                             @if ($errors->has('password'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->first('password-confirm') }}</strong>
@@ -103,16 +106,12 @@
                                             @endif    
                                         </div>
                                     </div>
-                                     
                                 @endif
-                                
                                 
                                 <div class="hr-line-dashed"></div>
                                 
                                 <div class="form-group">
-                                   
                                     <label class="col-sm-2 control-label">Perfiles</label>
-                                    
                                     <div class="col-sm-6">
                                         @foreach($g_perfiles as $perfil)
                                             <div class="i-checks">
@@ -126,10 +125,7 @@
                                     </div>
                                 </div>
                                 
-                                
                                 <div class="hr-line-dashed"></div>
-                                
-                                
                                 
                                 <div class="form-group">
                                     <div class="col-sm-4 col-sm-offset-2">
@@ -151,6 +147,23 @@
 
 
 @section('scripts')
+
+<script>
+    $(document).ready(function(){
+        var options1 = {};
+        options1.ui = {
+            container: "#pwd-container1",
+            showVerdictsInsideProgressBar: true,
+            viewports: {
+                progress: ".pwstrength_viewport_progress"
+            }
+        };
+        options1.common = {
+            debug: false
+        };
+        $('.example1').pwstrength(options1);
+    })
+</script>
 
 <!-- Page-Level Scripts -->
 <!--<script>-->

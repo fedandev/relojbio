@@ -54,21 +54,6 @@ class MarcaEmpleadosController extends Controller
 	}
 	
     public function store(MarcaEmpleadoRequest $request){
-    	
-    	$data = $request->input('imageData');
-		if (preg_match('/data:image\/(gif|jpeg|png);base64,(.*)/i', $data, $matches)) {
-			$imageType = $matches[1];
-			$imageData = base64_decode($matches[2]);
-			$image = imagecreatefromstring($imageData);
-			$filename = md5($imageData) . '.png';
-			
-			if (imagepng($image, public_path().'/images/marcas/' . $filename)) {
-			} else {
-				return redirect()->route('marcaempleado.index')->with('error', 'Imagen no se pudo guardar');
-			}
-		} else {
-			return redirect()->route('marcaempleado.index')->with('error', 'Problema al machear imagen.');
-		}
         if(auth()->user()->fk_empleado_cedula != ''){
         	
         	$rango_max = ajuste('rango_gps');
@@ -89,9 +74,8 @@ class MarcaEmpleadosController extends Controller
         		}
         		
         	}
-        	
         
-        	if($hay_rango_oficina = 'S'){
+        	if($hay_rango_oficina == 'N'){
         		return redirect()->route('marcaempleado.index')->with('error', 'Fuera de rango');
         	}
         	$fecha = new DateTime();
@@ -110,7 +94,20 @@ class MarcaEmpleadosController extends Controller
         	}
         	
         	$ultimoRegistro = $registros->last();
-        	
+        	$data = $request->input('imageData');
+			if (preg_match('/data:image\/(gif|jpeg|png);base64,(.*)/i', $data, $matches)) {
+				$imageType = $matches[1];
+				$imageData = base64_decode($matches[2]);
+				$image = imagecreatefromstring($imageData);
+				$filename = md5($imageData) . '.png';
+				
+				if (imagepng($image, public_path().'/images/marcas/' . $filename)) {
+				} else {
+					return redirect()->route('marcaempleado.index')->with('error', 'Imagen no se pudo guardar');
+				}
+			} else {
+				return redirect()->route('marcaempleado.index')->with('error', 'Problema al machear imagen.');
+			}
         	if($ultimoRegistro == null){
         		$tipo_marca = "I";
         		$registro = new Registro();
@@ -124,6 +121,7 @@ class MarcaEmpleadosController extends Controller
 				$registro->save();
 				
 				return redirect()->route('marcaempleado.index')->with('info', 'Marca ENTRADA registrada con éxito.');
+				
         	}else{
         		if($ultimoRegistro->registro_tipo == "I"){
 	        		$tipo_marca = "O";

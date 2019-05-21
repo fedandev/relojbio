@@ -353,6 +353,11 @@ class HomeController extends Controller
     }
     
     public function dashboard(){
+        if (auth()->user()->fk_empleado_cedula){
+            return redirect()->route('marcaempleado.index');
+        }
+        
+        
         $this->ChequeoLicencia();
         $advertencias = $this->advertencias();
         

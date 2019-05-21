@@ -88,12 +88,18 @@
                                             <td>{{ $registro->empleado->empleado_cedula}}</td>
                                             <td>{{ date( "d-m-Y", strtotime( $registro->registro_hora ) ) }}</td>
                                             <td>{{ date( "H:i:s", strtotime( $registro->registro_hora ) ) }}</td>
-                                            @if($registro->	registro_tipo == "I")
+                                            
+                                            @if($registro->registro_tipo == "I")
                                                 <td>Entrada</td>
                                             @else
                                                 <td>Salida</td>
                                             @endif
                                             <td class="text-right">
+                                                @if(substr($registro->registro_comentarios,-3) === 'png')
+                                                    <a class="btn btn-xs btn-default" href="{{ route('registros.download', substr($registro->registro_comentarios,-36)) }}">
+                                                        <i class="fa fa-camera"></i> 
+                                                    </a>
+                                                @endif
                                                 <a class="btn btn-xs btn-default" href="{{ route('registros.show', $registro->id) }}">
                                                     <i class="fa fa-eye"></i> 
                                                 </a>
@@ -102,6 +108,7 @@
                                                     <i class="fa fa-edit"></i> 
                                                 </button>
                                             </td>
+                                            <td style='display:none;'>{{ $registro->registro_comentarios }}</td> <!-- Columna oculta con comentarios de registros -->
                                         </tr>
                                         @endif
                                     @endforeach

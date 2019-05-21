@@ -200,8 +200,7 @@ class RegistrosController extends Controller
         return response()->json($registro);
     }
     
-    public function updateModal(Request $request, $registro_id)
-    {
+    public function updateModal(Request $request, $registro_id){
     	$registro = Registro::find($registro_id);
     	
     	$hora = $request->input('registro_hora');
@@ -222,5 +221,10 @@ class RegistrosController extends Controller
         return response()->json($registro);
         
         
+    }
+    
+    public function download($file){
+    	$pathtoFile = public_path().'/images/marcas/'.$file;
+    	return response()->download($pathtoFile);
     }
 }

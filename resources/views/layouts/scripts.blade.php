@@ -15,6 +15,8 @@
 <script src="{{ secure_asset('js/plugins/jasny-bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/highcharts.js') }}" type="text/javascript"></script>
 <script src="{{ secure_asset('js/plugins/exporting.js') }}" type="text/javascript"></script>
+<script src="{{ secure_asset('js/plugins/pwstrength/pwstrength-bootstrap.min.js') }}"></script>
+<script src="{{ secure_asset('js/plugins/pwstrength/zxcvbn.js') }}"></script>
 
 <script type="text/javascript">
                     

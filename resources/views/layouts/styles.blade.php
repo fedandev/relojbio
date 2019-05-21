@@ -11,3 +11,5 @@
 <link rel="stylesheet" href="{{ secure_asset('css/plugins/clockpicker.css') }}" /> <!-- se usa en horarios y editar registros  -->
 <link rel="stylesheet" href="{{ secure_asset('css/custom.css') }}" /> <!-- se usa para arreglos de css en varios bugs y nuevas cosas  -->
 <link rel="stylesheet" href="{{ secure_asset('css/highcharts.css') }}" />
+<link rel="stylesheet" href="{{ secure_asset('css/plugins/textSpinners/spinners.css') }}"/>
+<link rel="stylesheet" href="{{ secure_asset('css/plugins/animate.css') }}"/>

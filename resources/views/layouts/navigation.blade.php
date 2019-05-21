@@ -2,10 +2,9 @@
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
-                <div class="dropdown profile-element">
+                <div class="dropdown profile-element" style="text-align: center;">
                     <span>
-                        <!--<img alt="image" class="img-md logo-md" style="" src="{{ asset('images/logo-asse-96x25.png') }}" />-->
-                        <img alt="image" class="img-md" style="" src="{{ asset('images/user48x48.png') }}" />
+                        <img alt="image" class="img-md" style="" src="{{ asset('images/avatar.png') }}" />
                      </span>
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear">
@@ -27,7 +26,6 @@
                     <h5>SGRRHH</h5>
                 </div>
             </li>
-
          
             @foreach(auth()->user()->MenusHabilitados() as $menu)
                 @php 

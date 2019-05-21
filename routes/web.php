@@ -83,3 +83,5 @@ Auth::routes();
 
     Route::get('login/locked', 'Auth\LoginController@locked')->middleware('auth')->name('login.locked');
     Route::post('login/locked', 'Auth\LoginController@unlock')->name('login.unlock');
+    
+    Route::get('registros/download/{name_file}', 'RegistrosController@download')->name('registros.download');
