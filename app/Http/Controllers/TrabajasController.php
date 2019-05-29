@@ -15,11 +15,11 @@ class TrabajasController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Trabaja::disableAuditing();
         }else{
         	Trabaja::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

@@ -15,11 +15,11 @@ class HorarioRotativosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		HorarioRotativo::disableAuditing();
         }else{
         	HorarioRotativo::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

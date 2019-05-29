@@ -12,12 +12,13 @@
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "~4.0",
         "fzaninotto/faker": "^1.7",
+        "illuminate/database": "^5.8",
         "karlmonson/laravel-ping": "^1.0",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "~2.1.0",
         "maatwebsite/laravel-excel-light": "dev-master",
-        "owen-it/laravel-auditing": "^8.0"
+        "owen-it/laravel-auditing": "^9.2"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

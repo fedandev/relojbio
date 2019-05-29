@@ -13,11 +13,11 @@ class SucursalsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Sucursal::disableAuditing();
         }else{
         	Sucursal::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

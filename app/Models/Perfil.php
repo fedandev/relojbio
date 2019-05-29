@@ -2,11 +2,12 @@
 
 namespace App\Models;
 use App\Models\Permiso;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Perfil extends Model //implements Auditable
+class Perfil extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['perfil_nombre', 'perfil_descripcion'];
     public $timestamps = false;
     

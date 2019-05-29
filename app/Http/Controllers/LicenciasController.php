@@ -14,11 +14,11 @@ class LicenciasController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Licencia::disableAuditing();
         }else{
         	Licencia::enableAuditing();
-        }*/
+        }
     }
 
 	public function index(){

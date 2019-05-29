@@ -16,11 +16,11 @@ class PerfilsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Perfil::disableAuditing();
         }else{
         	Perfil::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

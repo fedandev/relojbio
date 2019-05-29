@@ -13,11 +13,11 @@ class FeriadosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Feriado::disableAuditing();
         }else{
         	Feriado::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

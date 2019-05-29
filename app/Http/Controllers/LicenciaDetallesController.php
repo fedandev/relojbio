@@ -19,11 +19,11 @@ class LicenciaDetallesController extends Controller
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		LicenciaDetalle::disableAuditing();
         }else{
         	LicenciaDetalle::enableAuditing();
-        }*/
+        }
     }
 
 	public function index(){

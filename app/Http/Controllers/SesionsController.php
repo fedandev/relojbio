@@ -13,11 +13,11 @@ class SesionsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Sesion::disableAuditing();
         }else{
         	Sesion::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

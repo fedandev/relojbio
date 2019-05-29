@@ -13,11 +13,11 @@ class HorarioSemanalsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		HorarioSemanal::disableAuditing();
         }else{
         	HorarioSemanal::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

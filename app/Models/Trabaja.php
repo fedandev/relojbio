@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Trabaja extends Model //implements Auditable
+class Trabaja extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['trabaja_fechainicio', 'trabaja_fechafin', 'fk_horariorotativo_id', 'fk_turno_id', 'fk_horariosemanal_id', 'fk_empleado_id'];
     public $timestamps = false;
     

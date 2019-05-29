@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Oficina extends Model //implements Auditable
+class Oficina extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['oficina_nombre', 'oficina_descripcion', 'oficina_codigo', 'oficina_estado', 'fk_sucursal_id', 'fk_dispositivo_id','oficina_latitud', 'oficina_longitud'];
     public $timestamps = false;
     

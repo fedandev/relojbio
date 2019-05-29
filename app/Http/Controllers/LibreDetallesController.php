@@ -20,11 +20,11 @@ class LibreDetallesController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		LibreDetalle::disableAuditing();
         }else{
         	LibreDetalle::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

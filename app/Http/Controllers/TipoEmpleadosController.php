@@ -13,11 +13,11 @@ class TipoEmpleadosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		TipoEmpleado::disableAuditing();
         }else{
         	TipoEmpleado::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

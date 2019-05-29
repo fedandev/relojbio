@@ -13,11 +13,11 @@ class TipoLicenciasController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		TipoLicencia::disableAuditing();
         }else{
         	TipoLicencia::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

@@ -127,3 +127,4 @@ Stack trace:
 [16-May-2019 18:27:49 UTC] PHP Fatal error:  Class 'Middleware' not found in /home/ubuntu/workspace/app/Http/Middleware/AuthLock.php on line 7
 [16-May-2019 18:29:33 UTC] PHP Fatal error:  Class 'App\Http\Middleware\Middleware' not found in /home/ubuntu/workspace/app/Http/Middleware/AuthLock.php on line 9
 [17-May-2019 18:00:34 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/ubuntu/workspace/storage/framework/views/79ee1caa6bffda12849ca7a75389529d93958274.php on line 32
+[23-May-2019 04:14:49 UTC] PHP Fatal error:  Trait 'OwenIt\Auditing\Auditable' not found in /home/ubuntu/workspace/app/Models/Ajuste.php on line 10

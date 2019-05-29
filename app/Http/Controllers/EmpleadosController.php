@@ -13,11 +13,11 @@ class EmpleadosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Empleado::disableAuditing();
         }else{
         	Empleado::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

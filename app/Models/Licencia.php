@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Licencia extends Model //implements Auditable
+class Licencia extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['licencia_anio', 'licencia_cantidad', 'licencia_observaciones', 'fk_tipolicencia_id', 'fk_empleado_id'];
     public $timestamps = false;
     

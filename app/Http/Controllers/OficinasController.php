@@ -13,11 +13,11 @@ class OficinasController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Oficina::disableAuditing();
         }else{
         	Oficina::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

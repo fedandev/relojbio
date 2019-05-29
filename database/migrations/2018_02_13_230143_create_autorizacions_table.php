@@ -17,7 +17,7 @@ class CreateAutorizacionsTable extends Migration
             $table->integer('fk_user_id')->unsigned()->index();
         	$table->foreign('fk_empleado_id')->references('id')->on('empleados');
         	$table->foreign('fk_user_id')->references('id')->on('users');
-        	$table->index(['fk_empleado_id','autorizacion_dia', 'autorizacion_tipo']);
+        	$table->index(['fk_empleado_id','autorizacion_dia', 'autorizacion_tipo'],"index_02");
             $table->timestamps();
         });
 	}

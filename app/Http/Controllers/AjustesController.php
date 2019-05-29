@@ -14,12 +14,11 @@ class AjustesController extends Controller
         $this->middleware('auth');
         $this->middleware('auth.lock');
         
-        
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Ajuste::disableAuditing();
         }else{
         	Ajuste::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

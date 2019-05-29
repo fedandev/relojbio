@@ -8,17 +8,15 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 ---------------------------------------------------------------------------------------------------------------------
 
 - Agregar para que se pueda ver el horarios/s de empleado en la vista de empleados
-
 - Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
-
-- Agregar advertencia en modificacion de horarios cuando se existen registros en fechas que el cliente tenia dicho horario asociado.
-
+- Agregar advertencia en modificacion de horarios cuando se existen registros en fechas que el cliente tenia dicho horario 
+  asociado.
 - agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
                 Tener en cuenta fecha ingreso empleado (antiguedad). 
                 Analizar trabajador mensual (dias = meses trabajados * 1.6)
                 Analizar trabajador jornalero (dias = jornadas * 0.06)
-                
-- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste en horarios y horario semanal
+- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste 
+  en horarios y horario semanal
 - agregar flujo para asignar horarios de manera mas "tutorial" sin tener ir por cada menu a configurar todo
 - agregar advertencia de vencimiento de horarios y vencidos (implementar notificaciones en la parte del header )
 - Modificar presentacion de reportes, mostrar primero en una grilla y poner botones para exportarlos en diferentes formatos.
@@ -35,11 +33,12 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 ----------------------------------------------------URGENTE----------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
 
-- Arreglar Auditoria, se deshabilito en version actual por errores.
+
 
 - Arreglar reportes no estan tomando en cuenta los feriados.
         Ejemplo: - Listado de faltas (Si es feriado no laborable, lo marca como falta)
-                 - Listado de horas extras (Si trabaja un feriado las horas extras no las multiplica por el coeficiente)  ¡¡¡¡ NO LO VAMOS A TOMAR EN CUENTA AL COEFICIENTE !!!
+                 - Listado de horas extras (Si trabaja un feriado las horas extras no las multiplica por el coeficiente)  ¡¡¡¡ NO LO 
+                   VAMOS A TOMAR EN CUENTA AL COEFICIENTE !!!
 
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -118,3 +117,4 @@ la suma de todas las horas.
 - Subir codigo para ver registros "en vivo" desde el reloj conectado.
 - Agregar a la tabla feriados un campo para saber si es laborable o no laborable.
 - Arreglar reporte de horas extras resumidas, no esta teniendo en cuenta el minimo_extras por día, sino que lo hace a lo ultimo y esta mal.
+- Se arreglo Auditoria, se habia deshabilitado en version anterior por errores.

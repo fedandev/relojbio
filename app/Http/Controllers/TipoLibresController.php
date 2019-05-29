@@ -13,11 +13,11 @@ class TipoLibresController extends Controller
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		TipoLibre::disableAuditing();
         }else{
         	TipoLibre::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

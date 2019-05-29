@@ -13,11 +13,11 @@ class TipoHorariosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		TipoHorario::disableAuditing();
         }else{
         	TipoHorario::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

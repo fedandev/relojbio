@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Mensaje extends Model //implements Auditable
+class Mensaje extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['mensaje_titulo','mensaje_mensaje', 'mensaje_fecha', 'mensaje_leido', 'mensaje_usuario_envia', 'fk_conversacion_id'];
     public $timestamps = false;
     

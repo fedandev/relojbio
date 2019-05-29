@@ -19,11 +19,11 @@ class RegistrosController extends Controller
         $this->middleware('auth');
         $this->middleware('auth.lock');
         $this->error = 'N';
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Registro::disableAuditing();
         }else{
         	Registro::enableAuditing();
-        }*/
+        }
     }
 
 	public function index(){
@@ -132,7 +132,7 @@ class RegistrosController extends Controller
 
 	public function destroy(Registro $registro){
 		$this->authorize('destroy', $registro);
-		$registro->delete();
+		$registro->Eliminar();
 		return redirect()->route('registros.index')->with('info', 'Eliminado exitosamente.');
 	}
 	

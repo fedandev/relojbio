@@ -14,11 +14,11 @@ class MensajesController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('auth.lock');
-        /*if (ajuste('audit') != 'S'){
+        if (ajuste('audit') != 'S'){
     		Mensaje::disableAuditing();
         }else{
         	Mensaje::enableAuditing();
-        }*/
+        }
     }
 
 	public function index()

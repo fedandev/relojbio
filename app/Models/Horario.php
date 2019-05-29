@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Horario extends Model //implements Auditable
+class Horario extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['horario_nombre', 'horario_entrada', 'horario_salida', 'horario_comienzobrake', 'horario_finbrake', 'horario_tiempotarde', 'horario_salidaantes', 'horario_haybrake','horario_entrada_m', 'horario_salida_m', 'horario_comienzobrake_m', 'horario_finbrake_m','horario_haybrake_m'];
     public $timestamps = false;
     
