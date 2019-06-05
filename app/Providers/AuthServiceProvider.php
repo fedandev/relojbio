@@ -91,5 +91,12 @@ class AuthServiceProvider extends ServiceProvider
         	return menuHabilitado( $controller, $permiso );
         	
 	    });
+	    
+	    Gate::define('view-marca', function ($user, $controller) {
+        	debug_to_console('gate:'. $controller);
+        	$permiso = 4; // show 
+        	return menuHabilitado( $controller, $permiso );
+        	
+	    });
     }
 }

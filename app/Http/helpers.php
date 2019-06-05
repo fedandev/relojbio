@@ -8,6 +8,7 @@ use App\Models\Registro;
 use App\Models\LicenciaDetalle;
 use App\Models\Feriado;
 use App\SumaTiempos;
+use App\Models\Empleado;
 
 function isActiveRoute($route, $output = 'active'){   
     $ruta_actual = Route::getCurrentRoute()->uri();
@@ -268,8 +269,45 @@ function totalExtras($registros, $horarioAhacer){
 }
 
 function RegistrosLicencia($arrayDias, $cedulaEmpleado, $entrada, $salida){
+    $empleado = Empleado::where('empleado_cedula',$cedulaEmpleado)->first();
+    $entradaReset = $entrada;
+    $salidaReset = $salida;
     foreach($arrayDias as $dia){
-        $registroEntrada = new Registro();
+        $trabaja = Trabaja::where('fk_empleado_id',$empleado->id)->whereDate('trabaja_fechainicio','<=',$dia[0])->
+						whereDate('trabaja_fechafin','>=',$dia[0])->first();
+		
+		$diaSem = date("N", strtotime($dia[0]));
+		
+		if($trabaja->turno->turno_lunes == 1 && $trabaja->turno->turno_lunes_mh == 1 && $diaSem == 1){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_martes == 1 && $trabaja->turno->turno_martes_mh == 1 && $diaSem == 2){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_miercoles == 1 && $trabaja->turno->turno_miercoles_mh == 1 && $diaSem == 3){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_jueves == 1 && $trabaja->turno->turno_jueves_mh == 1 && $diaSem == 4){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_viernes == 1 && $trabaja->turno->turno_viernes_mh == 1 && $diaSem == 5){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_sabado == 1 && $trabaja->turno->turno_sabado_mh == 1 && $diaSem == 6){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		if($trabaja->turno->turno_domingo == 1 && $trabaja->turno->turno_domingo_mh == 1 && $diaSem == 7){
+		    $entrada = $trabaja->turno->horario->horario_entrada_m;
+		    $salida = $trabaja->turno->horario->horario_salida_m;
+		}
+		
+		$registroEntrada = new Registro();
 		$registroEntrada->registro_hora = $dia[0]. " " .$entrada;
 		$registroEntrada->registro_fecha = $dia[0];
 		$registroEntrada->registro_tipomarca = "Automático";
@@ -290,6 +328,9 @@ function RegistrosLicencia($arrayDias, $cedulaEmpleado, $entrada, $salida){
 		$registroSalida->fk_empleado_cedula = $cedulaEmpleado;
 		
 		$registroSalida->save();
+		
+		$entrada = $entradaReset;
+		$salida = $salidaReset;
     }
 }
 

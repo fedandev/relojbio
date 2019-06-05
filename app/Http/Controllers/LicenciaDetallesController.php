@@ -102,8 +102,8 @@ class LicenciaDetallesController extends Controller
 		$trabaja = Trabaja::where('fk_empleado_id','=',$request['fk_empleado_id'])->where('trabaja_fechainicio','<=', $fechaInicio)->where('trabaja_fechafin','>=',$fechaFin)->first();
 
 		if($trabaja != null){
-			$diasLibres = $this->diasLibresTurnoFijo($request);
-			if($request['licencia_cantidad'] >= count($diasLibres)){
+			$diasLicencia = $this->diasAplicarLicenciaTurnoFijo($request);
+			if($request['licencia_cantidad'] >= count($diasLicencia)){
 				$trabaja = Trabaja::where('fk_empleado_id','=',$request['fk_empleado_id'])->first();
 				if($trabaja['fk_turno_id'] != null){
 					$entrada = $trabaja->turno->horario->horario_entrada;
@@ -112,8 +112,8 @@ class LicenciaDetallesController extends Controller
 					$entrada = $trabaja->HorarioRotativo->horario->horario_entrada;
 					$salida = $trabaja->HorarioRotativo->horario->horario_salida;
 				}
-				$retorno = RegistrosLicencia($diasLibres, $trabaja->empleado->empleado_cedula, $entrada, $salida);
-				Licencia::find($request['fk_licencia_id'])->decrement('licencia_cantidad', count($diasLibres));
+				$retorno = RegistrosLicencia($diasLicencia, $trabaja->empleado->empleado_cedula, $entrada, $salida);
+				Licencia::find($request['fk_licencia_id'])->decrement('licencia_cantidad', count($diasLicencia));
 			}else{
 				$devuelvo[0] = "Error";
 				$devuelvo[1] = "Segundo Nivel";
@@ -128,7 +128,7 @@ class LicenciaDetallesController extends Controller
 		
 	}
 	
-	public function diasLibresTurnoFijo(Request $request){
+	public function diasAplicarLicenciaTurnoFijo(Request $request){
 		$empleadoId = $request['fk_empleado_id'];
 		$fechaInicio = $request['fecha_desde'];
 		$fechaFin = $request['fecha_hasta'];
@@ -180,13 +180,20 @@ class LicenciaDetallesController extends Controller
 						$checksD = $request['aplica_domingo'];
 						$checksL = $request['aplica_libre'];
 						
-						$trabaja = Trabaja::where('fk_empleado_id','=',$request['fk_empleado_id'])->where('trabaja_fechainicio','>',$agregar)->where('trabaja_fechafin','<',$agregar)->first();
+						$trabaja = Trabaja::where('fk_empleado_id',$request['fk_empleado_id'])->whereDate('trabaja_fechainicio','<=',$agregar)->
+						whereDate('trabaja_fechafin','>=',$agregar)->first();
 						
 						if($diaSem == 1){
 							
 						}
 						
-						$trabaja->turno->
+						$lunes = $trabaja->turno->turno_lunes;
+						$martes = $trabaja->turno->turno_martes;
+						$miercoles = $trabaja->turno->turno_miercoles;
+						$jueves = $trabaja->turno->turno_jueves;
+						$viernes = $trabaja->turno->turno_viernes;
+						$sabado = $trabaja->turno->turno_sabado;
+						$domingo = $trabaja->turno->turno_domingo;
 						
 						if($checksS != null || $checksD != null || $checksS != null){
 							if($diaSem == 6 && $checksS == "S"){
@@ -195,21 +202,48 @@ class LicenciaDetallesController extends Controller
 							}elseif($diaSem == 7 && $checksD == "S"){
 								$diasTrab[$x][0]=$agregar;
 								$x++;
-							}elseif($diaSem != 6 && $diaSem != 7){
+							}elseif($diaSem != 6 && $diaSem != 7 && $checksL == "S"){
 								$diasTrab[$x][0]=$agregar;
 								$x++;
 							}
-							
-						}else{
-							$diasTrab[$x][0]=$agregar;
-							$x++;
+						}
+						
+						if($diaSem != 6 && $diaSem != 7){
+							if($lunes == 1 && $diaSem == 1){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($martes == 1 && $diaSem == 2){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($miercoles == 1 && $diaSem == 3){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($jueves == 1 && $diaSem == 4){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($viernes == 1 && $diaSem == 5){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($sabado == 1 && $diaSem == 6){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
+							if($domingo == 1 && $diaSem == 7){
+								$diasTrab[$x][0]=$agregar;
+								$x++;
+							}
 						}
 					}
 				}
 				$day++;
 			}
 		}
-		dd($diasTrab);
+		
 		return $diasTrab;
 	}
 }

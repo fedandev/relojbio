@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Models;
-//use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class HorarioRotativo extends Model //implements Auditable
+class HorarioRotativo extends Model implements Auditable
 {       
-    //use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     protected $fillable = ['horariorotativo_nombre', 'horariorotativo_diacomienzo', 'horariorotativo_diastrabajo', 'fk_horario_id', 'horariorotativo_diaslibres'];
     public $timestamps = false;
     

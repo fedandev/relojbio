@@ -26,10 +26,22 @@ class MarcaEmpleadosController extends Controller
 
 	public function index(){
 		//Falta la parte de chequear si esta autorizado para ver y entrar en este formulario
-        return view('marcaempleado.index', compact('latitud', 'longitud','rango_max'));
+		$controller = 'marcaempleado';
+		if (Gate::allows('view-marca', $controller)) {  //Esta en app/Providers/AuthServiceProvider.php
+           return view('marcaempleado.index');
+        }else{
+           return redirect()->back()->with('error', 'No esta autorizado a ejecutar la acción.'); 
+        }
+        
+        
+        
 	}
 	
 	public function guardar(Request $request){
+		$controller = 'marcaempleado';
+		if (!Gate::allows('view-marca', $controller)) {  //Esta en app/Providers/AuthServiceProvider.php
+           return redirect()->back()->with('error', 'No esta autorizado a ejecutar la acción.'); 
+        }
 		$data = $request->get('image');
 		if (preg_match('/data:image\/(gif|jpeg|png);base64,(.*)/i', $data, $matches)) {
 			$imageType = $matches[1];
@@ -51,6 +63,10 @@ class MarcaEmpleadosController extends Controller
 	}
 	
     public function store(MarcaEmpleadoRequest $request){
+    	$controller = 'marcaempleado';
+		if (!Gate::allows('view-marca', $controller)) {  //Esta en app/Providers/AuthServiceProvider.php
+           return redirect()->back()->with('error', 'No esta autorizado a ejecutar la acción.'); 
+        }
         if(auth()->user()->fk_empleado_cedula != ''){
         	
         	$rango_max = ajuste('rango_gps');

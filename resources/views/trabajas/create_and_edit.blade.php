@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Tipo de Horario</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="tipohorario" id="tipohorario">
+                                        <select class="select2_demo_2 form-control" name="tipohorario" id="tipohorario">
                                             <option value="Fijo">Fijo</option>
                                             <option value="Rotativo">Rotativo</option>
                                             <option value="Semanal">Semanal</option>
@@ -83,7 +83,7 @@
                                 <div class="form-group" id="turno" >
                                     <label class="col-sm-2 control-label">Horario de Turno</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="fk_turno_id" id="fk_turno_id-field" value="{{ $trabaja->fk_turno_id  }}">
+                                        <select class="select2_demo_2 form-control" name="fk_turno_id" id="fk_turno_id-field" value="{{ $trabaja->fk_turno_id  }}">
                                             @include('layouts.turnos')
                                         </select>
                                     </div>
@@ -91,7 +91,7 @@
                                 <div class="form-group" id="rotativo" >
                                     <label class="col-sm-2 control-label">Horario Rotativo</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="fk_horariorotativo_id" id="fk_horariorotativo_id-field"  value="{{ old('fk_horariorotativo_id', $trabaja->fk_horariorotativo_id )}}">
+                                        <select class="select2_demo_2 form-control" name="fk_horariorotativo_id" id="fk_horariorotativo_id-field"  value="{{ old('fk_horariorotativo_id', $trabaja->fk_horariorotativo_id )}}">
                                             @include('layouts.horarios_rotativos')
                                         </select>
                                     </div>
@@ -99,7 +99,7 @@
                                 <div class="form-group" id="semanal" >
                                     <label class="col-sm-2 control-label">Horario Semanal</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="fk_horariosemanal_id" id="fk_horariosemanal_id-field" value="{{ old('fk_horariosemanal_id', $trabaja->fk_horariosemanal_id ) }}">
+                                        <select class="select2_demo_2 form-control" name="fk_horariosemanal_id" id="fk_horariosemanal_id-field" value="{{ old('fk_horariosemanal_id', $trabaja->fk_horariosemanal_id ) }}">
                                             @include('layouts.horarios_semanales')
                                         </select>
                                     </div>

@@ -52,7 +52,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Marca</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control m-b" name="registro_tipo" id="registro_tipo-field" value="{{ old('registro_tipo', $registro->registro_tipo ) }}">
+                                        <select class="select2_demo_2 form-control m-b" name="registro_tipo" id="registro_tipo-field" value="{{ old('registro_tipo', $registro->registro_tipo ) }}">
                                             <option value="I"> Entrada</option>
                                             <option value="O"> Salida</option>
                                         </select>

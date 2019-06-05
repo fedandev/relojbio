@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Menu Padre</label>
                                     <div class="col-sm-3">
-                                        <select class="form-control" name="menu_padre_id" id="menu_padre_id-field">
+                                        <select class="select2_demo_2 form-control" name="menu_padre_id" id="menu_padre_id-field">
                                         @if($menus->count())
                                             <option value="0">Ninguno</option>
                                             @foreach($menus as $ax_menu)
@@ -135,7 +135,7 @@
                     $(this).prop("selected", true);
                 }
             });
-            
+            $(".select2_demo_2").select2();
         });
     </script>
 @endsection

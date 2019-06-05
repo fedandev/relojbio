@@ -1,7 +1,8 @@
 <?php
-// DB::listen(function($query) {
-       
-// echo '<pre>'. $query->sql. '</pre>';
+
+//Muestra todas las consultas sql que se hacen
+// DB::listen(function($query) { 
+//    echo '<pre>'. $query->sql. '---'.$query->binding. '</pre>';
 // });
 
 Auth::routes();

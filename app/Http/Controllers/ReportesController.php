@@ -27,7 +27,7 @@ class ReportesController extends Controller
     
     public function index(){
 	    $controller = 'reportes';
-		if (Gate::allows('view-report', $controller)) {
+		if (Gate::allows('view-report', $controller)) {  //Esta en app/Providers/AuthServiceProvider.php
            return view('reportes.index');
         }else{
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.'); 

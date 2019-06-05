@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Estado</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" name="estado" id="estado-field" value="{{ old('estado', $user->estado) }}">
+                                        <select class="select2_demo_2 form-control" name="estado" id="estado-field" value="{{ old('estado', $user->estado) }}">
                                             <option value="ACTIVO">Activo</option>
                                             <option value ="BAJA">Baja</option>
                                         </select>
@@ -69,7 +69,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Empleado</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" name="fk_empleado_cedula" id="fk_empleado_cedula-field" value="{{ old('fk_empleado_cedula', $user->fk_empleado_cedula) }}">
+                                        <select class="select2_demo_2 form-control" name="fk_empleado_cedula" id="fk_empleado_cedula-field" value="{{ old('fk_empleado_cedula', $user->fk_empleado_cedula) }}">
                                             @include('layouts.empleadosXcedula');
                                         </select>
                                     </div>
@@ -162,6 +162,7 @@
             debug: false
         };
         $('.example1').pwstrength(options1);
+        $(".select2_demo_2").select2();
     })
 </script>
 
