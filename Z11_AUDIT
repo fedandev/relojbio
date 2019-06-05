@@ -1,0 +1,37 @@
+Reinstalar audit:
+
+    sacar del coomposer.json la siguiente linea:
+    
+            "owen-it/laravel-auditing": "^9.2"
+            
+    ejecutar composer update en consola
+    
+    ejecutar comandos para borrar cache: 
+    
+            composer clear-cache
+            php artisan event:clear
+            php artisan optimize:clear
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan view:clear
+            
+            
+    borrar en config/audit.php
+    
+    comentar en config/app.php la siguiente linea
+    
+            OwenIt\Auditing\AuditingServiceProvider::class,
+            
+    ejecutar: composer require owen-it/laravel-auditing
+    
+    
+    ejecutar: php artisan vendor:publish --provider "OwenIt\Auditing\AuditingServiceProvider" --tag="config"
+    
+    
+    
+    descomentar en config/app.php la siguiente linea
+    
+            OwenIt\Auditing\AuditingServiceProvider::class,
+            
+
+RUN!!

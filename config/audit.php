@@ -1,18 +1,8 @@
 <?php
-/**
- * This file is part of the Laravel Auditing package.
- *
- * @author     Antério Vieira <anteriovieira@gmail.com>
- * @author     Quetzy Garcia  <quetzyg@altek.org>
- * @author     Raphael França <raphaelfrancabsb@gmail.com>
- * @copyright  2015-2018
- *
- * For the full copyright and license information,
- * please view the LICENSE.md file that was distributed
- * with this source code.
- */
 
 return [
+
+    'enabled' => env('AUDITING_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -23,21 +13,23 @@ return [
     |
     */
 
-    'implementation' => OwenIt\Auditing\Contracts\Audit::class,
+    'implementation' => OwenIt\Auditing\Models\Audit::class,
 
     /*
     |--------------------------------------------------------------------------
-    | User Keys, Model
+    | User Morph prefix & Guards
     |--------------------------------------------------------------------------
     |
-    | Define the User primary key, foreign key and Eloquent model.
+    | Define the morph prefix and authentication guards for the User resolver.
     |
     */
 
     'user' => [
-        'primary_key' => 'id',
-        'foreign_key' => 'user_id',
-        'model'       => App\User::class,
+        'morph_prefix' => 'user',
+        'guards'       => [
+            'web',
+            'api',
+        ],
     ],
 
     /*
@@ -128,7 +120,7 @@ return [
     'drivers' => [
         'database' => [
             'table'      => 'audits',
-            'connection' => env('DB_CONNECTION', 'mysql'),
+            'connection' => null,
         ],
     ],
 

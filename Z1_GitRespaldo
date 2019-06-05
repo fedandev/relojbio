@@ -95,7 +95,7 @@ Importar sql a base:
         
 Exportar
 
-        mysqldump -u fsantucho -p clock_db_armandugon > bk-data-20190427.sql    
+        mysqldump -u fsantucho -p clock_db_armandugon > bk-data-20190528.sql    
 
 Scaffold: 
 

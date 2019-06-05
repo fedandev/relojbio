@@ -522,7 +522,6 @@ function v_inout($fdesde,$fhasta, $cedula = ''){
     }
     $query = $query." group by r1.registro_hora order by r1.registro_hora) t order by r_cedula, r_fecha, r_entrada;";
 
-   
     //return $registros = DB::select($query);
     return $registros = cacheQuery($query);
 }
