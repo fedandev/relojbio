@@ -15,8 +15,7 @@
     			    <form action="{{ route('marcaempleado.store') }}" method="POST" accept-charset="UTF-8" class="form-horizontal" id="formMarca">
                         {!! csrf_field() !!}
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="latitud" id="latitud" value="{{ $latitud }}">
-                        <input type="hidden" name="longitud" id="longitud" value="{{ $longitud }}">
+                        
                         <input type="hidden" name="latitudNow" id="latitudNow" >
                         <input type="hidden" name="longitudNow" id="longitudNow">
                         <input type="hidden" name="distancia" id="distancia">

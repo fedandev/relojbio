@@ -26,9 +26,6 @@ class MarcaEmpleadosController extends Controller
 
 	public function index(){
 		//Falta la parte de chequear si esta autorizado para ver y entrar en este formulario
-		$latitud = ajuste('latitud');
-		$longitud = ajuste('longitud');
-		
         return view('marcaempleado.index', compact('latitud', 'longitud','rango_max'));
 	}
 	
