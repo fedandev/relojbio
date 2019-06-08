@@ -79,8 +79,16 @@
                 <?php $i++ ?>
                 <tr>
                     <td>{{ $registro['empleado'] }}</td>
-                    <td>{{ $registro['inicio_brake']  }}</td>
-                    <td>{{ $registro['fin_brake']  }}</td>
+                    @if($registro['inicio_brake'] != null){
+                        <td>{{ $registro['inicio_brake']  }}</td>
+                    @else
+                        <td>No Tiene</td>
+                    @endif
+                    @if($registro['fin_brake'] != null){
+                        <td>{{ $registro['fin_brake']  }}</td>
+                    @else
+                        <td>No Tiene</td>
+                    @endif
                     <td>{{ $registro['hora_salida'] }}</td>
                     <td>{{ $registro['registro_fecha']  }}</td>
                 </tr>

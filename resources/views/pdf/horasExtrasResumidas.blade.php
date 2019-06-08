@@ -24,12 +24,10 @@
 </head>
 
 <body>
-
 	<div id="page-wrap">
 		<textarea id="header">HORAS EXTRAS RESUMIDAS</textarea>
 		@include('pdf.cabecera')	
 	
-		
 		<table id="items">
 			<tr id="title">
 				<th>Empleado</th>

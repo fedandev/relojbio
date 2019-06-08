@@ -1,5 +1,6 @@
 @php
     // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
+    use App\Models\Empleado;
     $logo = ajuste('system_logo');
     $empresa = ajuste('company_name');
     $format_hora =ajuste('time_format');
@@ -59,6 +60,7 @@
 		
 		<table id="items">
 			<tr>
+			    <th>Empleado</th>
 				<th>Fecha</th>
                 <th>Tipo Libre</th>
                 <th>Entrada/Salida</th>
@@ -79,6 +81,10 @@
                 			                $i=1;
                 			            @endphp
             			                <tr>
+            			                    @php
+            			                        $empleado = Empleado::where('empleado_cedula',$registro->fk_empleado_cedula)->first();
+            			                    @endphp
+            			                    <th>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</th>
                                             <td>{{ formatFecha($registro->registro_fecha, $format_fecha) }}</td>
                                             <td>{{ $registro->registro_comentarios }}</td>
                                             <td>
@@ -135,7 +141,8 @@
                                     		
                                     		<table id="items">
                                     			<tr>
-                                    				<th>Fecha</th>
+                                    				<th>Empleado</th>
+				                                    <th>Fecha</th>
                                                     <th>Tipo Libre</th>
                                                     <th>Entrada/Salida</th>
                                                     <th>Fecha/Hora</th>
@@ -151,6 +158,10 @@
             			            @endphp
             			            @if($i <= 29)
             			                <tr>
+            			                    @php
+            			                        $empleado = Empleado::where('empleado_cedula',$registro->fk_empleado_cedula)->first();
+            			                    @endphp
+            			                    <th>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</th>
                                             <td>{{ formatFecha($registro->registro_fecha, $format_fecha) }}</td>
                                             <td>{{ $registro->registro_comentarios }}</td>
                                             <td>
@@ -210,6 +221,7 @@
                                 		
                                 		<table id="items">
                                 			<tr>
+                                			    <th>Empleado</th>
                                 				<th>Fecha</th>
                                                 <th>Tipo Libre</th>
                                                 <th>Entrada/Salida</th>
