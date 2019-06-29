@@ -320,7 +320,9 @@ class HomeController extends Controller
                     
                     Mail::send('common.mail', $data, function($message) use ($empresa){
                         if($empresa->empresa_email2 == null){
-                            $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                            if($empresa->empresa_email != null){
+                                $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                            }
                         }else{
                             $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
                         }
@@ -337,7 +339,9 @@ class HomeController extends Controller
                         
                         Mail::send('common.mail_vencido', $data, function($message) use ($empresa){
                            if($empresa->empresa_email2 == null){
-                                $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                                if($empresa->empresa_email != null){
+                                    $message->to($empresa->empresa_email)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
+                                }
                             }else{
                                 $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->bcc('matiasfiermarin@hotmail.com')->bcc('Fede.santucho@hotmail.com')->subject('Recordatorio de vencimiento');
                             }
@@ -353,9 +357,9 @@ class HomeController extends Controller
     }
     
     public function dashboard(){
-        if (auth()->user()->fk_empleado_cedula){
+        /*if (auth()->user()->fk_empleado_cedula){
              return redirect()->route('marcaempleado.index');
-        }
+        }*/
         
         
         $this->ChequeoLicencia();

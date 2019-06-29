@@ -28,26 +28,41 @@
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Día</label>
-                                <div class="col-lg-10"><p class="form-control-static">{{formatFecha($autorizacion->autorizacion_dia) }}</p></div>
+                            <div class="form-group"><label class="col-lg-2 control-label">Fecha Desde</label>
+                                <div class="col-lg-10"><p class="form-control-static">{{formatFecha($autorizacion->autorizacion_fechadesde) }}</p></div>
                             </div>
                             
                             <div class="hr-line-dashed"></div>
                             
-                            <div class="form-group"><label class="col-lg-2 control-label">Tipo</label>
+                            <div class="form-group"><label class="col-lg-2 control-label">Fecha Hasta</label>
+                                <div class="col-lg-10"><p class="form-control-static">{{formatFecha($autorizacion->autorizacion_fechahasta) }}</p></div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            <div class="form-group"><label class="col-lg-2 control-label">Antes de Hora</label>
                                 <div class="col-lg-10">
-                                        <p class="form-control-static">
-                                            @if ($autorizacion->autorizacion_tipo == 'HORA_EXTRA')
-                                                Horas Extras
-                                            @endif
-                                            @if ($autorizacion->autorizacion_tipo == 'FALTA')
-                                                Falta
-                                            @endif
-                                            @if ($autorizacion->autorizacion_tipo == 'L_TARDE')
-                                                Llegada tarde
-                                            @endif
-                                        
-                                        </p>
+                                    <p class="form-control-static">
+                                        @if ($autorizacion->autorizacion_antesHorario == '1')
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            
+                            <div class="form-group"><label class="col-lg-2 control-label">Despues de Hora</label>
+                                <div class="col-lg-10">
+                                    <p class="form-control-static">
+                                        @if ($autorizacion->autorizacion_despuesHorario == '1')
+                                            <i class="fa fa-check text-navy"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
                             
@@ -59,26 +74,6 @@
                             </div>
                             
                             <div class="hr-line-dashed"></div>
-                             
-                           
-                            <div class="form-group"><label class="col-lg-2 control-label">Autorizado</label>
-                                <div class="col-lg-10">
-                                        <p class="form-control-static">
-                                            @if ($autorizacion->autorizacion_autorizado == 'SI')
-                                                <i class="fa fa-check text-navy"></i>
-                                            @else
-                                                <i class="fa fa-times text-danger"></i>
-                                            @endif
-                                        
-                                        </p>
-                                </div>
-                            </div>
-                           
-                            <div class="hr-line-dashed"></div>
-                            
-                            <div class="form-group"><label class="col-lg-2 control-label">Usuario Autorizante</label>
-                                <div class="col-lg-10"><p class="form-control-static"><a href="{{ route('users.show', $autorizacion->usuario->id) }}" target="_blank">{{$autorizacion->usuario->nombre}} </a></p></div>
-                            </div>
                             
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">

@@ -10,7 +10,7 @@
                     <div class="ibox-title">
                        
                         <h5>
-                            <i class="fa fa-edit"></i> Autorización /
+                            <i class="fa fa-edit"></i> Autorización de horas extras/
                             @if($autorizacion->id)
                                 Editar #{{$autorizacion->id}}
                             @else
@@ -35,7 +35,7 @@
                         @endif
         
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="fk_user_id" id="fk_user_id-field" value="{{ auth()->user()->id }}">    
+                                
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Empleado</label>
                                     <div class="col-sm-3">
@@ -45,46 +45,41 @@
                                     </div>
                                 </div>    
                                 
-                               
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Día</label>
-                                    <div class="col-sm-3"><input class="form-control" type="date" name="autorizacion_dia" id="autorizacion_dia-field" value="{{ old('autorizacion_dia', $autorizacion->autorizacion_dia ) }}"></div>
+                                    <label class="col-sm-2 control-label">Fecha Desde</label>
+                                    <div class="col-sm-3"><input class="form-control" type="date" name="autorizacion_fechadesde" id="autorizacion_fechadesde-field" value="{{ old('autorizacion_fechadesde', $autorizacion->autorizacion_fechadesde ) }}"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Fecha Hasta</label>
+                                    <div class="col-sm-3"><input class="form-control" type="date" name="autorizacion_fechahasta" id="autorizacion_fechahasta-field" value="{{ old('autorizacion_fechahasta', $autorizacion->autorizacion_fechahasta ) }}"></div>
                                 </div>
                                
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Tipo</label>
+                                    <label class="col-sm-2 control-label">Antes de Hora</label>
                                     <div class="col-sm-3">
-                                        <select class="select2_demo_2 form-control" name="autorizacion_tipo" id="autorizacion_tipo-field" value="{{ old('autorizacion_tipo', $autorizacion->autorizacion_tipo ) }}">
-                                            <option value="">Seleccionar tipo...</option>
-                                            <option value="HORA_EXTRA">Horas extras</option>
-                                            <option value="FALTA">Falta</option>
-                                            <option value="L_TARDE">Llegada tarde</option>
+                                        <select class="select2_demo_2 form-control" name="autorizacion_antesHorario" id="autorizacion_antesHorario-field" value="{{ old('autorizacion_antesHorario', $autorizacion->autorizacion_antesHorario ) }}">
+                                            <option value="0">No</option>
+                                            <option value="1">Si</option>
                                         </select>
                                     </div>
                                 </div>
                                 
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Despues de Hora</label>
+                                    <div class="col-sm-3">
+                                        <select class="select2_demo_2 form-control" name="autorizacion_despuesHorario" id="autorizacion_despuesHorario-field" value="{{ old('autorizacion_despuesHorario', $autorizacion->autorizacion_despuesHorario ) }}">
+                                            <option value="0">No</option>
+                                            <option value="1">Si</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Descripción</label>
                                     <div class="col-sm-6"><input class="form-control" type="text" name="autorizacion_descripcion" id="autorizacion_descripcion-field" value="{{ old('autorizacion_descripcion', $autorizacion->autorizacion_descripcion ) }}"></div>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Autorizado</label>
-
-                                    <div class="col-sm-10">
-                                        <div class="i-checks">
-                                            <label> 
-                                                <input type="radio" name="autorizacion_autorizado" id="autorizacion_autorizado-field" value="SI" {{ $autorizacion->autorizacion_autorizado == 'SI' ? 'checked' : '' }}>  Si 
-                                            </label>
-                                        </div>
-                                        <div class="i-checks">
-                                            <label> 
-                                                <input type="radio" name="autorizacion_autorizado" id="autorizacion_autorizado-field" value="NO" {{ $autorizacion->autorizacion_autorizado == 'NO' ? 'checked' : '' }}>   No
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
                                 
                                 <div class="hr-line-dashed"></div>
 

@@ -22,7 +22,6 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 - Modificar presentacion de reportes, mostrar primero en una grilla y poner botones para exportarlos en diferentes formatos.
 - Hacer Multi select para asignar horarios para no tener que asignar un horario a un empleado solamente.
 
-
 ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------SUGERENCIAS A DISCUTIR--------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
@@ -33,7 +32,8 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 ----------------------------------------------------URGENTE----------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------
 
-
+- Si una autorizacion nueva esta dentro de un rango de una autorizacion ya ingresado habria que hacer un for entre la fecha inicio, fecha fin (nuevas)
+y crear un registro nuevo por cada fecha del periodo ingresado.
 
 - Arreglar reportes no estan tomando en cuenta los feriados.
         Ejemplo: - Listado de faltas (Si es feriado no laborable, lo marca como falta)

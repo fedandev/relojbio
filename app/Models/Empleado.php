@@ -32,7 +32,7 @@ class Empleado extends Model implements Auditable
     }
     
     public function Libres(){
-        return $this->hasMany('App\Models\LiibreDetalle','fk_empleado_id','id');
+        return $this->hasMany('App\Models\LibreDetalle','fk_empleado_id','id');
     }
     
     public function HorarioEnFecha($fecha){

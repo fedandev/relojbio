@@ -3,8 +3,8 @@
     // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
     $logo = ajuste('system_logo');
     $empresa = ajuste('company_name');
-    $format_hora =ajuste('time_format');
-    $format_fecha=ajuste('date_format');
+    $format_hora = ajuste('time_format');
+    $format_fecha = ajuste('date_format');
     $format_fh = $format_fecha. " " .$format_hora;
     $now = date("D M d, Y G:i");
 @endphp

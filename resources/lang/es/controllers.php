@@ -4,7 +4,7 @@ return [
     
     'AjustesController' => 'Ajustes',
     'AuditsController' => 'Auditoría',
-    'AutorizacionsController' => 'Autorizaciones',
+    'AutorizacionsController' => 'Autorizaciones de Horas Extras',
     'ConversacionsController' => 'Conversaciones',
     'DispositivosController' => 'Dispositivos',
     'EmpleadosController' => 'Empleados',

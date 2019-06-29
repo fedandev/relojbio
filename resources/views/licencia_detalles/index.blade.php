@@ -20,7 +20,6 @@
 				    </div>
 				    
 					<div class="table-responsive">
-                    
 					    @if($licencia_detalles->count())
     						<table class="footable table table-stripped " data-filter=#filter data-page="true">
     							<thead>

@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Traits;
+use App\Models\Ajuste;
 
 trait LockableTrait
 {
     
     public function getLockoutTime()
     {
-        $lockout_time = 5;                          //Tiempo en minutos para que se bloquee la cuenta por inactividad
+        $ajuste = ajuste('time_lock');
+        $lockout_time = $ajuste;                          //Tiempo en minutos para que se bloquee la cuenta por inactividad
         return $lockout_time;
     }
 

@@ -9,6 +9,8 @@ use App\Models\LicenciaDetalle;
 use App\Models\Feriado;
 use App\SumaTiempos;
 use App\Models\Empleado;
+use App\Models\Autorizacion;
+use Carbon\Carbon;
 
 function isActiveRoute($route, $output = 'active'){   
     $ruta_actual = Route::getCurrentRoute()->uri();
@@ -604,4 +606,27 @@ function distanceCalculation($point1_lat, $point1_long, $point2_lat, $point2_lon
 			$distance =  $degrees * 59.97662; // 1 grado = 59.97662 millas naúticas, basándose en el diametro promedio de la Tierra (6,876.3 millas naúticas)
 	}
 	return round($distance, $decimals);
+}
+
+function HorasTrabajadas($Empleadoid, $entrada, $salida, $fecha){
+    $entrada = new DateTime($entrada->format('H:i:s'));
+    $salida = new DateTime($salida->format('H:i:s'));
+    $autorizacion = Autorizacion::where('fk_empleado_id',$Empleadoid)->where('autorizacion_antesHorario',$fecha);
+    if($autorizacion == null){
+        $autorizacion = Autorizacion::where('fk_empleado_id',$Empleadoid)->whereBetween($fecha,['autorizacion_fechadesde','autorizacion_fechahasta']);
+    }
+    if($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 1){
+        $diferencia = $salida->diff($entrada);
+    }elseif($autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 1){
+        $entradaE = horarioAfecha($Empleadoid, $fecha);
+        $diferencia = $salida->diff($entradaE[0]);
+    }elseif($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 0){
+        $salidaE = horarioAfecha($Empleadoid, $fecha);
+        $diferencia = $salidaE[3]->diff($entrada);
+    }else{
+        $horarioE = horarioAfecha($Empleadoid, $fecha);
+        $diferencia = $horarioE[3]->diff($horarioE[0]);
+    }
+    
+    return $diferencia;
 }

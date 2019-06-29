@@ -6,7 +6,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
 				<div class="ibox-title">
-					<h5>Lista de Autorizaciones</h5>
+					<h5>Lista de Autorizaciones de Horas Extras</h5>
                 </div>
 				
 				<div class="ibox-content">
@@ -25,10 +25,11 @@
                             <thead>
                                 <tr>
                                     <th>Empleado</th>
-                                    <th>Día</th>
-                                    <th>Tipo</th>
-                                    <th>Autorizado</th>
-                                    <th data-hide="phone,tablet">Descripción</th>
+                                    <th>Fecha Desde</th>
+                                    <th>Fecha Hasta</th>
+                                    <th>Antes de Hora</th>
+                                    <th>Despues de Hora</th>
+                                    <th>Descripción</th>
                                     <th class="text-right">Acciones</th>
                                 </tr>
                             </thead>
@@ -37,22 +38,21 @@
                                 @foreach($autorizacions as $autorizacion)
                                     <tr>
                                         <td><a href="{{ route('empleados.show', $autorizacion->empleado->id) }}" target="_blank">{{$autorizacion->empleado->empleado_nombre}} {{$autorizacion->empleado->empleado_apellido}} </a> </td>
-                                        <td>{{formatFecha($autorizacion->autorizacion_dia) }}</td>
-                                        <td>@if ($autorizacion->autorizacion_tipo == 'HORA_EXTRA')
-                                                Horas Extras
-                                            @endif
-                                            @if ($autorizacion->autorizacion_tipo == 'FALTA')
-                                                Falta
-                                            @endif
-                                            @if ($autorizacion->autorizacion_tipo == 'L_TARDE')
-                                                Llegada tarde
+                                        <td>{{formatFecha($autorizacion->autorizacion_fechadesde) }}</td>
+                                        <td>{{formatFecha($autorizacion->autorizacion_fechahasta) }}</td>
+                                        <td>
+                                            @if ($autorizacion->autorizacion_antesHorario == '1')
+                                                <i class="fa fa-check text-navy"></i>
+                                            @else
+                                                <i class="fa fa-times text-danger"></i>
                                             @endif
                                         </td>
-                                        <td>@if ($autorizacion->autorizacion_autorizado == 'SI')
-                                                    <i class="fa fa-check text-navy"></i>
-                                                @else
-                                                    <i class="fa fa-times text-danger"></i>
-                                                @endif
+                                        <td>
+                                            @if ($autorizacion->autorizacion_despuesHorario == '1')
+                                                <i class="fa fa-check text-navy"></i>
+                                            @else
+                                                <i class="fa fa-times text-danger"></i>
+                                            @endif
                                         </td>
                                         <td>{{$autorizacion->autorizacion_descripcion}}</td>
                                         <td class="text-right">
