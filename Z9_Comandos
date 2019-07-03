@@ -6,3 +6,19 @@ php artisan optimize:clear
 php artisan config:clear
 php artisan cache:clear
 php artisan view:clear
+
+
+MIGRACION DE APLICACION:
+
+mysql -u root -p
+
+CREATE DATABASE clock_db;
+
+importar bk-data-20190629.sql en phpmyadmin
+
+crear archivo .htaccess en carpeta root que contenga lo siguiente:
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

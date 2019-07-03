@@ -11,13 +11,13 @@
                 </div>
                 <h3 style="padding-bottom: 20px;" >Sistema de Gestión de Recursos Humanos</h3>
                 
-                <p> Ingrese su correo electrónico y password para iniciar sesión.</p>
+                <p> Ingrese su cedula o correo electronico y password para iniciar sesión.</p>
                
                 <form class="m-t" method="POST" action="{{ route('login') }}">
                     {{ csrf_field() }}
                     
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                        <input id="email" name="email" type="email" class="form-control" placeholder="Correo electrónico" value="{{ old('email') }}" required autofocus>
+                        <input id="email" name="email" type="text" class="form-control" placeholder="Cedula/Correo Electronico" value="{{ old('email') }}" required autofocus>
                         @if ($errors->has('email'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('email') }}</strong>

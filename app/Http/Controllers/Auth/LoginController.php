@@ -71,6 +71,20 @@ class LoginController extends Controller
         //return redirect('/');
     }
     
+    public function username()
+    {
+        $email  =request()->input('email');
+        if (strpos($email, '@') === false){  
+          request()->merge(['fk_empleado_cedula' => $email]);
+          return 'fk_empleado_cedula';
+        }else{
+          request()->merge(['email' => $email]);
+          return 'email';
+        }
+        
+    }
+  
+ 
     
    
 }

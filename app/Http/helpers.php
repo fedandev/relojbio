@@ -608,25 +608,49 @@ function distanceCalculation($point1_lat, $point1_long, $point2_lat, $point2_lon
 	return round($distance, $decimals);
 }
 
-function HorasTrabajadas($Empleadoid, $entrada, $salida, $fecha){
-    $entrada = new DateTime($entrada->format('H:i:s'));
-    $salida = new DateTime($salida->format('H:i:s'));
-    $autorizacion = Autorizacion::where('fk_empleado_id',$Empleadoid)->where('autorizacion_antesHorario',$fecha);
+function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
+    $autorizacion = Autorizacion::where('fk_empleado_id',$Empleado->id)->where('autorizacion_antesHorario',$fecha)->first();
     if($autorizacion == null){
-        $autorizacion = Autorizacion::where('fk_empleado_id',$Empleadoid)->whereBetween($fecha,['autorizacion_fechadesde','autorizacion_fechahasta']);
-    }
-    if($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 1){
-        $diferencia = $salida->diff($entrada);
-    }elseif($autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 1){
-        $entradaE = horarioAfecha($Empleadoid, $fecha);
-        $diferencia = $salida->diff($entradaE[0]);
-    }elseif($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 0){
-        $salidaE = horarioAfecha($Empleadoid, $fecha);
-        $diferencia = $salidaE[3]->diff($entrada);
-    }else{
-        $horarioE = horarioAfecha($Empleadoid, $fecha);
-        $diferencia = $horarioE[3]->diff($horarioE[0]);
+        $autorizacion = Autorizacion::where('fk_empleado_id',$Empleado->id)->where('autorizacion_fechadesde','<=',$fecha)->where('autorizacion_fechahasta','>=',$fecha)->first();
     }
     
+    if($autorizacion == null){
+        return null;
+    }
+    
+    $entradaSF = new DateTime($entrada);
+    $entradaF = $entradaSF->format('H:i:s');
+    $salidaSF = new DateTime($salida);
+    $salidaF = $salidaSF->format('H:i:s');
+    
+    if($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 1){
+        $diferencia = $salidaF->diff($entradaF);
+    }elseif($autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 1){
+        $entradaA = horarioAfecha($Empleado->id, $fecha);
+        $entradaSE = new DateTime($entradaA[0]);
+        $entradaE = $entradaSE->format('H:i:s');
+        $datetime1 = DateTime::createFromFormat('H:i:s', $entradaE);
+        $datetime2 = DateTime::createFromFormat('H:i:s', $salidaF);
+        
+        $diferenciaD = $datetime2->diff($datetime1);
+        
+        $diferencia = $diferenciaD->format('H:i:s');        
+    }elseif($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 0){
+        $salidaA = horarioAfecha($Empleado->id, $fecha);
+        $SalidaE = DateTime::createFromFormat('H:i:s', $salidaA[0]);
+        $diferencia = $salidaE->diff($entradaF);
+    }else{
+        //Chequear que la entrada no sea antes del horario y la salida no sea mayor a la salida asignada
+        $horarioE = horarioAfecha($Empleado->id, $fecha);
+        $SalidaE = DateTime::createFromFormat('H:i:s', $horarioE[3]);
+        $entradaE = DateTime::createFromFormat('H:i:s', $horarioE[0]);
+        $diferencia = $SalidaE->diff($entradaE);
+    }
     return $diferencia;
 }
+
+
+
+
+
+

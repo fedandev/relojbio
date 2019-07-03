@@ -37,7 +37,7 @@ class ReportesController extends Controller
     public function horasTrabajadasEmpleado(Request $request, Empleado $empleados){
         $controller = 'reportes';
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         
@@ -98,7 +98,7 @@ class ReportesController extends Controller
     public function entradasYsalidas(Request $request){
         $controller = 'reportes';
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.'); 
         }
         $for = 'N';
@@ -137,7 +137,7 @@ class ReportesController extends Controller
     public function llegadasTarde(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         $fechainicio = $request->input('fechainicio');
@@ -314,7 +314,7 @@ class ReportesController extends Controller
     public function salidasAntes(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         
@@ -469,7 +469,7 @@ class ReportesController extends Controller
     public function horasNocturnas(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         $for = "N";
@@ -552,9 +552,9 @@ class ReportesController extends Controller
     public function listadoFaltas(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
-		}
+		    }
         $fechaInicio = $request->input('fechainicio');
         $fechaFin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
@@ -630,7 +630,7 @@ class ReportesController extends Controller
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
         $now = new DateTime();
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            echo '<script> localStorage.setItem("alertaroja", "No esta autorizado a ejecutar la acción"); </script>'; 
            return redirect()->route('main'); 
         }
@@ -771,7 +771,7 @@ class ReportesController extends Controller
     public function horasExtras(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         $for = "N";
@@ -859,7 +859,7 @@ class ReportesController extends Controller
     public function libresConcedidos(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }    
         $for = "N";
@@ -1196,10 +1196,10 @@ class ReportesController extends Controller
         }
     }*/
 
-    public function HorasExtrasResumidas(Request $request){
+    /*public function HorasExtrasResumidas(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		if (!Gate::allows('view-report', $controller)) {
+		    if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
         }
         $for = "N";
@@ -1299,7 +1299,11 @@ class ReportesController extends Controller
     	                $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));   
     	            }else{
     	                $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
-	                    $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                        if($totalHoras != null){
+                            $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                        }else{
+                            $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                        }
     	            }
                 }else{
                     $horas = totalHorasAfecha($horario);
@@ -1331,7 +1335,11 @@ class ReportesController extends Controller
                     $fecha = $registro->r_fecha;
                     $horas_dia = new SumaTiempos();
                     $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
-    	            $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                    if($totalHoras != null){
+                        $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                    }else{
+                        $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                    }
                     //$horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
                 }
                 $horario = horarioAfecha( $Empleado->id, $registro->r_fecha);
@@ -1443,7 +1451,11 @@ class ReportesController extends Controller
     	                $feriado = Feriado::where('feriado_fecha','=',$registro->r_fecha)->first();
     	                if($feriado == null){
     	                    $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
-    	                    $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                            if($totalHoras != null){
+    	                        $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                            }else{
+                                $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                            }
     	                }else{
     	                    if($feriado->feriado_laborable == 1){
     	                        $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
@@ -1483,7 +1495,11 @@ class ReportesController extends Controller
                     $fecha = $registro->r_fecha;
                     $horas_dia = new SumaTiempos();
                     $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
-                    $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                    if($totalHoras != null){
+                        $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                    }else{
+                        $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                    }
     	        }
     		}
         }
@@ -1501,6 +1517,143 @@ class ReportesController extends Controller
         }else{
             return back()->with('warning', 'No se encontraron datos.')->withInput();
         }
+    }*/
+    
+    public function HorasExtrasResumidas(Request $request){
+        $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
+        $controller = 'reportes';
+		    if (!Gate::allows('view-report', $controller)) {
+           return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
+        }
+        $for = "N";
+        $ii=0;
+        $fechainicio = $request->input('fechainicio');
+        $fechafin = $request->input('fechafin');
+        $cedula = $request->input('fk_empleado_cedula');
+        $fk_oficina_id = $request->input('fk_oficina_id');
+        
+        if($cedula !='' && $cedula != 'ALL'){
+            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+        }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
+            if($fk_oficina_id != NULL){
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+            }
+        }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
+            $for = "S";
+        }
+
+        /*if($for == 'N'){
+            $registros_inout =  v_inout($fechainicio,$fechafin,$empleados[0]->empleado_cedula);
+        }elseif($for == 'S'){
+            $registros_inout =  v_inout($fechainicio,$fechafin);
+        }
+        
+        $registros_sql = collect($registros_inout);*/
+        
+        $registros = [];
+        
+        $minimo_extras = ajuste('minimo_extras');
+        $max_extras = ajuste('max_hours_ext_per_day');
+        $format_extras = ajuste('hours_ext_format');
+        $i=0;
+        $empleado_cedula = "";
+        $fecha = "";
+        $Empleado_Anterior = new Empleado();
+        $primero = 0;
+        $entro = 0;
+        
+        //Cosas a tener en cuenta:
+        // 1- Minimo extras.
+        // 2- Maximo extras.
+        // 3- Formato de extras.
+        // 4- Autorizaciones de extras.
+        // 5- Como se restan las extras con las horas comunes.
+        // 6- Horario cortado.
+        // 7- Si las extras estan autorizadas para ese día (lunes, martes, etc) o no.
+        
+        if($for == 'S'){
+            $empleados = Empleado::all();
+        }
+        
+        foreach($empleados as $empleado){
+            $registros_inout =  v_inout($fechainicio,$fechafin,$empleados->empleado_cedula);
+            $registros_sql = collect($registros_inout);
+            foreach($registros_sql as $registro){
+                /*$Empleado = Empleado::where('empleado_cedula', '=',$registro->r_cedula)->first();
+
+                if($Empleado == null){
+                    continue;
+                }*/
+                
+                if(array_first($registros_sql) == $registro){
+                    //Primer registro
+                    $horas_debe_trabajar_sum = new SumaTiempos();
+                    $horas_trabajadas = new SumaTiempos();
+                    $horas_dia = new SumaTiempos();
+                    $extras_sinDesc = new SumaTiempos();
+                    $horas_libre_feriado = new SumaTiempos();
+                    
+                    $fecha = $registro->r_fecha;
+                    $horarioCompleto = horarioAfecha($Empleado->id, $fecha);
+                    $horario = totalHorasAfecha($horarioCompleto);
+                    
+                    if($registro->r_total_horas != null){
+                        if($horario[0] == "00:00:00" && $horario[3] == "00:00:00"){
+                            $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));  
+                        }else{
+                            $feriado = Feriado::where('feriado_fecha','=',$fecha)->first();
+                            if($feriado == null){
+                                $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
+                                if($totalHoras != null){
+                                    $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                                }
+                            }else{
+                                if($feriado->feriado_laborable == 1){
+                                    $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                                }else{
+                                    $horas_libre_feriado->sumaTiempo(new SumaTiempos($registro->r_total_horas));   
+                                }
+    	                    }
+                            
+                            
+                            $totalHoras = HorasTrabajadas($Empleado, $registro->r_entrada, $registro->r_salida, $fecha);
+                            if($totalHoras != null){
+                                $horas_dia->sumaTiempo(new SumaTiempos($totalHoras));
+                            }else{
+                                $horas_dia->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                            }
+                        
+                    }
+                }
+                
+                if($fecha == $registro->r_fecha){
+                    $horario = horarioAfecha( $Empleado->id, $fecha);
+                    
+                }else{
+                    if(last($registros_sql) == $registro){
+                    
+                    }
+                    $fecha = $registro->r_fecha;
+                    $horario = horarioAfecha( $Empleado->id, $fecha);
+                }
+            }
+          }
+        }
+        
+        $registros_ok = collect($registros);
+        
+        if($registros_ok->count() > 0){
+            $pdf = PDF::loadView('pdf.horasExtrasResumidas', compact('registros_ok','fechainicio','fechafin','oficina'));
+            
+            if($Rpdf->ajuste_valor == 'stream'){
+                return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
+            }elseif($Rpdf->ajuste_valor == 'download'){
+                return $pdf->download('listado.pdf');             //Forzar descarga de PDF
+            }
+        }else{
+            return back()->with('warning', 'No se encontraron datos.')->withInput();
+        }
+    
     }
     
 }
