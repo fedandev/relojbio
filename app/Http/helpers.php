@@ -614,38 +614,124 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
         $autorizacion = Autorizacion::where('fk_empleado_id',$Empleado->id)->where('autorizacion_fechadesde','<=',$fecha)->where('autorizacion_fechahasta','>=',$fecha)->first();
     }
     
-    if($autorizacion == null){
-        return null;
+    if($autorizacion == null || $autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 0 || !TomaExtras($Empleado->id, $fecha)){
+        //Chequear que la entrada no sea antes del horario y la salida no sea mayor a la salida asignada
+        $entradaSF = new DateTime($entrada);
+        $entradaF = $entradaSF->format('H:i:s');
+        $salidaSF = new DateTime($salida);
+        $salidaF = $salidaSF->format('H:i:s');
+        
+        $horarioE = horarioAfecha($Empleado->id, $fecha);
+        if($horarioE[1] == ''){
+            if($entrada < $horarioE[0]){
+                $entradaE = new DateTime($horarioE[0]);
+            }else{
+                $entradaE = new DateTime($entradaF);
+            }
+            if($salida > $horarioE[3]){
+                $SalidaE = new DateTime($horarioE[3]);
+            }else{
+                $salidaE = new DateTime($salidaF);
+            }
+        }else{
+            //Para la entrada
+            if($entrada < $horarioE[0] && $entrada < $horarioE[1]){
+                $entradaE = new DateTime($horarioE[0]);
+            }elseif($entrada >= $horarioE[0] && $entrada <= $horarioE[1]){
+                $entradaE = new DateTime($entradaF);
+            }elseif($entrada >= $horarioE[1] && $entrada <= $horarioE[2]){
+                $entradaE = new DateTime($horarioE[2]);
+            }elseif($entrada >= $horarioE[2]){
+                $entradaE = new DateTime($entradaF);
+            }
+            
+            //Para la salida
+            if($salida > $horarioE[1] && $salida < $horarioE[2]){
+                $SalidaE = new DateTime($horarioE[1]);
+            }elseif($salida <= $horarioE[1] && $salida >= $horarioE[0]){
+                $SalidaE = new DateTime($salidaF);
+            }elseif($salida >= $horarioE[2] && $salida <= $horarioE[3]){
+                $SalidaE = new DateTime($salidaF);
+            }elseif($salida >= $horarioE[3]){
+                $SalidaE = new DateTime($horarioE[3]);
+            }
+        }
+        
+        $diferenciaD = $entradaE->diff($SalidaE);
+        
+        $diferencia = $diferenciaD->format("%H:%I:%S");
+        
+        return $diferencia;
     }
     
+    /*if(!TomaExtras($Empleado->id, $fecha)){
+        return null;
+    }*/
+    
+    $horarioCompleto = horarioAfecha($Empleado->id, $fecha);    //Busco los horarios de entrada/salida del empleado en una fecha especifica
+    //$horarioCompleto[3] //Horario que tiene que salir
     $entradaSF = new DateTime($entrada);
     $entradaF = $entradaSF->format('H:i:s');
     $salidaSF = new DateTime($salida);
     $salidaF = $salidaSF->format('H:i:s');
     
     if($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 1){
-        $diferencia = $salidaF->diff($entradaF);
+        $diferenciaD = $salidaSF->diff($entradaSF);
+        $diferencia = $diferenciaD->format("%H:%I:%S");
     }elseif($autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 1){
-        $entradaA = horarioAfecha($Empleado->id, $fecha);
-        $entradaSE = new DateTime($entradaA[0]);
-        $entradaE = $entradaSE->format('H:i:s');
-        $datetime1 = DateTime::createFromFormat('H:i:s', $entradaE);
-        $datetime2 = DateTime::createFromFormat('H:i:s', $salidaF);
+        if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
+            if($entradaF <= $horarioCompleto[1]){
+                $datetime1 = new DateTime($horarioCompleto[1]);
+            }elseif($entradaF <= $horarioCompleto[2] && $entradaF >= $horarioCompleto[1]){
+                $datetime1 = new DateTime($horarioCompleto[2]);
+            }elseif($entradaF >= $horarioCompleto[2]){
+                $datetime1 = new DateTime($entradaF);
+            }
+        }else{
+            if($entradaF <= $horarioCompleto[0]){
+                $datetime1 = new DateTime($horarioCompleto[0]);
+            }else{
+                $datetime1 = new DateTime($entradaF);
+            }
+        }
         
-        $diferenciaD = $datetime2->diff($datetime1);
+        if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
+            if($salidaF >= $horarioCompleto[1] && $salidaF <= $horarioCompleto[2]){
+                $datetime2 = new DateTime($horarioCompleto[1]);
+            }elseif($salidaF > $horarioCompleto[2] && $salidaF > $horarioCompleto[3]){
+                $datetime2 = new DateTime($salidaF);
+            }elseif($salidaF < $horarioCompleto[1]){
+                $datetime2 = new DateTime($salidaF);
+            }
+        }else{
+            $datetime2 = new DateTime($salidaF);
+        }
         
-        $diferencia = $diferenciaD->format('H:i:s');        
+        $diferenciaD = $datetime1->diff($datetime2);
+        
+        $diferencia = $diferenciaD->format("%H:%I:%S");
+        
+        
     }elseif($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 0){
-        $salidaA = horarioAfecha($Empleado->id, $fecha);
-        $SalidaE = DateTime::createFromFormat('H:i:s', $salidaA[0]);
-        $diferencia = $salidaE->diff($entradaF);
-    }else{
-        //Chequear que la entrada no sea antes del horario y la salida no sea mayor a la salida asignada
-        $horarioE = horarioAfecha($Empleado->id, $fecha);
-        $SalidaE = DateTime::createFromFormat('H:i:s', $horarioE[3]);
-        $entradaE = DateTime::createFromFormat('H:i:s', $horarioE[0]);
-        $diferencia = $SalidaE->diff($entradaE);
+        if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
+            if($salidaF >= $horarioCompleto[1] && $salidaF <= $horarioCompleto[2]){
+                $datetime2 = new DateTime($horarioCompleto[1]);
+            }elseif($salidaF > $horarioCompleto[2] && $salidaF > $horarioCompleto[3]){
+                $datetime2 = new DateTime($salidaF);
+            }elseif($salidaF < $horarioCompleto[1]){
+                $datetime2 = new DateTime($salidaF);
+            }
+        }else{
+            if($salidaF > $horarioCompleto[3] && $entradaE < $horarioCompleto[3]){
+                $datetime2 = new DateTime($horarioCompleto[3]);
+            }
+        }
+        
+        $diferenciaD = $datetime1->diff($datetime2);
+        
+        $diferencia = $diferenciaD->format("%H:%I:%S");
     }
+    
     return $diferencia;
 }
 
