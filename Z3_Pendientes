@@ -11,14 +11,14 @@ asset('ruta/al/css/estilos.css', true); // El 'true' indica que debe ser con HTT
 - Arreglar consulta de audit simil a consulta registros (pintar en verde, rojo cambios)
 - Agregar advertencia en modificacion de horarios cuando se existen registros en fechas que el cliente tenia dicho horario 
   asociado.
-- agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
+- Agregar proceso automatico para asignar dias de licencia todos los empleado el 1eros de enero. 
                 Tener en cuenta fecha ingreso empleado (antiguedad). 
                 Analizar trabajador mensual (dias = meses trabajados * 1.6)
                 Analizar trabajador jornalero (dias = jornadas * 0.06)
-- agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste 
+- Agregar ajuste 'max_hours_per_day' maximo de horas que un empleado puede trabajar por dia. Agregar control sobre este ajuste 
   en horarios y horario semanal
-- agregar flujo para asignar horarios de manera mas "tutorial" sin tener ir por cada menu a configurar todo
-- agregar advertencia de vencimiento de horarios y vencidos (implementar notificaciones en la parte del header )
+- Agregar flujo para asignar horarios de manera mas "tutorial" sin tener ir por cada menu a configurar todo
+- Agregar advertencia de vencimiento de horarios y vencidos (implementar notificaciones en la parte del header )
 - Modificar presentacion de reportes, mostrar primero en una grilla y poner botones para exportarlos en diferentes formatos.
 - Hacer Multi select para asignar horarios para no tener que asignar un horario a un empleado solamente.
 
@@ -118,3 +118,4 @@ la suma de todas las horas.
 - Agregar a la tabla feriados un campo para saber si es laborable o no laborable.
 - Arreglar reporte de horas extras resumidas, no esta teniendo en cuenta el minimo_extras por día, sino que lo hace a lo ultimo y esta mal.
 - Se arreglo Auditoria, se habia deshabilitado en version anterior por errores.
+- Se agrega reporte para ver los registros creados manualmente.

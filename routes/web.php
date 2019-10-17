@@ -33,7 +33,9 @@ Auth::routes();
     Route::post('/reportes/listadoFaltas', 'ReportesController@listadoFaltas')->name('reportes.listadoFaltas');
     Route::post('/reportes/entradasYsalidas', 'ReportesController@entradasYsalidas')->name('reportes.entradasYsalidas');
     Route::post('/reportes/libresConcedidos', 'ReportesController@libresConcedidos')->name('reportes.libresConcedidos');
+    Route::post('/reportes/empleadosMarcasAyer', 'ReportesController@empleadosMarcasAyer')->name('reportes.empleadosMarcasAyer');
     Route::post('/registros/load/excel', 'RegistrosController@loadExcel')->name('registros.loadExcel');
+    Route::post('/reportes/registrosManual', 'ReportesController@HorasCreadasManual')->name('reportes.HorasCreadasManual');
     Route::post('/search', 'AuditsController@search')->name('audits.search');
     Route::post('/registros/del', 'RegistrosController@del')->name('registros.del');
     
@@ -86,3 +88,5 @@ Auth::routes();
     Route::post('login/locked', 'Auth\LoginController@unlock')->name('login.unlock');
     
     Route::get('registros/download/{name_file}', 'RegistrosController@download')->name('registros.download');
+    Route::get('/ReporteEmail/{key}', 'ReportesRESTController@empleadosMarcasAyer');
+    

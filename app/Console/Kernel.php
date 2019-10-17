@@ -5,7 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\EliminarRegistrosDuplicados;
-
+use App\Console\Commands\MarcasAyer;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-       EliminarRegistrosDuplicados::class
+       EliminarRegistrosDuplicados::class,
+       MarcasAyer::class
     ];
 
     /**
@@ -26,6 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('registros:delete')->dailyAt('11:00');
+        //$schedule->command('registros:marcas_ayer')->dailyAt('1:50');
+        $schedule->command('registros:marcas_ayer')->dailyAt('1:50');
         // $schedule->command('inspire')
         //          ->hourly();
     }

@@ -15,12 +15,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<title>ENTRADAS Y SALIDAS</title>
+	<title>REGISTROS MANUALES</title>
 	<link rel="stylesheet" href="{{ asset('css/pdf2.css') }}" />
 </head>
 <body>
 	<div id="page-wrap">
-		<textarea id="header">ENTRADAS Y SALIDAS</textarea>
+		<textarea id="header">REGISTROS MANUALES</textarea>
 		<div id="identity">
             <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
 			</textarea>
@@ -269,12 +269,8 @@
                     <h3 class="text-center alert alert-info">No hay datos para mostrar!</h3>
                 </td>
             </tr>    
-            @endif		  
-		
+            @endif
 		</table>
-				
 	</div>
-	
 </body>
-
 </html>

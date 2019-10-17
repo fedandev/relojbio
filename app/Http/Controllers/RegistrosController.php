@@ -89,7 +89,7 @@ class RegistrosController extends Controller
 		
 		$datetime = new \DateTime($t);
 		$request['registro_hora'] = $datetime;
-		$request['registro_tipomarca'] = 'Fingerpint';
+		$request['registro_tipomarca'] = 'Manual';
 		
 		
 		$this->validate($request, [
@@ -117,7 +117,7 @@ class RegistrosController extends Controller
 		
 		$datetime = new \DateTime($t);
 		$request['registro_hora'] = $datetime;
-		$request['registro_tipomarca'] = 'Fingerpint';
+		$request['registro_tipomarca'] = 'Manual';
 		
 		$this->validate($request, [
             'registro_hora' => 'required',

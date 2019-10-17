@@ -58,15 +58,15 @@ class UsersController extends Controller
         
 		$this->validate($request, [
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6|confirmed',
         ]);
         
         $password = $request->input('password');
         $password_crypt = bcrypt($password);
         $request->merge([ 'password' => $password_crypt ]);
-		$user = User::create($request->all());
-		$user->Perfiles()->sync($request->v_perfiles);
+        $user = User::create($request->all());
+        $user->Perfiles()->sync($request->v_perfiles);
 		return redirect()->route('users.show', $user->id)->with('info', 'Creado exitosamente.');
 		
 	}

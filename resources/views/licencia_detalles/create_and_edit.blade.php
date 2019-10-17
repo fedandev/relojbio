@@ -137,7 +137,7 @@ use Carbon\Carbon;
                     if(res.length>=0){
     		            $("#fk_licencia_id-field").append('<option> Seleccione un tipo de licencia.</option>');
                         res.forEach(element => {
-                            $('#fk_licencia_id-field').append(`<option value=${element.id}> ${element.tipolicencia_nombre} </option>`);
+                            $('#fk_licencia_id-field').append(`<option value=${element.id}> ${element.caracteristica_detalle_nombre} </option>`);
                         });
 		            }
                     $(".select2_demo_2").select2();

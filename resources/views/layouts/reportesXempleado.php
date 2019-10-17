@@ -4,7 +4,9 @@
 <option value="ht">Horas trabajadas</option>
 <option value="hn">Horas nocturnas</option>
 <option value="he">Horas extras</option>
+<option value="rm">Registros manuales</option>
 <option value="lf">Listado de faltas</option>
 <option value="es">Entradas y Salidas</option>
 <option value="lc">Libres Concedidos</option>
 <option value="her">Horas Extras Resumida</option>
+<option value="esm">Marcas Ayer</option>

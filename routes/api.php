@@ -18,3 +18,8 @@ use Illuminate\Http\Request;
 // });
 
 //Route::resource('registros', 'RegistrosRESTController', ['only' => ['index', 'show', 'create', 'store', 'update', 'edit', 'destroy']]);
+
+
+
+
+

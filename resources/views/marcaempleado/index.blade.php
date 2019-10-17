@@ -42,7 +42,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit" >Marcar</button>
+                                <button class="btn btn-primary" type="submit" id="btnMarcar" >Marcar</button>
                             </div>
                         </div>
                     </form>
@@ -134,6 +134,7 @@
     $(document).ready(function(){
         
         $('#formMarca').on('submit', function(e){
+             $('#btnMarcar').attr("disabled", true); 
             var context = snapshot.getContext('2d');
             // Draw the video frame to the canvas.
             context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);

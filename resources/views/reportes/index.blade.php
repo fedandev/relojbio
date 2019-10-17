@@ -110,6 +110,10 @@
                     action = '/reportes/libresConcedidos';
                 }else if(reporte == 'her'){
                     action = '/reportes/HorasExtrasResumidas';
+                }else if(reporte == 'rm'){
+                    action = '/reportes/registrosManual';
+                }else if(reporte == 'esm'){
+                    action = '/reportes/empleadosMarcasAyer';
                 }
                 
                 $("#frmReportes").attr("action", action);
