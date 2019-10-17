@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('registros:delete')->dailyAt('11:00');
         //$schedule->command('registros:marcas_ayer')->dailyAt('1:50');
-        $schedule->command('registros:marcas_ayer')->dailyAt('1:50');
+        $schedule->command('registros:marcas_ayer')->dailyAt('00:15');
         // $schedule->command('inspire')
         //          ->hourly();
     }
