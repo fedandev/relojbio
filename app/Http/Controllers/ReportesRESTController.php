@@ -29,12 +29,12 @@ class ReportesRESTController extends Controller
 				$key_app = 'eQXSUoh4RkX5DvTktmlT7+SVueSChf5mrqlJscwK8KU=';
 			
 				if($key_app != $key){
-					//return response()->json("{'error': 'no autorizado'}",401);
+					return response()->json("{'error': 'no autorizado'}",401);
 				}
 			
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $ayer = date('Y-m-d', strtotime('yesterday'));   
-        $ayer = '2019-02-04';
+      
                 
 				$empleados = Empleado::all();    
      
@@ -316,14 +316,49 @@ class ReportesRESTController extends Controller
                     }
                 }
             }
-					
+						
+						if ($registros_sql->count() == 0){
+							$horario_Fecha = horarioAfecha($empleado->id, $ayer);
+							$horas = totalHorasAfecha($horario_Fecha);
+							$horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas));
+							
+							if($horas_trabajadas->verTiempoFinal() == '00:00:00'){
+									$horas_diff =	$horas_debe_trabajar_sum->verTiempoFinal();
+							}else{													
+									$horas_diff = date('H:i:s', strtotime($horas_debe_trabajar_sum->verTiempoFinal()) - strtotime($horas_trabajadas->verTiempoFinal()));
+							}
+							if($horas_diff>='12:00:00'){
+									$horas_diff = '00:00:00';
+							}
+							
+							$r['fk_empleado_cedula'] = $empleado->empleado_cedula;
+							$r['registro_fecha'] = $ayer;
+							if($horas_debe_trabajar_sum->verTiempoFinal() == '00:00:00'){
+									$r['horas_debe_trabajar']='No tiene horario asignado';
+							}else{
+									$r['horas_debe_trabajar'] = $horas_debe_trabajar_sum->verTiempoFinal();
+							}
+							$r['horas_trabajadas'] = $horas_trabajadas->verTiempoFinal();
+							if($extras_sinDesc == '00:00:00'){
+									$r['horas_extras'] = '00:00:00';
+							}elseif($extras_sinDesc < '00:00:00'){
+									$r['horas_extras'] = '00:00:00';
+							}else{
+									$r['horas_extras'] = $extras_sinDesc->verTiempoFinal();
+							}
+							$r['horas_diff'] = $horas_diff;
+							$r['empleado'] = $empleado->empleado_nombre.' '.$empleado->empleado_apellido;
+							$r['horas_libre_feriado'] = $horas_libre_feriado->verTiempoFinal();	
+							$registros[$i] = $r;
+							$i++;
+					  }
 					
 					
         }
         
         $registros_ok = collect($registros);
 			
-				Log::info("Hay registros");
+				
         if($registros_ok->count() > 0){
 						Log::info("Hay registros");
 						$path = public_path().'/storage/empleadosMarcasAyer_'.$ayer.'.pdf';

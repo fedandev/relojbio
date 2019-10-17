@@ -15,7 +15,7 @@
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<title>REPORTE DE MARCAS EN EL DIA DE AYER</title>
-	<link rel="stylesheet" href="{{ asset('css/pdf2.css') }}" />
+	<link rel="stylesheet" href="{{ public_path().'/css/pdf2.css' }}" />
 </head>
 
 <body>
@@ -31,9 +31,9 @@
 				<th>Cedula</th>
 				<th>Fecha</th>
 				<th>Horas a Trabajar</th>
-			  <th>Horas Cargadas</th>
+			  <th>Horas Marcadas</th>
 				<th>Horas Extras</th>
-        <th>Horas Faltan Cargar</th>
+        <th>Horas Faltan Marcar</th>
 			</tr>
 			@if($registros_ok->count())
 				 @php
@@ -41,14 +41,16 @@
 	            @endphp
 				@foreach($registros_ok as $registro)
               <?php $i++; ?>
-              @if ($i == 29 )    
-        			     
+              @if ($i == 24 )    
+									@php
+			                echo '</table>';
+			            @endphp
                   <div id="footer">
                     <div class="page-number"></div>
                   </div>
 			            <div style="page-break-after:always;"></div>
 			            <textarea id="header">REPORTE DE MARCAS EN EL DIA DE AYER</textarea>
-	                    @include('pdf.cabecera')
+									@include('pdf.cabecera')
 			            @php
 			                echo '<table id="items" >'
 			            @endphp
@@ -58,9 +60,9 @@
                     <th>Cedula</th>
                     <th>Fecha</th>
                     <th>Horas a Trabajar</th>
-                    <th>Horas Cargadas</th>
+                    <th>Horas Marcadas</th>
 										<th>Horas Extras</th>
-                    <th>Horas Faltan Cargar</th>
+                    <th>Horas Faltan Marcar</th>
                   </tr>
             @endif
 					
