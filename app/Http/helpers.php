@@ -613,7 +613,7 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
     if($autorizacion == null){
         $autorizacion = Autorizacion::where('fk_empleado_id',$Empleado->id)->where('autorizacion_fechadesde','<=',$fecha)->where('autorizacion_fechahasta','>=',$fecha)->first();
     }
-    
+        
     if($autorizacion == null || $autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 0 || !TomaExtras($Empleado->id, $fecha)){
         //Chequear que la entrada no sea antes del horario y la salida no sea mayor a la salida asignada
         $entradaSF = new DateTime($entrada);
@@ -622,8 +622,9 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
         $salidaF = $salidaSF->format('H:i:s');
         
         $horarioE = horarioAfecha($Empleado->id, $fecha);
+        
         if($horarioE[1] == ''){
-            if($entrada < $horarioE[0]){
+            if($entradaF < $horarioE[0]){
                 $entradaE = new DateTime($horarioE[0]);
             }else{
                 $entradaE = new DateTime($entradaF);
@@ -635,13 +636,13 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
             }
         }else{
             //Para la entrada
-            if($entrada < $horarioE[0] && $entrada < $horarioE[1]){
+            if($entradaF < $horarioE[0] && $entradaF < $horarioE[1]){
                 $entradaE = new DateTime($horarioE[0]);
-            }elseif($entrada >= $horarioE[0] && $entrada <= $horarioE[1]){
+            }elseif($entradaF >= $horarioE[0] && $entradaF <= $horarioE[1]){
                 $entradaE = new DateTime($entradaF);
-            }elseif($entrada >= $horarioE[1] && $entrada <= $horarioE[2]){
+            }elseif($entradaF >= $horarioE[1] && $entradaF <= $horarioE[2]){
                 $entradaE = new DateTime($horarioE[2]);
-            }elseif($entrada >= $horarioE[2]){
+            }elseif($entradaF >= $horarioE[2]){
                 $entradaE = new DateTime($entradaF);
             }
             
@@ -664,10 +665,6 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
         return $diferencia;
     }
     
-    /*if(!TomaExtras($Empleado->id, $fecha)){
-        return null;
-    }*/
-    
     $horarioCompleto = horarioAfecha($Empleado->id, $fecha);    //Busco los horarios de entrada/salida del empleado en una fecha especifica
     //$horarioCompleto[3] //Horario que tiene que salir
     $entradaSF = new DateTime($entrada);
@@ -679,10 +676,22 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
         $diferenciaD = $salidaSF->diff($entradaSF);
         $diferencia = $diferenciaD->format("%H:%I:%S");
     }elseif($autorizacion->autorizacion_antesHorario == 0 && $autorizacion->autorizacion_despuesHorario == 1){
+        //Entrada
         if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
-            if($entradaF <= $horarioCompleto[1]){
+            /*if($entradaF <= $horarioCompleto[1] && $entradaF > $horarioCompleto[0]){
                 $datetime1 = new DateTime($horarioCompleto[1]);
             }elseif($entradaF <= $horarioCompleto[2] && $entradaF >= $horarioCompleto[1]){
+                $datetime1 = new DateTime($horarioCompleto[2]);
+            }elseif($entradaF >= $horarioCompleto[2]){
+                $datetime1 = new DateTime($entradaF);
+            }elseif($entradaF <= $horarioCompleto[0]){
+                $datetime1 = new DateTime($horarioCompleto[0]);
+            }*/
+            if($entradaF <= $horarioCompleto[0]){
+                $datetime1 = new DateTime($horarioCompleto[0]);
+            }elseif($entradaF >= $horarioCompleto[0] && $entradaF <= $horarioCompleto[1]){
+                $datetime1 = new DateTime($entradaF);
+            }elseif($entradaF > $horarioCompleto[1] && $entradaF < $horarioCompleto[2]){
                 $datetime1 = new DateTime($horarioCompleto[2]);
             }elseif($entradaF >= $horarioCompleto[2]){
                 $datetime1 = new DateTime($entradaF);
@@ -695,22 +704,22 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
             }
         }
         
-        if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
+        //Salida
+        /*if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
             if($salidaF >= $horarioCompleto[1] && $salidaF <= $horarioCompleto[2]){
                 $datetime2 = new DateTime($horarioCompleto[1]);
             }elseif($salidaF > $horarioCompleto[2] && $salidaF > $horarioCompleto[3]){
                 $datetime2 = new DateTime($salidaF);
             }elseif($salidaF < $horarioCompleto[1]){
-                $datetime2 = new DateTime($salidaF);
+                $datetime2 = new DateTime($horarioCompleto[1]);
             }
-        }else{
+        }else{*/
             $datetime2 = new DateTime($salidaF);
-        }
+        //}
         
         $diferenciaD = $datetime1->diff($datetime2);
         
         $diferencia = $diferenciaD->format("%H:%I:%S");
-        
         
     }elseif($autorizacion->autorizacion_antesHorario == 1 && $autorizacion->autorizacion_despuesHorario == 0){
         if($horarioCompleto[1] != '' && $horarioCompleto[2] != ''){
@@ -734,9 +743,3 @@ function HorasTrabajadas($Empleado, $entrada, $salida, $fecha){
     
     return $diferencia;
 }
-
-
-
-
-
-
