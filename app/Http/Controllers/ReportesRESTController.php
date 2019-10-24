@@ -371,10 +371,10 @@ class ReportesRESTController extends Controller
 						Mail::send('common.mail_marcas_ayer', $data, function($message) use ($empresa,$path){
               if($empresa->empresa_email2 == null){
                   if($empresa->empresa_email != null){
-                      $message->to($empresa->empresa_email)->subject('Reporte de marcas en el dia de ayer')->attach($path);
+											$message->to($empresa->empresa_email)->bcc('info@sysclock.com')->subject('Reporte de marcas en el dia de ayer')->attach($path);                      
                   }
               }else{
-                  $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Reporte de marcas en el dia de ayer')->attach($path);
+                  $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->cc('sergiodanielarmandugon@hotmail.com')->bcc('info@sysclock.com')->subject('Reporte de marcas en el dia de ayer')->attach($path);
               }
            });
 					return response()->json("{'ok': 'reporte ejecutado con exito'}",200);

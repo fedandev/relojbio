@@ -11,7 +11,7 @@
   
         git push -u origin desarrollo
         
-3) Ir a CPANEL y actualizar el repositorio para que se suban los cambios al ambiente de https://prueba1.sysclock.com:
+3) Ir a CPANEL y actualizar el repositorio para que se suban los cambios al ambiente de https://test.sysclock.com:
 
         GIT VERSION CONTROL
             
