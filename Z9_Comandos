@@ -22,3 +22,7 @@ crear archivo .htaccess en carpeta root que contenga lo siguiente:
     RewriteEngine On
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+
+php artisan cache:clear
+chmod -R 777 storage/

@@ -15,6 +15,7 @@
         "illuminate/database": "^5.8",
         "karlmonson/laravel-ping": "^1.0",
         "laravel/framework": "5.8.*",
+        "laravel/telescope": "^2.1",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "~2.1.0",
         "maatwebsite/laravel-excel-light": "dev-master",

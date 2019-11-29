@@ -9,15 +9,14 @@ class CreateAutorizacionsTable extends Migration
 	{
 		Schema::create('autorizacions', function(Blueprint $table) {
             $table->increments('id');
-            $table->date('autorizacion_dia');
-            $table->string('autorizacion_tipo');
+            $table->date('autorizacion_fechadesde');
+						$table->date('autorizacion_fechahasta');
+            $table->string('autorizacion_antesHorario');
+            $table->string('autorizacion_despuesHorario');
             $table->string('autorizacion_descripcion');
-            $table->string('autorizacion_autorizado');
-            $table->integer('fk_empleado_id')->unsigned();
-            $table->integer('fk_user_id')->unsigned()->index();
-        	$table->foreign('fk_empleado_id')->references('id')->on('empleados');
-        	$table->foreign('fk_user_id')->references('id')->on('users');
-        	$table->index(['fk_empleado_id','autorizacion_dia', 'autorizacion_tipo'],"index_02");
+            $table->integer('fk_empleado_id')->unsigned();            
+        		$table->foreign('fk_empleado_id')->references('id')->on('empleados');    
+        		$table->index(['fk_empleado_id','autorizacion_fechadesde', 'autorizacion_fechahasta','autorizacion_antesHorario', 'autorizacion_despuesHorario'],'autorizacions02');
             $table->timestamps();
         });
 	}

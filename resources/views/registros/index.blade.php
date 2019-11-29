@@ -144,11 +144,9 @@
 
 @section('scripts')
     <script src="{{ asset('js/plugins/jquery.mask.js') }}" type="text/javascript"></script>
-    
 
     <script>
         $(document).ready(function(){
-            
             var ci = $("#ci").attr('value');
             $('#ci option[value="'+ ci +'"]').prop("selected", true);
            
@@ -160,7 +158,6 @@
 
             //get base URL *********************
             var url = $('#url').val();
-        
         
             //display modal form for creating new product *********************
             $('#btn_add').click(function(){
@@ -249,14 +246,6 @@
                     }
                 });
             });
-        
-        
-     
-            
-        });
-                  
+        }); 
     </script>
-    
-    
-
 @endsection

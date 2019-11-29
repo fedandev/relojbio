@@ -7,7 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Mensaje extends Model implements Auditable
 {       
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['mensaje_titulo','mensaje_mensaje', 'mensaje_fecha', 'mensaje_leido', 'mensaje_usuario_envia', 'fk_conversacion_id'];
+    protected $fillable = ['mensaje_mensaje', 'mensaje_fecha', 'mensaje_leido', 'mensaje_usuario_envia', 'fk_conversacion_id'];
     public $timestamps = false;
     
     public function Conversacion(){

@@ -1,3 +1,10 @@
+@php
+    // La funcion ajuste y formatFecha estan en el archivo app/http/helper.php
+    
+    $logo = ajuste('system_logo');
+    $empresa = ajuste('company_name');
+    
+@endphp
 <!DOCTYPE html PUBLIC>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -12,7 +19,7 @@
     				<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #cccccc; border-collapse: collapse;">
     					<tr>
     						<td align="center" bgcolor="#ffffff" style="padding: 40px 0 30px 0; color: #153643; font-size: 28px; font-weight: bold; font-family: Arial, sans-serif;">
-    							<img src="https://reloj-biometrico-v3-fsantucho.c9users.io/images/Logo-SysClock.png" alt="Creating Email Magic" width="400" height="100" style="display: block;" />
+    							<img src="{{ public_path().'/images/'. $logo }}" alt="Creating Email Magic" width="400" height="100" style="display: block;" />
     						</td>
     					</tr>
     					<tr>
@@ -51,7 +58,7 @@
     												</td>
     												<td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
     												<td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
-    													<a href="#" style="color: #ffffff;">
+    													<a href="https://www.facebook.com/SysClockBiometricSolutions/" style="color: #ffffff;">
     														<img src="https://cdn.icon-icons.com/icons2/1211/PNG/512/1491579586-yumminkysocialmedia21_83091.png" alt="Facebook" width="38" height="38" style="display: block;" border="0" />
     													</a>
     												</td>

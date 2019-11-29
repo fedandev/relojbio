@@ -11,16 +11,17 @@ Auth::routes();
     Route::get('/', 'HomeController@dashboard');
     Route::get('/home', 'HomeController@dashboard');
     Route::get('/dashboard', 'HomeController@dashboard')->name('main');
+    Route::get('/dashboard-empleado', 'HomeController@dashboardempleado');
 
     // van antes de los resource, sino no toma la ruta
     Route::get('/registros/load', 'RegistrosController@Excel')->name('registros.load');
     Route::get('/registros/search', 'RegistrosController@search')->name('registros.search');
 
     
-    Route::get('/dispositivos/download/{dispositivo}', 'DispositivosController@download')->name('dispositivos.download');
-    Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios');
-    Route::get('licencia/{id}','LicenciasController@getDiasLicencia');
-    Route::get('tipolicencia/{id}','LicenciasController@getTiposLicencia');
+    Route::get('/dispositivos/download/{dispositivo}', 'DispositivosController@download')->name('dispositivos.download')->where('dispositivo', '[0-9]+');
+    Route::get('trabajas/horarios/{id}', 'TrabajasController@getHorarios')->where('id', '[0-9]+');
+    Route::get('licencia/{id}','LicenciasController@getDiasLicencia')->where('id', '[0-9]+');
+    Route::get('tipolicencia/{id}','LicenciasController@getTiposLicencia')->where('id', '[0-9]+');
     Route::get('/registros/modal/{registro_id?}', 'RegistrosController@showModal');
     Route::get('/marcaempleado', 'MarcaEmpleadosController@index');
     
@@ -88,5 +89,5 @@ Auth::routes();
     Route::post('login/locked', 'Auth\LoginController@unlock')->name('login.unlock');
     
     Route::get('registros/download/{name_file}', 'RegistrosController@download')->name('registros.download');
-    Route::get('/ReporteEmail/{key}', 'ReportesRESTController@empleadosMarcasAyer');
-    
+    Route::get('/ReporteEmail', 'ReportesRESTController@empleadosMarcasAyer');
+    Route::get('/tablon', 'TareasAutomaticasController@ActualizaTablon');

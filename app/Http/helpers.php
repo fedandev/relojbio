@@ -45,22 +45,22 @@ function controllerFromRoute(){
     return $controller;
 }
 
-function cacheQuery($sql, $timeout = 60) {
-    $key = md5($sql);
-    if(Cache::has($key)){
-         $content = Cache::get($key);
-         return $content;
-    }
+// function cacheQuery($sql, $timeout = 60) {
+//     $key = md5($sql);
+//     if(Cache::has($key)){
+//          $content = Cache::get($key);
+//          return $content;
+//     }
     
-    return Cache::remember($key, $timeout, function() use ($sql) {
-        return DB::select(DB::raw($sql));
-    });
-}
+//     return Cache::remember($key, $timeout, function() use ($sql) {
+//         return DB::select(DB::raw($sql));
+//     });
+// }
  
 //$cache = $this->cacheQuery("SOME COMPLEX JOINS ETC..", 30);
 
 function getMenusUser(){
-    $menus = cacheQuery("select * from menus where menu_habilitado=1 and id in (select fk_menu_id from modulos_menus where fk_modulo_id in (select fk_modulo_id from perfiles_modulos where fk_perfil_id in (select fk_perfil_id from perfiles_usuarios where fk_user_id = ". auth()->user()->id . " )))", 30);
+    $menus = DB::select("select * from menus where menu_habilitado=1 and id in (select fk_menu_id from modulos_menus where fk_modulo_id in (select fk_modulo_id from perfiles_modulos where fk_perfil_id in (select fk_perfil_id from perfiles_usuarios where fk_user_id = ". auth()->user()->id . " )))");
     return $menus;
 }
 
@@ -91,7 +91,7 @@ function debug_to_console( $data ) {
 }
 
 function menuHabilitado( $controller, $permiso ) {
-    $menu = cacheQuery("SELECT * FROM menus WHERE menu_formulario = '". $controller . "'");
+    $menu = DB::select("SELECT * FROM menus WHERE menu_formulario = '". $controller . "'");
     //$menu = DB::select("SELECT * FROM menus WHERE menu_formulario = '". $controller . "'");
     if(count($menu) > 0){
         
@@ -566,7 +566,7 @@ function v_inout($fdesde,$fhasta, $cedula = ''){
     $query = $query." group by r1.registro_hora order by r1.registro_hora) t order by r_cedula, r_fecha, r_entrada;";
 
     //return $registros = DB::select($query);
-    return $registros = cacheQuery($query);
+    return $registros = DB::select($query);
 }
 
 // Si en el mismo dia para el mismo empleado, existe la misma salida en 2 registros, es una inconsitencia. analiza datos devueltos en v_inout funcion de este archivo (la vista no la uso mas porque anda muy lento)

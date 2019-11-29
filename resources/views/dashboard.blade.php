@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-
-
 @section('content')
     <div class="wrapper wrapper-content animated fadeIn">
         <div class="row">

@@ -58,7 +58,7 @@
     												</td>
     												<td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
     												<td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
-    													<a href="#" style="color: #ffffff;">
+    													<a href="https://www.facebook.com/SysClockBiometricSolutions/" style="color: #ffffff;">
     														<img src="https://cdn.icon-icons.com/icons2/1211/PNG/512/1491579586-yumminkysocialmedia21_83091.png" alt="Facebook" width="38" height="38" style="display: block;" border="0" />
     													</a>
     												</td>

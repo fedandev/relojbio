@@ -49,8 +49,6 @@ y crear un registro nuevo por cada fecha del periodo ingresado.
 
 - Ver si se esta calculando a los empleados la diferencia de horas
 
-- Autorizacion de horas extras (pensar como lo vamos a hacer) (agregar botones para autorizar y rechazar en autorizacions, cargar tabla desde carga de registros)
-
 - Licencia_detalle arreglar formularios, aplicacion etc.
     - Se crea funcion para crear registros cuando se aplica la licenica y reste los días tomados. (Chequear mas a fondo)
     - Crear regla donde no pueda asignar licencia a un periodo de fecha donde ya tenga otra asignada.
@@ -119,3 +117,4 @@ la suma de todas las horas.
 - Arreglar reporte de horas extras resumidas, no esta teniendo en cuenta el minimo_extras por día, sino que lo hace a lo ultimo y esta mal.
 - Se arreglo Auditoria, se habia deshabilitado en version anterior por errores.
 - Se agrega reporte para ver los registros creados manualmente.
+- Autorizacion de horas extras (pensar como lo vamos a hacer) (agregar botones para autorizar y rechazar en autorizacions, cargar tabla desde carga de registros)

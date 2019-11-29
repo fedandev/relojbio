@@ -11,7 +11,9 @@ use App\Models\Ajuste;
 use App\Models\Registro;
 use App\Models\Empleado;
 use App\Models\Trabaja;
+use App\Models\Perfil;
 use App\Models\Estadistica;
+use App\User;
 use DateTime;
 use Carbon\Carbon;
 use Mail;
@@ -33,6 +35,43 @@ class HomeController extends Controller
 	
     }
  
+    public function dashboardempleado(){
+        $empleado_cedula = auth()->user()->fk_empleado_cedula;
+        
+        //DATOS CARDS
+        $fechaActual = new DateTime();
+        $hoy = $fechaActual->format('Y-m-d');
+        
+        $fechaActual->modify('first day of this month');
+        
+        $f_inicio_mes = $fechaActual->format('Y-m-d');
+        
+        $fechaActual->modify('last day of this month');
+        
+        $f_fin_mes = $fechaActual->format('Y-m-d');
+        
+        $horasTrabajadas = v_inout($f_inicio_mes, $f_fin_mes, $empleado_cedula);
+        $tiempoTrabajado = new SumaTiempos();
+        foreach($horasTrabajadas as $registro){
+            if(!is_null($registro->r_total_horas )){
+                $fecha = $registro->r_fecha;
+                $fechaSalida = $registro->r_salida;
+                
+                $inconsitencia = inconsistencia_1($horasTrabajadas, $empleado_cedula , $fecha, $fechaSalida );
+                
+                if($inconsitencia == 'N'){
+                     $tiempoTrabajado->sumaTiempo(new SumaTiempos($registro->r_total_horas));
+                }
+               
+            }
+            
+        }
+        $horas = $tiempoTrabajado->verTiempoFinal();
+        $registros = Registro::where('fk_empleado_cedula', '=', $empleado_cedula)->whereBetween('registro_fecha', [$f_inicio_mes, $f_fin_mes])->orderby('registro_fecha')->orderby('registro_hora')->get();
+    
+        return view('dashboard-empleado', compact('registros','horas'));
+    }
+    
     public function advertencias(){
         $trabajas = Trabaja::with(['empleado','Turno'])->get();
         
@@ -357,10 +396,18 @@ class HomeController extends Controller
     }
     
     public function dashboard(){
-        /*if (auth()->user()->fk_empleado_cedula){
-             return redirect()->route('marcaempleado.index');
-        }*/
+        $empleado_cedula = auth()->user()->fk_empleado_cedula;
+        $User = User::where('fk_empleado_cedula',$empleado_cedula)->first();
         
+        $sql= "SELECT * FROM perfiles_usuarios WHERE fk_user_id='".$User->id."'" ;
+
+        $perfil_user =  DB::select($sql);
+        
+        $perfil = Perfil::where('id', $perfil_user[0]->fk_perfil_id)->first();
+        
+        if ($perfil->id == 6){
+             return $this->dashboardempleado();
+        }
         
         $this->ChequeoLicencia();
         $advertencias = $this->advertencias();
@@ -608,7 +655,7 @@ class HomeController extends Controller
                     $f_inicio = $horario_entrada_2->format('Y-m-d H:i:s');
                     $f_fin = $horario_salida->format('Y-m-d H:i:s');
                     $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."' order by registro_hora limit 1" ;
-                    $reg_sql =  cacheQuery($sql);
+                    $reg_sql =  DB::select($sql);
                     
                     if($reg_sql[0]->registro_hora == $registro_hora_d->format('Y-m-d H:i:s')){
                         $ok='S';
@@ -642,7 +689,7 @@ class HomeController extends Controller
                             $f_inicio = $horario_finbrake_2->format('Y-m-d H:i:s');
                             $f_fin = $horario_salida->format('Y-m-d H:i:s');
                             $sql= "SELECT registro_hora FROM registros WHERE registro_hora between '".$f_inicio."' and  '".$f_fin."'  AND registro_tipo='I'  AND fk_empleado_cedula = '".$empleado->empleado_cedula."'  order by registro_hora limit 1" ;
-                            $reg_sql =  cacheQuery($sql);
+                            $reg_sql =  DB::select($sql);
                             
                             if($reg_sql){
                                 if($reg_sql[0]->registro_hora == $registro_hora_d->format('Y-m-d H:i:s')){
@@ -761,7 +808,7 @@ class HomeController extends Controller
         $end_date= new DateTime($hoy);
         
         //$Empleados =  Empleado::where('empleado_estado' ,"=", "Activo")->get();
-        $Empleados =  cacheQuery("Select * from empleados where empleado_estado = 'Activo' ");
+        $Empleados =  DB::select("Select * from empleados where empleado_estado = 'Activo' ");
         
         
         for($i = $start_date; $i <= $end_date; $i->modify('+1 day')){
@@ -790,7 +837,7 @@ class HomeController extends Controller
     
     public function rankingEmpleados($f_inicio, $f_fin){
         $rankingEmpleados =[];
-        $Empleados =  cacheQuery("Select * from empleados where empleado_estado = 'Activo' ");
+        $Empleados =  DB::select("Select * from empleados where empleado_estado = 'Activo' ");
         $iEmpleados = 0;
         $tiempoAcumulado = new SumaTiempos();    
        
