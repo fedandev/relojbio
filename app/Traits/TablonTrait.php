@@ -53,7 +53,7 @@ trait TablonTrait
            
             
             $debe_trabajar = 'S';
-            if ($h_debe_trabajar == '00:00:00'){
+            if ($h_debe_trabajar == '00:00:00' or $horario_Fecha[0] != ''){
               $debe_trabajar = 'N';
             }
             
@@ -65,6 +65,8 @@ trait TablonTrait
             $es_medio_horario = 'N';
             $es_nocturno_horario = 'N';
             $h_extras_auth = 'N';
+                     
+            
             //CONTROLAR QUE NO EXISTE PARA FECHA CEDULA REGISTRO, SI EXISTE ACTUALIZAR DATOS.
             $tablon = Tablon::where('tablon_fk_empleado_cedula','=', $cedula)->where('tablon_fecha','=',$fecha)->first();
            
