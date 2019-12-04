@@ -7,6 +7,8 @@ use App\Traits\TablonTrait;
 class TareasAutomaticasController extends Controller
 {
     use TablonTrait;
+  
+  
     public function ActualizaTablon(){
       
       $ok = $this->Tablon();

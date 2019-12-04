@@ -95,8 +95,7 @@ function menuHabilitado( $controller, $permiso ) {
     //$menu = DB::select("SELECT * FROM menus WHERE menu_formulario = '". $controller . "'");
     if(count($menu) > 0){
         
-        $menu_id = $menu[0]->id;
-        debug_to_console('menuid:'. $menu_id);
+        $menu_id = $menu[0]->id;       
       
         $permiso = DB::select('select * from permisos where id= :id_permiso and id in 
                                 (select permiso_id from  perfiles_permisos where perfil_id in 
@@ -129,14 +128,15 @@ function formatFecha( $date , $format_fecha = null) {
 
 function horarioAfecha($idEmpleado, $fecha){
     $trabaja = Trabaja::where('fk_empleado_id', '=', $idEmpleado)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->first();
-    $horario[0] = '';
-    $horario[1] = '';
-    $horario[2] = '';
-    $horario[3] = '';
-    $horario[4] = '';
-    $horario[5] = '';
-    $horario[6] = 'N';
-
+    $horario[0] = ''; // horario_entrada
+    $horario[1] = ''; // horario_comienzobrake
+    $horario[2] = '';	// horario_finbrake
+    $horario[3] = ''; // horario_salida
+    $horario[4] = ''; // horario_tiempotarde
+    $horario[5] = ''; // horario_salidaantes
+    $horario[6] = 'N';  //Si hay brake
+		$horario[7] = 'N';  //Si es medio horario
+	
     if(!is_null($trabaja)){
         if(!is_null($trabaja->fk_horariorotativo_id)){
            
@@ -200,7 +200,7 @@ function horarioAfecha($idEmpleado, $fecha){
                         $horario[4] = $trabaja->turno->horario->horario_tiempotarde;
                         $horario[5] = $trabaja->turno->horario->horario_salidaantes;
                     }
-                    
+                    $horario[7] = 'S'; 
                 }
             }else{
                 $horario[0] = "00:00:00";
@@ -362,10 +362,8 @@ function RegistrosLibres($arrayDias, $cedulaEmpleado, $tipoLibre, $entrada, $sal
     }
 }
 
-function existeLicencia($fechaInicio, $fechaFin, $fk_licencia_id ){
-	debug_to_console($fk_licencia_id);
-	$cant_licencias= LicenciaDetalle::whereBetween('fecha_desde',[$fechaInicio, $fechaFin])->where('fk_licencia_id', '=', $fk_licencia_id)->count();
-	debug_to_console($cant_licencias);
+function existeLicencia($fechaInicio, $fechaFin, $fk_licencia_id ){	
+	$cant_licencias= LicenciaDetalle::whereBetween('fecha_desde',[$fechaInicio, $fechaFin])->where('fk_licencia_id', '=', $fk_licencia_id)->count();	
 	if ($cant_licencias > 0){
 		return Redirect()->back()->withErrors(['Ya existe licencia para el periodo de fecha seleccionado.']);
 	}

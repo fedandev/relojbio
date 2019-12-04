@@ -21,9 +21,8 @@ class ReportesRESTController extends Controller
 // 					//return response()->json("{'error': 'no autorizado'}",401);
 // 				}
 			      
-        $ayer = date('Y-m-d', strtotime('yesterday')); 
-				
-				$ayer = '2019-11-23';
+        $ayer = date('Y-m-d', strtotime('yesterday'));			
+		
 				$fechainicio = $ayer;
         $fechafin = $ayer;
         $registros = [];

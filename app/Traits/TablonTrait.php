@@ -3,6 +3,9 @@
 namespace App\Traits;
 use App\Models\Tablon;
 use App\Models\Empleado;
+use App\Models\Licencia;
+use App\Models\Feriado;
+use App\Models\Autorizacion;
 use App\Traits\RepHorasExtrasResumidasTrait;
 use App\Traits\RepLlegadasTardesTrait;
 trait TablonTrait
@@ -10,11 +13,18 @@ trait TablonTrait
     use RepHorasExtrasResumidasTrait, RepLlegadasTardesTrait;
   
     public function Tablon()
-    {
-       
-      $fechainicio = '2019-11-23';
-      $fechafin = '2019-11-23';
-      
+    {      
+      $hora_nocturna = ajuste('nocturnal_start'); 
+      $hoy = date('Y-m-d', strtotime('now'));      
+      $desde = ajuste('tablon_fecha_desde');
+      if($desde != ''){
+        $fechainicio = $desde;  
+      }else{
+        $fechainicio = $hoy;
+      }
+     
+      $fechafin = $hoy;
+
       $empleados = Empleado::all();
       $fecha = $fechainicio;
       while (strtotime($fecha) <= strtotime($fechafin)) {         
@@ -50,21 +60,51 @@ trait TablonTrait
               $h_llegadas_tardes = $rHLT[0]['diferencia'];
             }
             
-           
+             
             
             $debe_trabajar = 'S';
-            if ($h_debe_trabajar == '00:00:00' or $horario_Fecha[0] != ''){
+            if ($h_debe_trabajar == '00:00:00' or $horario_Fecha[0] == ''){
               $debe_trabajar = 'N';
             }
             
             
             $es_dia_licencia = 'N';
+            $licencia = Licencia::where('fk_empleado_id', '=',$cedula)->with(['licencia_detalles' => function ($query) {
+                $query->where('fecha_desde', '<=', $fecha)->where('fecha_hasta','>=', $fecha);
+            }])->first();
+            if($licencia != null){
+              $es_dia_licencia ='S';
+            }
+            
             $es_dia_libre = 'N';
+            if ($debe_trabajar == 'N'){
+              $es_dia_libre = 'S';
+            }            
+            
             $es_dia_feriado = 'N';
-            $es_dia_facturable = 'N';
-            $es_medio_horario = 'N';
+            $feriado = Feriado::where('feriado_fecha', '=',$fecha)->where('feriado_laborable','=',0)->first();
+            if($feriado !=null) {
+              $es_dia_feriado = 'S';
+            }
+            
+            $es_dia_facturable = 'S';
+            $es_medio_horario = $horario_Fecha[7];
+        
             $es_nocturno_horario = 'N';
-            $h_extras_auth = 'N';
+            if($horario_Fecha[7] >=$hora_nocturna){
+              $es_nocturno_horario = 'S';
+            }
+            
+            $h_extras_auth = '';
+            if ($h_extras !='' and $h_extras!= '00:00:00'){
+              $autorizacion = Autorizacion::where('fk_empleado_id','=',$empleado->id)->where('autorizacion_fechadesde','<=',$fecha)->where('autorizacion_fechahasta','>=', $fecha)->first();  
+              if($autorizacion != null){                
+                $h_extras_auth = 'N';
+                if($autorizacion->autorizacion_antesHorario==1 or $autorizacion->autorizacion_despuesHorario==1){
+                  $h_extras_auth = 'S';
+                }
+              }
+            }
                      
             
             //CONTROLAR QUE NO EXISTE PARA FECHA CEDULA REGISTRO, SI EXISTE ACTUALIZAR DATOS.
@@ -104,7 +144,7 @@ trait TablonTrait
              
             
 
-          }//Fin Empleados
+          } //Fin Empleados
           $fecha = date("Y-m-d", strtotime("+1 day", strtotime($fecha)));
         
         
