@@ -95,7 +95,7 @@ trait TablonTrait
             $es_medio_horario = $horario_Fecha[7];
         
             $es_nocturno_horario = 'N';
-            if($horario_Fecha[7] >=$hora_nocturna){
+            if($horario_Fecha[0] >=$hora_nocturna){
               $es_nocturno_horario = 'S';
             }
             
