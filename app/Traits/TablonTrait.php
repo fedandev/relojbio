@@ -8,6 +8,7 @@ use App\Models\Feriado;
 use App\Models\Autorizacion;
 use App\Traits\RepHorasExtrasResumidasTrait;
 use App\Traits\RepLlegadasTardesTrait;
+use Log;
 trait TablonTrait
 {
     use RepHorasExtrasResumidasTrait, RepLlegadasTardesTrait;
@@ -27,6 +28,9 @@ trait TablonTrait
 
       $empleados = Empleado::all();
       $fecha = $fechainicio;
+      
+      Log::info("   TABLON: fecha desde: ". $fechainicio);
+      Log::info("   TABLON: fecha fin: ". $fechafin);
       while (strtotime($fecha) <= strtotime($fechafin)) {         
    
         
@@ -149,6 +153,9 @@ trait TablonTrait
         
         
       } //Fin fechas
+      
+      Log::info("   TABLON FIN: fecha: ". $fecha);
+      
       
     }// fin Tablon
 
