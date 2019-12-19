@@ -117,8 +117,10 @@
                                     <i class="fa fa-trophy fa-5x"></i>
                                 </div>
                                 <div class="col-sm-3">
-                                    @if($rankingEmpleados[0]['porcentaje'] <> 0)
-                                    <h3 class="float-right">#1 {{  $rankingEmpleados[0]['empleado']}} </h3>
+                                    @if($rankingEmpleados <> null)
+                                      @if($rankingEmpleados[0]['porcentaje'] <> 0)
+                                      <h3 class="float-right">#1 {{  $rankingEmpleados[0]['empleado']}} </h3>
+                                      @endif
                                     @endif
                                 </div>
                             </div>

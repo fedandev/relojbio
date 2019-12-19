@@ -22,7 +22,7 @@ trait TablonTrait
       }else{
         $fechainicio = $hoy;
       }
-     
+    
       $fechafin = $hoy;
 
       $empleados = Empleado::all();

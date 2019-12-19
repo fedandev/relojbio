@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Traits\TablonTrait;
-
+use Log;
 class Tablon extends Command
 {
      use TablonTrait;
@@ -39,6 +39,8 @@ class Tablon extends Command
      */
     public function handle()
     {
-       $ok = $this->Tablon();      
+      Log::info("INICIA ejecucion de tablon: ". date('Y-m-d H:i:s',strtotime('now')));
+      $ok = $this->Tablon();      
+      Log::info("FINALIZA ejecucion de tablon: ". date('Y-m-d H:i:s',strtotime('now')));
     }
 }

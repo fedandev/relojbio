@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-       $schedule->command('registros:delete')->dailyAt('15:00');
+       $schedule->command('registros:delete')->dailyAt('15:00');  //12:00hs uruguay, 15:00hs servidor
        $schedule->command('registros:marcas_ayer')->dailyAt('15:00');     
-       $schedule->command('tablon:update')->dailyAt('15:00');
+       $schedule->command('tablon:update')->dailyAt('01:00');   //22:00hs uruguay, 01:00hs servidor
        $schedule->command('licencia:check')->dailyAt('15:00');
     }
 

@@ -35,6 +35,153 @@ class HomeController extends Controller
         return view('home', compact('advertencias'));
 	
     }
+	
+	  public function dashboard(){
+        $empleado_cedula = auth()->user()->fk_empleado_cedula;
+        $User = User::where('fk_empleado_cedula',$empleado_cedula)->first();
+        
+        $sql= "SELECT * FROM perfiles_usuarios WHERE fk_user_id='".$User->id."'" ;
+
+        $perfil_user =  DB::select($sql);
+        
+        $perfil = Perfil::where('id', $perfil_user[0]->fk_perfil_id)->first();
+        
+        if ($perfil->id == 6){
+             return $this->dashboardempleado();
+        }
+        
+        $this->ChequeoLicencia();
+        $advertencias = $this->advertencias();
+        
+         
+        //DATOS CARDS (DATOS DEL MES ACTUAL)
+        $fechaActual = new DateTime();
+				//$fechaActual = DateTime::createFromFormat('Y-m-d', '2019-10-31');
+				
+        $hoy = $fechaActual->format('Y-m-d');
+        
+        $fechaActual->modify('first day of this month');
+        //$fechaActual->modify('first day of february');
+        
+        $f_inicio_mes = $fechaActual->format('Y-m-d');
+        
+        $fechaActual->modify('last day of this month');
+        //$fechaActual->modify('last day of february');
+        
+        $f_fin_mes = $fechaActual->format('Y-m-d');      
+			
+				$horas = $this->RecorroTablon($f_inicio_mes, $f_fin_mes);
+        $HorasTrabajadas = $horas[0];
+        $LlegadasTardes = $horas[1];
+        $HorasExtras = $horas[2];      
+        $TotalHorasAtrabajar = $horas[3];			
+				$rankingEmpleados = $horas[4];
+		
+				//PORCENTAJE
+				$porcentajeHorasAtrabajar = 0; 
+				$explode = explode(":", $HorasTrabajadas);	
+				$segHorasTrabajadas     = (((int)$explode[0]) * 3600)      +  (((int)$explode[1]) * 60)     +  (((int)$explode[2]));
+
+				$explode = explode(":", $TotalHorasAtrabajar);
+				$segTotalHorasAtrabajar = (((int)$explode[0]) * 3600)      +  (((int)$explode[1]) * 60)     +  (((int)$explode[2]));
+
+				if($segHorasTrabajadas != 0 && $segTotalHorasAtrabajar !=0){
+					 $porcentajeHorasAtrabajar = ($segHorasTrabajadas*100)/$segTotalHorasAtrabajar;
+						$porcentajeHorasAtrabajar = round($porcentajeHorasAtrabajar,2); 
+				}
+        
+      
+
+        //DATOS GRAFICA
+        $fechaActual = new DateTime();
+        $fechaActual2 = new DateTime();
+        $hoy = $fechaActual->format('Y-m-d');
+        //Horas de todo el año
+        $months = array("January", "February", "March","April", "May","June", "July", "August", "September", "October", "November", "December");
+        $arrayHorasTrabajadas = array();
+        $arrayLlegadasTardes = array();
+        $arrayHorasExtras = array();
+        $mesAnterior = $fechaActual2->modify('-1 month');
+        $mesAnterior = $mesAnterior->format('Y-m-d');
+        $tiempoTrabajadoAnual = new SumaTiempos();
+        $horasTrabajadasMesAnterior = '00:00';
+        $HorasTrabajadasAnual = '00:00';
+        
+        foreach ($months as $month) {
+            $LlegadasTardes2 = '00:00';
+            $HorasExtras2 = '00:00';
+            $HorasTrabajadas2 = '00:00';
+            
+            
+            $fechaActual->modify('first day of '.$month.' '. date('Y'));
+            $f_inicio_mes = $fechaActual->format('Y-m-d');
+            
+            $fechaActual->modify('last day of '.$month.' '. date('Y'));
+            $f_fin_mes = $fechaActual->format('Y-m-d');
+            
+            
+            $Estadistica = Estadistica::where('fecha_desde','>=', $f_inicio_mes)->where('fecha_hasta','<=', $f_fin_mes )->first();
+           
+           
+            if($Estadistica){
+                $HorasTrabajadas2 = $Estadistica->total_horas_trabajadas;
+                $LlegadasTardes2  = $Estadistica->total_llegadas_tardes;
+                $HorasExtras2     = $Estadistica->total_horas_extras;
+                
+            }else{
+                
+                if ($f_fin_mes < $hoy){
+									
+										$horas2 = $this->RecorroTablon($f_inicio_mes, $f_fin_mes);
+										$HorasTrabajadas2 = $horas2[0];
+										$LlegadasTardes2 = $horas2[1];
+										$HorasExtras2 = $horas2[2];      
+										$TotalHorasAtrabajar2 = $horas2[3];									
+								
+                    $Estadistica = new Estadistica();
+										$Estadistica->total_horas_trabajadas = $HorasTrabajadas2;
+										$Estadistica->total_llegadas_tardes = $LlegadasTardes2;
+										$Estadistica->total_horas_extras = $HorasExtras2;
+										$Estadistica->fecha_desde = $f_inicio_mes;
+										$Estadistica->fecha_hasta = $f_fin_mes;		
+										$Estadistica->total_debe_trabajar = $TotalHorasAtrabajar2;
+										$Estadistica->save();
+                }
+            }
+            
+            $explode = explode(":", $HorasTrabajadas2);
+            $HorasNum = $explode[0];
+            array_push($arrayHorasTrabajadas, $HorasNum);
+            
+            $explode = explode(":", $LlegadasTardes2);
+            $HorasNum = $explode[0];
+            array_push($arrayLlegadasTardes, $HorasNum);
+            
+            $explode = explode(":", $HorasExtras2);
+            $HorasNum = $explode[0];
+            array_push($arrayHorasExtras, $HorasNum);
+            
+            if($mesAnterior >= $f_inicio_mes && $mesAnterior <= $f_fin_mes){
+                $horasTrabajadasMesAnterior = $HorasTrabajadas2;
+            }
+            
+            if($HorasTrabajadas2 != '00:00'){
+                 $tiempoTrabajadoAnual->sumaTiempo(new SumaTiempos($HorasTrabajadas2));
+            }
+            
+        }
+       
+        $HorasTrabajadasAnual = $tiempoTrabajadoAnual->verTiempoFinal();
+        
+        $explode = explode(":", $HorasTrabajadasAnual);
+        $HorasTrabajadasAnual = $explode[0];
+        
+        $explode = explode(":", $horasTrabajadasMesAnterior);
+        $horasTrabajadasMesAnterior = $explode[0];
+        
+        
+        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas','arrayLlegadasTardes','arrayHorasExtras','horasTrabajadasMesAnterior','HorasTrabajadasAnual','rankingEmpleados', 'advertencias'));
+    }
  
     public function dashboardempleado(){
         $empleado_cedula = auth()->user()->fk_empleado_cedula;
@@ -396,152 +543,7 @@ class HomeController extends Controller
         }
     }
     
-    public function dashboard(){
-        $empleado_cedula = auth()->user()->fk_empleado_cedula;
-        $User = User::where('fk_empleado_cedula',$empleado_cedula)->first();
-        
-        $sql= "SELECT * FROM perfiles_usuarios WHERE fk_user_id='".$User->id."'" ;
-
-        $perfil_user =  DB::select($sql);
-        
-        $perfil = Perfil::where('id', $perfil_user[0]->fk_perfil_id)->first();
-        
-        if ($perfil->id == 6){
-             return $this->dashboardempleado();
-        }
-        
-        $this->ChequeoLicencia();
-        $advertencias = $this->advertencias();
-        
-         
-        //DATOS CARDS (DATOS DEL MES ACTUAL)
-        //$fechaActual = new DateTime();
-				$fechaActual = DateTime::createFromFormat('Y-m-d', '2019-10-31');
-				
-        $hoy = $fechaActual->format('Y-m-d');
-        
-        $fechaActual->modify('first day of this month');
-        //$fechaActual->modify('first day of february');
-        
-        $f_inicio_mes = $fechaActual->format('Y-m-d');
-        
-        $fechaActual->modify('last day of this month');
-        //$fechaActual->modify('last day of february');
-        
-        $f_fin_mes = $fechaActual->format('Y-m-d');      
-			
-				$horas = $this->RecorroTablon($f_inicio_mes, $f_fin_mes);
-        $HorasTrabajadas = $horas[0];
-        $LlegadasTardes = $horas[1];
-        $HorasExtras = $horas[2];      
-        $TotalHorasAtrabajar = $horas[3];			
-				$rankingEmpleados = $horas[4];
-		
-				//PORCENTAJE
-				$porcentajeHorasAtrabajar = 0; 
-				$explode = explode(":", $HorasTrabajadas);	
-				$segHorasTrabajadas     = (((int)$explode[0]) * 3600)      +  (((int)$explode[1]) * 60)     +  (((int)$explode[2]));
-
-				$explode = explode(":", $TotalHorasAtrabajar);
-				$segTotalHorasAtrabajar = (((int)$explode[0]) * 3600)      +  (((int)$explode[1]) * 60)     +  (((int)$explode[2]));
-
-				if($segHorasTrabajadas != 0 && $segTotalHorasAtrabajar !=0){
-					 $porcentajeHorasAtrabajar = ($segHorasTrabajadas*100)/$segTotalHorasAtrabajar;
-						$porcentajeHorasAtrabajar = round($porcentajeHorasAtrabajar,2); 
-				}
-        
-      
-
-        //DATOS GRAFICA
-        $fechaActual = new DateTime();
-        $fechaActual2 = new DateTime();
-        $hoy = $fechaActual->format('Y-m-d');
-        //Horas de todo el año
-        $months = array("January", "February", "March","April", "May","June", "July", "August", "September", "October", "November", "December");
-        $arrayHorasTrabajadas = array();
-        $arrayLlegadasTardes = array();
-        $arrayHorasExtras = array();
-        $mesAnterior = $fechaActual2->modify('-1 month');
-        $mesAnterior = $mesAnterior->format('Y-m-d');
-        $tiempoTrabajadoAnual = new SumaTiempos();
-        $horasTrabajadasMesAnterior = '00:00';
-        $HorasTrabajadasAnual = '00:00';
-        
-        foreach ($months as $month) {
-            $LlegadasTardes2 = '00:00';
-            $HorasExtras2 = '00:00';
-            $HorasTrabajadas2 = '00:00';
-            
-            
-            $fechaActual->modify('first day of '.$month.' '. date('Y'));
-            $f_inicio_mes = $fechaActual->format('Y-m-d');
-            
-            $fechaActual->modify('last day of '.$month.' '. date('Y'));
-            $f_fin_mes = $fechaActual->format('Y-m-d');
-            
-            
-            $Estadistica = Estadistica::where('fecha_desde','>=', $f_inicio_mes)->where('fecha_hasta','<=', $f_fin_mes )->first();
-           
-           
-            if($Estadistica){
-                $HorasTrabajadas2 = $Estadistica->total_horas_trabajadas;
-                $LlegadasTardes2  = $Estadistica->total_llegadas_tardes;
-                $HorasExtras2     = $Estadistica->total_horas_extras;
-                
-            }else{
-                
-                if ($f_fin_mes < $hoy){
-									
-										$horas2 = $this->RecorroTablon($f_inicio_mes, $f_fin_mes);
-										$HorasTrabajadas2 = $horas2[0];
-										$LlegadasTardes2 = $horas2[1];
-										$HorasExtras2 = $horas2[2];      
-										$TotalHorasAtrabajar2 = $horas2[3];									
-								
-                    $Estadistica = new Estadistica();
-										$Estadistica->total_horas_trabajadas = $HorasTrabajadas2;
-										$Estadistica->total_llegadas_tardes = $LlegadasTardes2;
-										$Estadistica->total_horas_extras = $HorasExtras2;
-										$Estadistica->fecha_desde = $f_inicio_mes;
-										$Estadistica->fecha_hasta = $f_fin_mes;		
-										$Estadistica->total_debe_trabajar = $TotalHorasAtrabajar2;
-										$Estadistica->save();
-                }
-            }
-            
-            $explode = explode(":", $HorasTrabajadas2);
-            $HorasNum = $explode[0];
-            array_push($arrayHorasTrabajadas, $HorasNum);
-            
-            $explode = explode(":", $LlegadasTardes2);
-            $HorasNum = $explode[0];
-            array_push($arrayLlegadasTardes, $HorasNum);
-            
-            $explode = explode(":", $HorasExtras2);
-            $HorasNum = $explode[0];
-            array_push($arrayHorasExtras, $HorasNum);
-            
-            if($mesAnterior >= $f_inicio_mes && $mesAnterior <= $f_fin_mes){
-                $horasTrabajadasMesAnterior = $HorasTrabajadas2;
-            }
-            
-            if($HorasTrabajadas2 != '00:00'){
-                 $tiempoTrabajadoAnual->sumaTiempo(new SumaTiempos($HorasTrabajadas2));
-            }
-            
-        }
-       
-        $HorasTrabajadasAnual = $tiempoTrabajadoAnual->verTiempoFinal();
-        
-        $explode = explode(":", $HorasTrabajadasAnual);
-        $HorasTrabajadasAnual = $explode[0];
-        
-        $explode = explode(":", $horasTrabajadasMesAnterior);
-        $horasTrabajadasMesAnterior = $explode[0];
-        
-        
-        return view('dashboard',compact('HorasTrabajadas', 'LlegadasTardes', 'HorasExtras', 'TotalHorasAtrabajar', 'porcentajeHorasAtrabajar','arrayHorasTrabajadas','arrayLlegadasTardes','arrayHorasExtras','horasTrabajadasMesAnterior','HorasTrabajadasAnual','rankingEmpleados', 'advertencias'));
-    }
+  
     
 		public function RecorroTablon($f_inicio_mes, $f_fin_mes){
 			$horas[0] = '00:00:00';  //HorasTrabajadas
