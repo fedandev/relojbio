@@ -174,7 +174,9 @@
         </div>
         
         <div class="row">
-            @include('vendor.home_layouts.table_autorizaciones', ['advertencias' => $advertencias])
+            @if($advertencias)
+              @include('vendor.home_layouts.table_autorizaciones', ['advertencias' => $advertencias])
+            @endif
         </div>
         
     </div>
