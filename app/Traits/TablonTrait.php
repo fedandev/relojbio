@@ -18,10 +18,11 @@ trait TablonTrait
       $hora_nocturna = ajuste('nocturnal_start'); 
       $hoy = date('Y-m-d', strtotime('now'));      
       $desde = ajuste('tablon_fecha_desde');
+      $ayer = date( "Y-m-d", strtotime( "-1 day", strtotime( $hoy ) ) ); 
       if($desde != ''){
         $fechainicio = $desde;  
       }else{
-        $fechainicio = $hoy;
+        $fechainicio = $ayer;
       }
     
       $fechafin = $hoy;
