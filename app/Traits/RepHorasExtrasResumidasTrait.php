@@ -4,7 +4,8 @@ namespace App\Traits;
 use App\Models\Empleado;
 use App\SumaTiempos;
 use App\Models\Feriado;
-
+use Log;
+use DateTime;
 trait RepHorasExtrasResumidasTrait
 {
     
@@ -56,9 +57,13 @@ trait RepHorasExtrasResumidasTrait
             $horas_dia = new SumaTiempos();
             $extras_sinDesc = new SumaTiempos();
             $horas_libre_feriado = new SumaTiempos();
-            
+          
+            //Log::info('+empleado: '. $empleado->empleado_cedula);
+          
             foreach($registros_sql as $registro){
-                            
+
+               // Log::info('+registro: '. $registro->r_fecha);      
+              
                 if(array_first($registros_sql) == $registro){                   //Si es el primer registro del array
                     $fecha = $registro->r_fecha;
                     $horarioCompleto = horarioAfecha($empleado->id, $fecha);    //Busco los horarios de entrada/salida del empleado en una fecha especifica
@@ -91,30 +96,53 @@ trait RepHorasExtrasResumidasTrait
 
                         $horasXdia = horarioAfecha($empleado->id, $fecha);
                         $horas = totalHorasAfecha($horasXdia);
-                        
+                        //Log::info('horasXdia: '. implode(" ",$horasXdia));  
+                        //Log::info('horas: '. $horas ); 
+                      
                         /*$ResultadoHoras = new SumaTiempos();
                         $ResultadoHoras->sumaTiempo(new SumaTiempos($horas));
                         $ResultadoHoras->restaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));*/
+                      
+                        //Log::info('horas_dia: '. $horas_dia->verTiempoFinal()); 
+                      
+                        $fechaA = "1970-01-01 " . $horas_dia->verTiempoFinal();  //horas que trabajo en el dia
+                        $fechaB = "1970-01-01 " . $horas;                        //horas que debe trabajar 
                         
-                        $fechaA = "1970-01-01 " . $horas_dia->verTiempoFinal();
-                        $fechaB = "1970-01-01 " . $horas;
+                        if($fechaA <= $fechaB ){
+                            $totalextras = '00:00:00';
+                        }else{
+                            $totalextras = date("H:i:s", strtotime($fechaA)-strtotime($fechaB));
+                        }
                         
-                        $totalextras = date("H:i:s", strtotime($fechaA)-strtotime($fechaB));
-                        
+                      
+                        //Log::info('totalextras: '. $totalextras); 
                         //$totalextras = $ResultadoHoras->verTiempoFinal();
                         
                         if($totalextras > $minimo_extras){
                             $extras_sinDesc->sumaTiempo(new SumaTiempos($totalextras));
+                            //Log::info('extras_sinDesc: '. $extras_sinDesc->verTiempoFinal()); 
                         }
-
+                      
+                        
+                      
                         $horas_trabajadas->sumaTiempo(new SumaTiempos($horas_dia->verTiempoFinal()));
-
+                      
+                        //Log::info('horas_trabajadas: '. $horas_trabajadas->verTiempoFinal()); 
+                      
                         $horasAux = new SumaTiempos();
                         $horasAux->sumaTiempo(new SumaTiempos($horas_trabajadas->verTiempoFinal()));
-
+                        
+                        //Log::info('horasAux: '. $horasAux->verTiempoFinal()); 
+                        
+                        //Log::info('horas: '. $horas); 
+                      
                         $totalextras = $horasAux->restaTiempo(new SumaTiempos($horas));
+                      
+                        //Log::info('totalextras: '. $totalextras); 
+                      
                         if($totalextras > $minimo_extras){
                             $horas_extras->sumaTiempo(new SumaTiempos($totalextras->verTiempoFinal()));
+                            //Log::info('horas_extras: '. $horas_extras->verTiempoFinal()); 
                         }
 
                         $inicio = strtotime($fechainicio);
@@ -124,17 +152,24 @@ trait RepHorasExtrasResumidasTrait
                             $fecha = date("Y-m-d", $z);
                             $horario_Fecha = horarioAfecha($empleado->id, $fecha);
                             $horas = totalHorasAfecha($horario_Fecha);
+                            //Log::info('sum1: '. $fecha. ' ; ' .$horas); 
                             $horas_debe_trabajar_sum->sumaTiempo(new SumaTiempos($horas));
                         }
+                        
+                        //Log::info('horas_debe_trabajar_sum: '. $horas_debe_trabajar_sum->verTiempoFinal()); 
+                        //Log::info('horas_trabajadas: '. $horas_trabajadas->verTiempoFinal()); 
                       
                         if($horas_trabajadas->verTiempoFinal() == '00:00:00'){
                           $horas_diff =	$horas_debe_trabajar_sum->verTiempoFinal();
+                          //Log::info('horas_diff 1: '. $horas_diff); 
                         }else{													
                           $horas_diff = date('H:i:s', strtotime($horas_debe_trabajar_sum->verTiempoFinal()) - strtotime($horas_trabajadas->verTiempoFinal()));
+                          //Log::info('horas_diff 2: '. $horas_diff); 
                         }
                         if($horas_diff>='12:00:00'){
                           $horas_diff = '00:00:00';
                         }
+                        //Log::info('horas_diff fin: '. $horas_diff); 
 
                         $r = [];
 

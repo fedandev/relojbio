@@ -846,32 +846,31 @@ class ReportesController extends Controller
     
         
         $registros_ok = $this->repHorasExtrasResumidas($fechainicio,$fechafin, $cedula, $fk_oficina_id);
-        $registros_ok = collect($registros);
-
+			
         if($registros_ok->count() > 0){
 						
 						$path = storage_path().'/app/public/empleadosMarcasAyer_'.$ayer.'.pdf';
 					 
             $pdf = PDF::loadView('pdf.empleadosMarcasAyer', compact('registros_ok','fechainicio','fechafin','oficina'))->save($path);
            	$data = array(); 			
-						$empresa = Empresa::where('empresa_estado','1')->first();
-						Mail::send('common.mail_marcas_ayer', $data, function($message) use ($empresa,$path){
-              if($empresa->empresa_email2 == null){
-                  if($empresa->empresa_email != null){
-                      $message->to($empresa->empresa_email)->subject('Reporte de marcas en el dia de ayer')->attach($path);
-                  }
-              }else{
-                  $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Reporte de marcas en el dia de ayer')->attach($path);
-              }
-           });
+// 						$empresa = Empresa::where('empresa_estado','1')->first();
+// 						Mail::send('common.mail_marcas_ayer', $data, function($message) use ($empresa,$path){
+//               if($empresa->empresa_email2 == null){
+//                   if($empresa->empresa_email != null){
+//                       $message->to($empresa->empresa_email)->subject('Reporte de marcas en el dia de ayer')->attach($path);
+//                   }
+//               }else{
+//                   $message->to($empresa->empresa_email)->cc($empresa->empresa_email2)->subject('Reporte de marcas en el dia de ayer')->attach($path);
+//               }
+//            });
 						
-            /*if($Rpdf->ajuste_valor == 'stream'){
+            if($Rpdf->ajuste_valor == 'stream'){
                 return $pdf->stream('listado.pdf');             //Ver PDF sin descargar    
             }elseif($Rpdf->ajuste_valor == 'download'){
                 return $pdf->download('listado.pdf');             //Forzar descarga de PDF
-            }*/
+            }
         }else{
-            //return back()->with('warning', 'No se encontraron datos.')->withInput();
+            return back()->with('warning', 'No se encontraron datos.')->withInput();
         }
 			
 	  }
