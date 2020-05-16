@@ -1,3 +1,15 @@
+ - arreglar reporte de faltas
+ - arreglar reporte de horas extras, desactualizados -> basarse en horas extras resumidas
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  -- CreateAndEdit TrabajasController 
         Crear controles para que un empleado no pueda tener asignado 2 horarios en el mismo periodo de tiempo.
 		 
