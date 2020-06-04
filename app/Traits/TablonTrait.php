@@ -27,7 +27,7 @@ trait TablonTrait
     
       $fechafin = $hoy;
 
-      $empleados = Empleado::all();
+      $empleados = Empleado::where('empleado_estado','Activo')->get();
       $fecha = $fechainicio;
       
       Log::info("   TABLON: fecha desde: ". $fechainicio);

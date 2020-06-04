@@ -25,7 +25,7 @@ use App\Traits\RepHorasExtrasResumidasTrait;
 
 class ReportesController extends Controller
 {
-		use RepLlegadasTardesTrait, RepHorasExtrasResumidasTrait;
+	use RepLlegadasTardesTrait, RepHorasExtrasResumidasTrait;
 	
     public function __construct(){
         //$this->middleware('auth');
@@ -56,13 +56,13 @@ class ReportesController extends Controller
         $fk_oficina_id = $request->input('fk_oficina_id');
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::all();    
+            $empleados = Empleado::where('empleado_estado','Activo');    
             $for = "S";
         }
         
@@ -116,13 +116,13 @@ class ReportesController extends Controller
         $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id != 'ALL' && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::all();    
+            $empleados = Empleado::where('empleado_estado','Activo');    
             $for = "S";
         }
         
@@ -152,7 +152,7 @@ class ReportesController extends Controller
         $cedula = $request->input('fk_empleado_cedula');
         $fk_oficina_id = $request->input('fk_oficina_id');        
 			
-				$registros_ok = $this->repLlegadasTardes($fechainicio,$fechafin, $cedula, $fk_oficina_id);    
+		$registros_ok = $this->repLlegadasTardes($fechainicio,$fechafin, $cedula, $fk_oficina_id);    
 			
         if($registros_ok->count() > 0){
             $pdf = PDF::loadView('pdf.llegadasTardes', compact('registros_ok','fechainicio','fechafin','oficina'));
@@ -336,12 +336,11 @@ class ReportesController extends Controller
         
         $fk_oficina_id = $request->input('fk_oficina_id');
         
-        
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
             $for = "S";
@@ -407,9 +406,9 @@ class ReportesController extends Controller
     public function listadoFaltas(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
         $controller = 'reportes';
-		    if (!Gate::allows('view-report', $controller)) {
+		if (!Gate::allows('view-report', $controller)) {
            return redirect()->route('main')->with('error', 'No esta autorizado a ejecutar la acción.');
-		    }
+		}
         $fechaInicio = $request->input('fechainicio');
         $fechaFin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
@@ -418,54 +417,56 @@ class ReportesController extends Controller
         $x = 0;
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL' ){
-            $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+            $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::all();
+            $empleados = Empleado::where('empleado_estado','Activo')->get();
         }
         foreach($empleados as $empleado){
             $registros_array = array();
             $registros_diff = array();
-            
-            $trabajas = Trabaja::where('trabaja_fechainicio','<=',$fechaInicio)->where('trabaja_fechafin','>=',$fechaFin)->where('fk_empleado_id',$empleado->id)->orwhere('trabaja_fechainicio','<=',$fechaInicio)->where('trabaja_fechafin','<=',$fechaFin)->where('fk_empleado_id',$empleado->id)->orwhere('trabaja_fechainicio','>=',$fechaInicio)->where('trabaja_fechafin','<=',$fechaFin)->where('fk_empleado_id',$empleado->id)->get();
-            foreach($trabajas as $trabaja){
-                if($trabaja->fk_horariorotativo_id != null){
-                    $trabajo = $trabaja->HorarioRotativo->horariorotativo_diastrabajo;
-                    $libre = $trabaja->HorarioRotativo->horariorotativo_diaslibres;
-                    $comienza = $trabaja->HorarioRotativo->horariorotativo_diacomienzo;
-                    
-                    $diasQueTrabaja = $this->Diasquetrabajarotativo($trabajo, $libre, $comienza, $fechaInicio);
-                    
-                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->whereBetween('registro_fecha', [$fechaInicio,$fechaFin])->get();
-                    
-                    foreach($registros as $registro){
-                        array_push($registros_array, $registro->registro_fecha);
-                    }
-                    
-                    $registros_diff = array_diff($diasQueTrabaja,$registros_array);
-                }elseif($trabaja->fk_turno_id != null){
-                    $diasQueTrabaja = $this->Diasquetrabaja($fechaInicio, $fechaFin, $trabaja);
-                    $registros = Registro::select('registro_fecha')->where('fk_empleado_cedula', '=', $empleado->empleado_cedula)->whereBetween('registro_fecha', [$fechaInicio,$fechaFin])->get();
+            $nombres = $empleado->empleado_nombre ." ". $empleado->empleado_apellido;
+            $cedula = $empleado->empleado_cedula;
 
-                    foreach($registros as $registro){
-                        array_push($registros_array, $registro->registro_fecha);
-                    }
-                    
-                    
-                    $registros_diff = array_diff($diasQueTrabaja,$registros_array);
-                }
-                $nombres = $trabaja->empleado->empleado_nombre ." ". $trabaja->empleado->empleado_apellido;
-                $cedula = $trabaja->empleado->empleado_cedula;
+            $feriados = Feriado::all();
+            
+            $fechafinAx = $fechaFin;
+            $fecha = $fechaInicio;
+					
+          	while (strtotime($fecha) <= strtotime($fechafinAx)) {
                 
-                foreach($registros_diff as $reg){
-                    $registros_ok[$x][0] = $cedula;
-                    $registros_ok[$x][1] = $nombres;
-                    $registros_ok[$x][2] = $reg;
-                    $x++;
+                $horario = horarioAfecha($empleado->id, $fecha);
+                
+                if($horario[0] != '' && $horario[0] != '00:00:00'){
+                    $registro = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$empleado->empleado_cedula)->get();
+                    $entre = 'N';
+                    if($registro->count() == 0){
+                        foreach($feriados as $feriado){
+                            
+                            if($feriado->feriado_fecha == $fecha){
+                                $entre = 'S';
+                                break;
+                            }
+                        }
+                        if($entre == 'N'){
+                            array_push($registros_array, $fecha);
+                        }
+                    }
                 }
+                
+				$fecha = date("Y-m-d", strtotime("+1 day", strtotime($fecha)));
+                
+            } //fin fechas 
+            
+            foreach($registros_array as $reg){
+                $registros_ok[$x][0] = $cedula;
+                $registros_ok[$x][1] = $nombres;
+                $registros_ok[$x][2] = $reg;
+                $x++;
             }
         }
+        
         
         $registros_ok = collect($registros_ok);
         
@@ -637,10 +638,10 @@ class ReportesController extends Controller
         $fk_oficina_id = $request->input('fk_oficina_id');
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id > 0 && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
             $for = "S";
@@ -678,21 +679,21 @@ class ReportesController extends Controller
     		$horas_debe_trabajar = totalHorasAfecha($horario);
     		$horas_trabajadas =  $registro->r_total_horas;
     		$horas_extras = date('H:i:s', strtotime($horas_trabajadas) - strtotime($horas_debe_trabajar));
-    	
-            if($horas_extras >= $minimo_extras && $horas_debe_trabajar<> '00:00:00' && $horas_extras <= $max_extras ){
-                $r = [];
-                
-                $r['fk_empleado_cedula']=$registro->r_cedula;
-                $r['registro_fecha']=$registro->r_fecha;
-                $r['horas_debe_trabajar']=$horas_debe_trabajar;
-                $r['horas_trabajadas']=$horas_trabajadas;
-                $r['horas_extras']=$horas_extras;
-                $r['empleado']=$Empleado->empleado_nombre.' '.$Empleado->empleado_apellido;
-                
-                $registros[$i] = $r;
-                $i++;
+    	    if(TomaExtras($Empleado->id, $registro->r_fecha)){
+                if($horas_extras >= $minimo_extras && $horas_debe_trabajar<> '00:00:00' && $horas_extras <= $max_extras ){
+                    $r = [];
+
+                    $r['fk_empleado_cedula']=$registro->r_cedula;
+                    $r['registro_fecha']=$registro->r_fecha;
+                    $r['horas_debe_trabajar']=$horas_debe_trabajar;
+                    $r['horas_trabajadas']=$horas_trabajadas;
+                    $r['horas_extras']=$horas_extras;
+                    $r['empleado']=$Empleado->empleado_nombre.' '.$Empleado->empleado_apellido;
+
+                    $registros[$i] = $r;
+                    $i++;
+                }
             }
-    		
         }
         
         $registros_ok = collect($registros)->sortBy('fk_empleado_cedula')->sortBy('registro_fecha');
@@ -709,7 +710,7 @@ class ReportesController extends Controller
             return back()->with('warning', 'No se encontraron datos.')->withInput();
         }
         
-    }
+    } //TERMINADO ARREGLADO 01/06/2020
     
     public function libresConcedidos(Request $request){
         $Rpdf = Ajuste::where('ajuste_nombre','reporte_pdf')->first();
@@ -724,13 +725,13 @@ class ReportesController extends Controller
         $fk_oficina_id = $request->input('fk_oficina_id');
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id != 'ALL' && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::all();    
+            $empleados = Empleado::where('empleado_estado','Activo');    
             $for = "S";
         }
         
@@ -793,13 +794,13 @@ class ReportesController extends Controller
         $empleados = Empleado::where('empleado_cedula',$cedula)->get();
         
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($fk_oficina_id != 'ALL' && $cedula == 'ALL'){
             if($fk_oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::all();    
+            $empleados = Empleado::where('empleado_estado','Activo');    
             $for = "S";
         }
         
@@ -817,7 +818,6 @@ class ReportesController extends Controller
             return $pdf->download('listado.pdf');             //Forzar descarga de PDF
         }
     }
-    
 	
     public function empleadosMarcasAyer(Request $request){
 				
@@ -829,7 +829,7 @@ class ReportesController extends Controller
         $ayer = date('Y-m-d', strtotime('yesterday'));   
         //$ayer = "2019-02-04";
                 
-				$fechainicio = $request->input('fechainicio');
+		$fechainicio = $request->input('fechainicio');
         $fechafin = $request->input('fechafin');
         $cedula = $request->input('fk_empleado_cedula');
         
@@ -848,9 +848,9 @@ class ReportesController extends Controller
         $registros_ok = $this->repHorasExtrasResumidas($fechainicio,$fechafin, $cedula, $fk_oficina_id);
 			
         if($registros_ok->count() > 0){
-						
-						$path = storage_path().'/app/public/empleadosMarcasAyer_'.$ayer.'.pdf';
-					 
+            
+            $path = storage_path().'/app/public/empleadosMarcasAyer_'.$ayer.'.pdf';
+            
             $pdf = PDF::loadView('pdf.empleadosMarcasAyer', compact('registros_ok','fechainicio','fechafin','oficina'))->save($path);
            	$data = array(); 			
 // 						$empresa = Empresa::where('empresa_estado','1')->first();

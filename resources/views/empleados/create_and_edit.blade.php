@@ -92,6 +92,16 @@
                                     </div>
                                 </div> 
                                 
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">Estado</label>
+                                    <div class="col-sm-3">
+                                        <input type="hidden" name="estado" id="estado" value="{{ old('empleado_estado', $empleado->empleado_estado ) }}"/>
+                                        <select class="select2_demo_2 form-control" name="empleado_estado" id="empleado_estado-field" >
+                                            <option value="Activo">Activo</option>
+                                            <option value ="Baja">Baja</option>
+                                        </select>
+                                    </div>
+                                </div>
                               
                                 <div class="hr-line-dashed"></div>
 
@@ -131,6 +141,16 @@
                     $(this).prop("selected", true);
                 }
             });
+            
+          var estado = $('#estado').val();
+            $('#empleado_estado-field option').each(function() {
+                if($(this).val() ==  estado) {
+                    $(this).prop("selected", true);
+                }
+            });
+          
+          
+          
             $(".select2_demo_2").select2();
         });
     </script>

@@ -130,20 +130,17 @@ function horarioAfecha($idEmpleado, $fecha){
     $trabaja = Trabaja::where('fk_empleado_id', '=', $idEmpleado)->where('trabaja_fechainicio', '<=', $fecha)->where('trabaja_fechafin', '>=', $fecha)->first();
     $horario[0] = ''; // horario_entrada
     $horario[1] = ''; // horario_comienzobrake
-    $horario[2] = '';	// horario_finbrake
+    $horario[2] = ''; // horario_finbrake
     $horario[3] = ''; // horario_salida
     $horario[4] = ''; // horario_tiempotarde
     $horario[5] = ''; // horario_salidaantes
-    $horario[6] = 'N';  //Si hay brake
-		$horario[7] = 'N';  //Si es medio horario
+    $horario[6] = 'N';//Si hay brake
+    $horario[7] = 'N';//Si es medio horario
 	
     if(!is_null($trabaja)){
         if(!is_null($trabaja->fk_horariorotativo_id)){
-           
             $trabajaElDia = trabajaDiaRotativo($trabaja->horariorotativo,$trabaja->trabaja_fechainicio, $fecha );
-            
             if($trabajaElDia == "1"){
-                
                 if($trabaja->horariorotativo->horario->horario_haybrake == "S"){
                     $horario[0] = $trabaja->horariorotativo->horario->horario_entrada;
                     $horario[1] = $trabaja->horariorotativo->horario->horario_comienzobrake;
@@ -162,14 +159,10 @@ function horarioAfecha($idEmpleado, $fecha){
                 $horario[0] = "00:00:00";
                 $horario[3]=  "00:00:00";
             }
-        
         }elseif(!is_null($trabaja->fk_turno_id)){
             $trabajaElDia = trabajaDiaTurno($trabaja->turno, $fecha);
-                
             if($trabajaElDia == "1"){
-                
                 $diaMedioHorario = diaMedioHorario($trabaja->turno,$fecha);
-                
                 if($diaMedioHorario == "0"){
                     if($trabaja->turno->horario->horario_haybrake == "S"){
                         $horario[0] = $trabaja->turno->horario->horario_entrada;
@@ -551,7 +544,7 @@ function TomaExtras($idEmpleado, $fecha){
     }else{
         return true;
     }
-}
+}  
 
 //(la vista no la uso mas porque anda muy lento) esta funcion hace lo mismo que dicha vista.
 function v_inout($fdesde,$fhasta, $cedula = ''){

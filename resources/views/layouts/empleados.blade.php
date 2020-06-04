@@ -1,6 +1,6 @@
 <?php 
 use App\Models\Empleado;
-$empleados = Empleado::orderBy('empleado_apellido')->get();
+$empleados = Empleado::where('empleado_estado','Activo')->orderBy('empleado_apellido')->get();
 ?>
     @if($empleados->count())
         <option value="">Seleccionar empleado...</option>

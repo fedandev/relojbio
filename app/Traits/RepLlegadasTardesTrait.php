@@ -138,10 +138,7 @@ trait RepLlegadasTardesTrait
                             }
                         }
                     }
-                    
                     if($ok=='S'){
-                        
-                       
                         $r = [];
                 
                         $r['fk_empleado_cedula']=$registro->fk_empleado_cedula;

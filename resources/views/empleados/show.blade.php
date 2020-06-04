@@ -80,7 +80,11 @@
                                 <div class="col-sm-3"><p class="form-control-static">{{  $empleado->oficina->sucursal->sucursal_nombre }} </p></div>
                             
                             </div>
-                          
+                            
+                           <div class="form-group">
+                                <label class="col-sm-2 control-label">Estado</label>
+                                <div class="col-sm-3"><p class="form-control-static">{{  $empleado->empleado_estado}} </p></div>
+                            </div>
                            
                             <div class="hr-line-dashed"></div>
                             

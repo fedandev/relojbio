@@ -1,0 +1,62 @@
+body { font: 14px/1.4 Georgia, serif; }
+#page-wrap { width: 800px; margin: 10px auto; }
+
+textarea { border: 0; font: 14px Georgia, Serif; overflow: hidden; resize: none; }
+table { border-collapse: collapse; }
+table td, table th { border: 1px solid black; padding: 5px; }
+
+#header { height: 15px; width: 100%;  background: #222; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; letter-spacing: 5px; padding: 8px 0px;  }
+
+thead:before, thead:after { display: none; } tbody:before, tbody:after { display: none; }
+@page { margin: 40px 10px; }
+#header2 { position: fixed; left: 0px; top: 0px; right: 0px; height: auto; background-color: white; text-align: left;}
+
+#address { width: 250px; height: 50px; float: left; }
+/*#customer { overflow: hidden; }*/
+#customer { float:left; margin-right:30px;}
+
+#logo { margin-bottom: 20px; text-align: right; float: right; border: 1px solid #fff; max-width: 300px; max-height: 100px; overflow: hidden; display: inline-block;}
+#logo:hover, #logo.edit { border: 1px solid #000; margin-top: 0px; max-height: 125px; }
+#logoctr { display: none; }
+#logo:hover #logoctr, #logo.edit #logoctr { display: block; text-align: right; line-height: 25px; background: #eee; padding: 0 5px; }
+
+#identity { margin-bottom: 20px; !important}
+
+#customer-title { font-size: 20px; font-weight: bold; float: left; margin-right:30px;}
+
+#title { text-align: center; }
+
+#meta { margin-top: 1px; width: 300px; }
+
+#meta-box { 
+	float: right;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 62.2%;
+    margin-bottom: 30px;
+}
+
+#meta td { text-align: right;}
+#meta td.meta-head { text-align: left; background: #eee; }
+#meta td textarea { width: 100%; height: 20px; text-align: right; }
+
+#items { clear: both; width: 100%; margin: 0 0 0 0; border: 1px solid black; }
+#items th { background: #eee; }
+#items textarea { width: 80px; height: 50px; }
+#items tr {margin-top:0px;}
+#items tr.item-row td { border: 0; vertical-align: top; }
+#items td.description { width: 300px; }
+#items td.item-name { width: 175px; }
+#items td.blank { border: 0; }
+
+#footer {
+  position: absolute;
+  text-align: center;
+  bottom: 20px;
+  width: 100%;
+  border-top: 1pt solid #aaa;
+  color: RGB(130,130,130);
+}
+.page-number:before {
+  content: "Hoja " counter(page);
+}

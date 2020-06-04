@@ -14,10 +14,10 @@ trait RepHorasExtrasResumidasTrait
         $for = "N";
          
         if($cedula !='' && $cedula != 'ALL'){
-            $empleados = Empleado::where('empleado_cedula',$cedula)->get();
+            $empleados = Empleado::where('empleado_cedula',$cedula)->where('empleado_estado','Activo')->get();
         }elseif($oficina_id > 0 && $cedula == 'ALL'){
             if($oficina_id != NULL){
-                $empleados = Empleado::where('fk_oficina_id',$oficina_id)->get();
+                $empleados = Empleado::where('fk_oficina_id',$oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($oficina_id == 'ALL' && $cedula == 'ALL'){
             $for = "S";
@@ -44,7 +44,7 @@ trait RepHorasExtrasResumidasTrait
         // 7- Si las extras estan autorizadas para ese día (lunes, martes, etc) o no.
         
         if($for == 'S'){
-            $empleados = Empleado::all();
+            $empleados = Empleado::where('empleado_estado','Activo')->get();
         }
         
         
