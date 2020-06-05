@@ -47,7 +47,7 @@
                         @php
 			                $i=0;
 			                echo '<tr>';
-			                echo 	'<td colspan="4"></td>';
+			                echo 	'<td colspan="3"></td>';
 							echo	'<td>Total de Horas</td>';
 							echo	'<td>'. $tiempoTrabajado->verTiempoFinal() .'</td>';
 							echo	'<td>'. $TrabajadoLibreFeriado->verTiempoFinal() .'</td>';

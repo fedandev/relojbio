@@ -62,7 +62,7 @@ class ReportesController extends Controller
                 $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::where('empleado_estado','Activo');    
+            $empleados = Empleado::where('empleado_estado','Activo')->get();    
             $for = "S";
         }
         
@@ -122,7 +122,7 @@ class ReportesController extends Controller
                 $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::where('empleado_estado','Activo');    
+            $empleados = Empleado::where('empleado_estado','Activo')->get();    
             $for = "S";
         }
         
@@ -731,7 +731,7 @@ class ReportesController extends Controller
                 $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::where('empleado_estado','Activo');    
+            $empleados = Empleado::where('empleado_estado','Activo')->get();    
             $for = "S";
         }
         
@@ -800,7 +800,7 @@ class ReportesController extends Controller
                 $empleados = Empleado::where('fk_oficina_id',$fk_oficina_id)->where('empleado_estado','Activo')->get();
             }
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
-            $empleados = Empleado::where('empleado_estado','Activo');    
+            $empleados = Empleado::where('empleado_estado','Activo')->get();    
             $for = "S";
         }
         

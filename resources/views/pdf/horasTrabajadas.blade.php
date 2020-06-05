@@ -49,16 +49,16 @@
 		</div>
 		
 		<div id="meta-box">
-			<table id="meta">
-                <tr>
-                    <td class="meta-head">Fecha Inicio</td>
-                    <td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
-                </tr>
+				<table id="meta">
+				<tr>
+					<td class="meta-head">Fecha Inicio</td>
+					<td><textarea id="date">{{ formatFecha($fechainicio, $format_fecha) }}</textarea></td>
+				</tr>
                 <tr>
                     <td class="meta-head">Fecha Fin</td>
                     <td><textarea id="date">{{ formatFecha($fechafin, $format_fecha) }}</textarea></td>
                 </tr>
-            </table>
+				</table>
 		</div>
 		
 		<table id="items">
@@ -70,21 +70,23 @@
                 <th>Total Horas</th>
 			</tr>
 			@if($registros->count())
+				
 			    @foreach($registros->groupBy('r_cedula') as $registro_group)
 		            @if($loop->last)
 		                @php
 		                    $ultimo='S';
 		                @endphp
 		            @endif
+					
 		            @foreach($registro_group->sortBy('r_fecha') as $registro)
 		                @php
 		                    $inconsistencia= inconsistencia_1($registros, $registro->r_cedula, $registro->r_fecha, $registro->r_salida );
 		                @endphp
-    	                
+						
     	                @if($inconsistencia == 'N')
-    	                
     		                @if($loop->last)
             			        @foreach($empleados as $empleado)
+									
             			            @if($empleado->empleado_cedula == $registro->r_cedula)
                 			                @if($i <= 29)
                         			            @php
@@ -230,7 +232,7 @@
             			                @php
                 			                $i += 1;
                 			            @endphp
-                			            @if($i < 29)
+                			            @if($i<29)
                 			                <tr>
                                                 <td>{{ $empleado->empleado_nombre }} {{ $empleado->empleado_apellido }}</td>
                                                 <td>{{ formatFecha($registro->r_fecha, $format_fecha) }}</td>    
@@ -325,4 +327,3 @@
 	</div>
 </body>
 </html>
-
