@@ -16,23 +16,20 @@
     <head>
     	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
     	<title>LISTADO DE FALTAS</title>
-    	<link rel="stylesheet" href="{{ asset('css/pdf2.css') }}" />
+    	<link rel="stylesheet" href="{{ asset('css/pdf3.css') }}" />
     </head>
     <body>
-    	<div id="page-wrap">
-    		<textarea id="header">LISTADO DE FALTAS</textarea>
-    		<div id="identity">
+    	<div id="header2">
+            <textarea id="header">LISTADO DE FALTAS</textarea>
+            <div id="identity">
                 <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-    			</textarea>
-    		</div>
-    		
-    		<div id="logo">
+                </textarea>
+            </div>
+            <div id="logo">
                 <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
             </div>
-            
-    		<div style="clear:both"></div>
-    		
-    		<div id="customer">
+            <div style="clear:both"></div>
+            <div id="customer">
                 <textarea id="customer-title">
                     @if(isset($oficina))
                         Oficina {{ $oficina->oficina_nombre }}
@@ -42,9 +39,9 @@
                         Empleado: {{ $empleados[0]->empleado_nombre }} {{ $empleados[0]->empleado_apellido }}
                     @endif
                 </textarea>
-    		</div>
-    		<div id="meta-box">
-    			<table id="meta">
+            </div>
+            <div id="meta-box">
+                <table id="meta">
                     <tr>
                         <td class="meta-head">Fecha Inicio</td>
                         <td><textarea id="date">{{ formatFecha($fechaInicio, $format_fecha) }}</textarea></td>
@@ -54,139 +51,56 @@
                         <td><textarea id="date">{{ formatFecha($fechaFin, $format_fecha) }}</textarea></td>
                     </tr>
                 </table>
-    		</div>
-    		
-    		<table id="items">
-    			<tr>
-    			    <th>Cedula</th>
-                    <th>Empleado</th>
-                    <th>Día</th>
-    			</tr>
-    			@if($registros_ok->count())
-    			    @foreach($registros_ok->groupBy('0') as $registro_group)
-    		            @if($loop->last)
-    		                @php
-    		                    $ultimo='S';
-    		                @endphp
-    		            @endif
-    		            @foreach($registro_group as $registro)
-    		                @if($loop->last)
-            			        @foreach($empleados as $empleado)
-            			            @if($empleado->empleado_cedula == $registro[0])
-                			                @php
-                    			                $i=1;
-                    			            @endphp
-                			                <tr>
-                                                <td>{{ $registro[0] }}</td>
-                                                <td>{{ $registro[1] }}</td>
-                                                <td>{{ $registro[2] }}</td>
-                                            </tr>
-                                            @if($ultimo != 'S')
-                                                <div id="footer">
-                                                  <div class="page-number"></div>
-                                                </div>
-                                                <div style="page-break-after:always;"></div>
-                                                </table>
-                                                <textarea id="header">LISTADO DE FALTAS</textarea>
-                                        		<div id="identity">
-                                                    <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-                                        			</textarea>
-                                        		</div>
-                                        		
-                                        		<div id="logo">
-                                                    <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-                                                </div>
-                                                
-                                        		<div style="clear:both"></div>
-                                        		
-                                        		<div id="meta-box">
-                                        			<table id="meta">
-                                                        <tr>
-                                                            <td class="meta-head">Fecha Inicio</td>
-                                                            <td><textarea id="date">{{ formatFecha($fechaInicio, $format_fecha) }}</textarea></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="meta-head">Fecha Fin</td>
-                                                            <td><textarea id="date">{{ formatFecha($fechaFin, $format_fecha) }}</textarea></td>
-                                                        </tr>
-                                                    </table>
-                                        		</div>
-                                        		
-                                        		<table id="items">
-                                        			<tr>
-                                        			    <th>Cedula</th>
-                                                        <th>Empleado</th>
-                                                        <th>Día</th>
-                                        			</tr>
-                                            @endif
-            			            @endif
-            			        @endforeach
-            			    @else
-            			        @foreach($empleados as $empleado)
-            			            @if($empleado->empleado_cedula == $registro[0])
-            			                @php
-                			                $i += 1;
-                			            @endphp
-                			            @if($i <= 29)
-                			                <tr>
-                                                <td>{{ $registro[0] }}</td>
-                                                <td>{{ $registro[1] }}</td>
-                                                <td>{{ $registro[2] }}</td>
-                                            </tr>
-                                        @else
-                                		    @php
-                    			                $i=1;
-                    			            @endphp
-                    			            <div id="footer">
-                                              <div class="page-number"></div>
-                                            </div>
-                    			            <div style="page-break-after:always;"></div>
-                                            </table>
-                                            <textarea id="header">LISTADO DE FALTAS</textarea>
-                                    		<div id="identity">
-                                                <textarea id="address">{{ $empresa }}<br>{{ formatFecha($now, $format_fh) }}
-                                    			</textarea>
-                                    		</div>
-                                    		
-                                    		<div id="logo">
-                                                <img id="image" src="{{ asset('images/'. $logo) }}" alt="logo" class="img-md logo-md"/>
-                                            </div>
-                                            
-                                    		<div style="clear:both"></div>
-                                    		
-                                    		<div id="meta-box">
-                                    			<table id="meta">
-                                                    <tr>
-                                                        <td class="meta-head">Fecha Inicio</td>
-                                                        <td><textarea id="date">{{ formatFecha($fechaInicio, $format_fecha) }}</textarea></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="meta-head">Fecha Fin</td>
-                                                        <td><textarea id="date">{{ formatFecha($fechaFin, $format_fecha) }}</textarea></td>
-                                                    </tr>
-                                                </table>
-                                    		</div>
-                                    		
-                                    		<table id="items">
-                                    			<tr>
-                                    			    <th>Cedula</th>
-                                                    <th>Empleado</th>
-                                                    <th>Día</th>
-                                    			</tr>
-                                		@endif
-            			            @endif
-            			        @endforeach
-        			        @endif
-        			    @endforeach
-        			@endforeach
-                    @else
-                    <tr>
-                        <td colspan="6">
-                            <h3 class="text-center alert alert-info">No hay datos para mostrar!</h3>
-                        </td>
-                    </tr>    
-                @endif
-    		</table>
-    	</div>
+            </div>
+        </div>
+        <table id="items">
+            <tr>
+                <th>Cedula</th>
+                <th>Empleado</th>
+                <th>Día</th>
+            </tr>
+            @if($registros_ok->count())
+                @php
+                    $i=1;
+                @endphp
+                @foreach($registros_ok->groupBy('fk_empleado_cedula') as $registro_group)
+                    @foreach($registro_group as $registro)
+                        @foreach($empleados as $empleado)
+                            @if($empleado->empleado_cedula == $registro[0])
+                                @php
+                                    $i++;
+                                @endphp
+                                @if($i > 29)
+                                    <tr>
+                                        <th>Cedula</th>
+                                        <th>Empleado</th>
+                                        <th>Día</th>
+                                    </tr>
+                                    @php
+                                        $i=2;
+                                    @endphp
+                                @endif
+                                @if($registro[3] == "C")
+                                    <tr>
+                                @else
+                                    <tr style="background-color: rgba(128, 128, 128, 0.7)">
+                                @endif
+                                    <td>{{ $registro[0] }}</td>
+                                    <td>{{ $registro[1] }}</td>
+                                    <td>{{ $registro[2] }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endforeach
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="6">
+                        <h3 class="text-center alert alert-info">No hay datos para mostrar!</h3>
+                    </td>
+                </tr>    
+            @endif
+        </table>
+    	
     </body>
 </html>

@@ -32,6 +32,7 @@
                                         <th data-hide="phone,tablet">Teléfono</th>
                                         <th data-hide="phone,tablet">Tipo Empleado</th>
                                         <th data-hide="phone,tablet">Oficina</th>
+                                        <th data-hide="phone,tablet">Estado</th>
                                         <th data-hide="phone,tablet" class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
@@ -46,7 +47,11 @@
                                             <td>{{$empleado->empleado_telefono}}</td>
                                             <td>{{$empleado->tipoempleado->tipoempleado_nombre}}</td>
                                             <td>{{$empleado->oficina->oficina_nombre}}</td>
-                                            
+                                            @if($empleado->empleado_estado == "Activo")
+                                                <td style="color: green;">Activo</td>
+                                            @else
+                                                <td style="color: red;">Baja</td>
+                                            @endif
                                             <td class="text-right">
                                               
                                                 <a class="btn btn-xs btn-default" href="{{ route('empleados.show', $empleado->id) }}">

@@ -423,8 +423,9 @@ class ReportesController extends Controller
         }elseif($fk_oficina_id == 'ALL' && $cedula == 'ALL'){
             $empleados = Empleado::where('empleado_estado','Activo')->get();
         }
-        foreach($empleados as $empleado){
+        foreach($empleados as $empleado){ //Recorro los empleados
             $registros_array = array();
+            $registros_arra_medios = array();
             $registros_diff = array();
             $nombres = $empleado->empleado_nombre ." ". $empleado->empleado_apellido;
             $cedula = $empleado->empleado_cedula;
@@ -434,23 +435,36 @@ class ReportesController extends Controller
             $fechafinAx = $fechaFin;
             $fecha = $fechaInicio;
 					
-          	while (strtotime($fecha) <= strtotime($fechafinAx)) {
+          	while (strtotime($fecha) <= strtotime($fechafinAx)) { //Recorro las fechas ingresadas
                 
-                $horario = horarioAfecha($empleado->id, $fecha);
+                $horario = horarioAfecha($empleado->id, $fecha); //Busco el horario que tiene que hacer en la fecha
                 
-                if($horario[0] != '' && $horario[0] != '00:00:00'){
+                if($horario[0] != '' && $horario[0] != '00:00:00'){ //Si tiene que hacer un horario entro al if
                     $registro = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$empleado->empleado_cedula)->get();
                     $entre = 'N';
                     if($registro->count() == 0){
-                        foreach($feriados as $feriado){
+                        foreach($feriados as $feriado){ //Recorro los feriados
                             
-                            if($feriado->feriado_fecha == $fecha){
+                            if($feriado->feriado_fecha == $fecha){ //Si es feriado no lo cuento como falta
                                 $entre = 'S';
                                 break;
                             }
                         }
-                        if($entre == 'N'){
+                        if($entre == 'N'){ // Sino es feriado lo cuento como falta
                             array_push($registros_array, $fecha);
+                        }
+                    }else{
+                        foreach($registro as $reg){
+                            $hora = new DateTime($reg->registro_hora);
+                            $hora = $hora->format('H:i:s');
+                            if($hora > $horario[2]){
+                                $entre = 'S';
+                                break;
+                            }
+                        }
+                        if($entre == 'N'){ // Sino hay registro despues del fin brake cuenta como media falta
+                            array_push($registros_array, $fecha);
+                            array_push($registros_arra_medios, $fecha);
                         }
                     }
                 }
@@ -460,9 +474,19 @@ class ReportesController extends Controller
             } //fin fechas 
             
             foreach($registros_array as $reg){
+                $entre2 = 'N';
                 $registros_ok[$x][0] = $cedula;
                 $registros_ok[$x][1] = $nombres;
                 $registros_ok[$x][2] = $reg;
+                foreach($registros_arra_medios as $medio){
+                    if($medio == $reg){
+                        $registros_ok[$x][3] = 'M';
+                        $entre2 = 'S';
+                    }
+                }
+                if($entre2 == 'N'){
+                    $registros_ok[$x][3] = 'C';
+                }
                 $x++;
             }
         }
