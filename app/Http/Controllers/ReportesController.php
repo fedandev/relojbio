@@ -441,30 +441,38 @@ class ReportesController extends Controller
                 
                 if($horario[0] != '' && $horario[0] != '00:00:00'){ //Si tiene que hacer un horario entro al if
                     $registro = Registro::where('registro_fecha',$fecha)->where('fk_empleado_cedula',$empleado->empleado_cedula)->get();
-                    $entre = 'N';
+                    $entre1 = 'N';
+                    $entre2 = 'N';
                     if($registro->count() == 0){
                         foreach($feriados as $feriado){ //Recorro los feriados
-                            
                             if($feriado->feriado_fecha == $fecha){ //Si es feriado no lo cuento como falta
-                                $entre = 'S';
+                                $entre1 = 'S';
                                 break;
                             }
                         }
-                        if($entre == 'N'){ // Sino es feriado lo cuento como falta
+                        if($entre1 == 'N'){ // Sino es feriado lo cuento como falta
                             array_push($registros_array, $fecha);
                         }
                     }else{
-                        foreach($registro as $reg){
-                            $hora = new DateTime($reg->registro_hora);
-                            $hora = $hora->format('H:i:s');
-                            if($hora > $horario[2]){
-                                $entre = 'S';
-                                break;
+                        if($horario[6] == 'S'){
+                            foreach($registro as $reg){
+                                $hora = new DateTime($reg->registro_hora);
+                                $hora = $hora->format('H:i:s');
+                                if($hora > $horario[2]){
+                                    $entre1 = 'S';
+                                    //break;
+                                }
+                                if($hora < $horario[1]){
+                                    $entre2 = 'S';
+                                    //break;
+                                }
                             }
-                        }
-                        if($entre == 'N'){ // Sino hay registro despues del fin brake cuenta como media falta
-                            array_push($registros_array, $fecha);
-                            array_push($registros_arra_medios, $fecha);
+                            if($entre1 == 'N' || $entre2 == 'N'){ // Sino hay registro despues del fin brake cuenta como media falta
+                                if($horario[7] == 'N'){
+                                    array_push($registros_array, $fecha);
+                                    array_push($registros_arra_medios, $fecha);    
+                                }
+                            }
                         }
                     }
                 }
