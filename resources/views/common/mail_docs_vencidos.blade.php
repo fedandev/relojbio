@@ -27,12 +27,12 @@
     							<table border="0" cellpadding="0" cellspacing="0" width="100%">
     								<tr>
     									<td style="color: #153643; font-family: Arial, sans-serif; font-size: 24px;">
-    										<b>Documentos por vencer - Empleados - @php echo date('Y-m-d', strtotime('yesterday')); @endphp </b>
+    										<b>Documentos por vencer - Empleados - @php echo date('Y-m-d', strtotime('now')); @endphp </b>
     									</td>
     								</tr>
     								<tr>
     									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-    										Estimado cliente @php echo $empresa @endphp, el presente correo se le envía con el fin de informarle los documentos de cedula de identidad y licencias de conducir que estan cerca de vencer @php echo date('Y-m-d', strtotime('yesterday')); @endphp
+    										Estimado cliente @php echo $empresa @endphp, el presente correo se le envía con el fin de informarle los documentos de cedula de identidad y licencias de conducir que estan cerca de vencer @php echo date('Y-m-d', strtotime('now')); @endphp
                                             <br><br>
                                             Atentamente<br>
                                             Equipo de SysClock.
