@@ -69,28 +69,35 @@
                                     <label class="col-sm-2 control-label">F. Ingreso</label>
                                     <div class="col-sm-3"><input class="form-control" type="date" name="empleado_fingreso" id="empleado_fingreso-field" value="{{ old('empleado_fingreso', $empleado->empleado_fingreso ) }}"></div>
                                 </div>
-                                 
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Tipo Empleado</label>
+                             
+                              
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">F. Vencimiento Cedula</label>
+                                    <div class="col-sm-3"><input class="form-control" type="date" name="empleado_fec_venc_cedula" id="empleado_fec_venc_cedula-field" value="{{ old('empleado_fec_venc_cedula', $empleado->empleado_fec_venc_cedula ) }}"></div>
+                                    
+                                    <label class="col-sm-1 control-label">Tipo Empleado</label>
                                     <div class="col-sm-3">
                                         <input type="hidden" name="tipoempleado" id="id_tipoempleado" value="{{ old('fk_tipoempleado_id', $empleado->fk_tipoempleado_id ) }}"/>
                                         <select class="select2_demo_2 form-control" name="fk_tipoempleado_id" id="fk_tipoempleado_id-field">
                                             @include('layouts.tipoempleados')
                                         </select>
                                     </div>
-                                    
-                                    
+                                 
                                 </div>
+                              
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">F. Vencimiento Licencia Conducir</label>
+                                    <div class="col-sm-3"><input class="form-control" type="date" name="empleado_fec_venc_lic_cond" id="empleado_fec_venc_lic_cond-field" value="{{ old('empleado_fec_venc_lic_cond', $empleado->empleado_fec_venc_lic_cond ) }}"></div>
                                 
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Oficina</label>
+                                     <label class="col-sm-1 control-label">Oficina</label>
                                     <div class="col-sm-3">
                                         <input type="hidden" name="oficina" id="id_oficina" value="{{ old('fk_oficina_id', $empleado->fk_oficina_id ) }}"/>
                                         <select class="select2_demo_2 form-control" name="fk_oficina_id" id="fk_oficina_id-field">
                                             @include('layouts.oficinas')
                                         </select>
                                     </div>
-                                </div> 
+                                </div>
+                              
                                 
                               <div class="form-group">
                                     <label class="col-sm-2 control-label">Estado</label>

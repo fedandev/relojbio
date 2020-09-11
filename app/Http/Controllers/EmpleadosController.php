@@ -29,7 +29,7 @@ class EmpleadosController extends Controller
 
     public function show(Empleado $empleado)
     {
-    	$this->authorize('show', $empleado);		
+    	$this->authorize('show', $empleado);
         return view('empleados.show', compact('empleado'));
     }
 

@@ -8,7 +8,6 @@
      <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    
     <title>{{ ajuste('system_name') }} 
             @if (routeIndex($controller) != 'home') 
                 | {{ trans('controllers.'.$controller) }}
@@ -29,7 +28,6 @@
     
     <link rel="apple-touch-icon" href="{{ secure_asset('images/icons/icon-64x64.png') }}">
     
-
     <meta name="apple-mobile-web-app-title" content="{{ ajuste('system_name') }}">
 
     @include('layouts.styles')
@@ -40,7 +38,6 @@
 
     @guest
         @yield('content')
-        
     @else
         <body class="">
           <!-- Wrapper-->
@@ -54,7 +51,6 @@
         
                     <!-- Page wrapper -->
                     @include('layouts.topnavbar')
-                    
                     
                     @include('layouts.headerpanel')
                     
@@ -75,12 +71,9 @@
             
             <!-- Scripts -->
             @include('layouts.scripts')
-               
             
             @section('scripts')
             @show
         </body>
     @endguest
-
-
 </html>

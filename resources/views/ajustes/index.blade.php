@@ -32,7 +32,6 @@
                                 </thead>
                                 <tbody>
                                     @foreach($ajustes as $ajuste)
-                                        
                                         <tr>                                      
                                             <td>{{$ajuste->ajuste_nombre}}</td>
                                             <td>{{$ajuste->ajuste_valor}}</td>
