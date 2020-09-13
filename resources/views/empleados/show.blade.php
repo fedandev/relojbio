@@ -71,6 +71,7 @@
                               
                                 <label class="col-sm-1 control-label">Tipo Empleado</label>
                                 <div class="col-sm-3"><p class="form-control-static">{{  $empleado->tipoempleado->tipoempleado_nombre }} </p></div>
+                                
                             </div>
                             
                             <div class="hr-line-dashed"></div>
@@ -86,11 +87,18 @@
                             </div>
                             
                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Estado</label>
-                                <div class="col-sm-3"><p class="form-control-static">{{  $empleado->empleado_estado}} </p></div>
+                               <label class="col-sm-2 control-label">F. Vencimiento Carne Salud</label>
+                                <div class="col-sm-3"><p class="form-control-static">{{  $empleado->empleado_fec_venc_salud }} </p></div> 
+                                               
                              
                                 <label class="col-sm-1 control-label">Sucursal</label>
                                 <div class="col-sm-3"><p class="form-control-static">{{  $empleado->oficina->sucursal->sucursal_nombre }} </p></div>
+                            </div>
+                          
+                           <div class="form-group">
+                                <label class="col-sm-2 control-label">Estado</label>
+                                <div class="col-sm-3"><p class="form-control-static">{{  $empleado->empleado_estado}} </p></div>
+                               
                             </div>
                            
                             <div class="hr-line-dashed"></div>

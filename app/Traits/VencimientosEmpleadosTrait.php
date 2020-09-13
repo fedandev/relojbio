@@ -31,6 +31,7 @@ trait VencimientosEmpleadosTrait
       foreach($empleados as $empleado){
           $informarCed = 'N';
           $informarLic = 'N';
+          $informarSal = 'N';
           if($empleado->empleado_fec_venc_cedula){
             if($empleado->empleado_fec_venc_cedula <= $fecha_tope ){
               $informarCed = 'S';
@@ -40,7 +41,14 @@ trait VencimientosEmpleadosTrait
             if($empleado->empleado_fec_venc_lic_cond <= $fecha_tope ){
               $informarLic = 'S';
             }
-          }          
+          }  
+          
+          if($empleado->empleado_fec_venc_salud){
+            if($empleado->empleado_fec_venc_salud <= $fecha_tope ){
+              $informarSal = 'S';
+            }
+          } 
+        
           
           if($informarLic=='S' Or $informarCed == 'S'){
              $e = [];
@@ -48,8 +56,10 @@ trait VencimientosEmpleadosTrait
              $e['nombre'] = $empleado->empleado_nombre.' '.$empleado->empleado_apellido;
              $e['fec_venc_ced'] = $empleado->empleado_fec_venc_cedula; 
              $e['fec_venc_lic'] = $empleado->empleado_fec_venc_lic_cond; 
+             $e['fec_venc_sal'] = $empleado->empleado_fec_venc_salud;
              $e['venc_ced'] = $informarCed; 
-             $e['venc_lic'] = $informarLic; 
+             $e['venc_lic'] = $informarLic;
+             $e['venc_sal'] = $informarSal;
             
              $arrayEmpleados[$i] = $e;
              $i++;

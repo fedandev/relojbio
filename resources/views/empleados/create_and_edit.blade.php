@@ -75,13 +75,13 @@
                                     <label class="col-sm-2 control-label">F. Vencimiento Cedula</label>
                                     <div class="col-sm-3"><input class="form-control" type="date" name="empleado_fec_venc_cedula" id="empleado_fec_venc_cedula-field" value="{{ old('empleado_fec_venc_cedula', $empleado->empleado_fec_venc_cedula ) }}"></div>
                                     
-                                    <label class="col-sm-1 control-label">Tipo Empleado</label>
+                                     <label class="col-sm-1 control-label">Tipo Empleado</label>
                                     <div class="col-sm-3">
                                         <input type="hidden" name="tipoempleado" id="id_tipoempleado" value="{{ old('fk_tipoempleado_id', $empleado->fk_tipoempleado_id ) }}"/>
                                         <select class="select2_demo_2 form-control" name="fk_tipoempleado_id" id="fk_tipoempleado_id-field">
                                             @include('layouts.tipoempleados')
                                         </select>
-                                    </div>
+                                    </div>                        
                                  
                                 </div>
                               
@@ -100,7 +100,11 @@
                               
                                 
                               <div class="form-group">
-                                    <label class="col-sm-2 control-label">Estado</label>
+                                 <label class="col-sm-2 control-label">F. Vencimiento Carne Salud</label>
+                                    <div class="col-sm-3"><input class="form-control" type="date" name="empleado_fec_venc_salud" id="empleado_fec_venc_salud-field" value="{{ old('empleado_fec_venc_salud', $empleado->empleado_fec_venc_salud ) }}"></div>   
+                                   
+                                
+                                    <label class="col-sm-1 control-label">Estado</label>
                                     <div class="col-sm-3">
                                         <input type="hidden" name="estado" id="estado" value="{{ old('empleado_estado', $empleado->empleado_estado ) }}"/>
                                         <select class="select2_demo_2 form-control" name="empleado_estado" id="empleado_estado-field" >

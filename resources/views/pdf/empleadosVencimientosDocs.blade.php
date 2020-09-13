@@ -48,8 +48,10 @@
                     <th>Cedula</th>
                     <th>Fecha Venc. Cedula</th>
                     <th>Fecha Venc. Licencia Conducir</th>
+                    <th>Fecha Venc. Carne Salud</th>
                     <th>Vence Cedula?</th>
-                    <th>Vence Licencia Conducir?</th>                    
+                    <th>Vence Licencia Conducir?</th>    
+                    <th>Vence Carne Salud?</th>   
                 </tr>
                 @if($arrayEmpleados->count())
                     @php
@@ -97,8 +99,10 @@
                                 <th>Cedula</th>
                                 <th>Fecha Venc. Cedula</th>
                                 <th>Fecha Venc. Licencia Conducir</th>
+                                <th>Fecha Venc. Carne Salud</th>
                                 <th>Vence Cedula?</th>
                                 <th>Vence Licencia Conducir?</th>  
+                                <th>Vence Carne Salud?</th> 
                             </tr>
                         @endif
                         <tr>
@@ -106,8 +110,10 @@
                             <td>{{ $empleado['cedula'] }}</td>
                             <td>{{ $empleado['fec_venc_ced'] }}</td>
                             <td>{{ $empleado['fec_venc_lic'] }}</td>
+                            <td>{{ $empleado['fec_venc_sal'] }}</td>
                             <td>@if($empleado['venc_ced'] == 'S') SI @else NO @endif</td>
-                            <td>@if($empleado['venc_lic'] == 'S') SI @else NO @endif</td>                            
+                            <td>@if($empleado['venc_lic'] == 'S') SI @else NO @endif</td>       
+                            <td>@if($empleado['venc_sal'] == 'S') SI @else NO @endif</td> 
                         </tr>
                     @endforeach
                 @else

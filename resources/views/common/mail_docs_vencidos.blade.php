@@ -32,7 +32,7 @@
     								</tr>
     								<tr>
     									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-    										Estimado cliente @php echo $empresa @endphp, el presente correo se le envía con el fin de informarle los documentos de cedula de identidad y licencias de conducir que estan cerca de vencer @php echo date('Y-m-d', strtotime('now')); @endphp
+    										Estimado cliente @php echo $empresa @endphp, el presente correo se le envía con el fin de informarle los documentos de cedula de identidad, carne de salud y licencias de conducir que estan cerca de vencer @php echo date('Y-m-d', strtotime('now')); @endphp
                                             <br><br>
                                             Atentamente<br>
                                             Equipo de SysClock.
